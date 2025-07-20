@@ -1,4 +1,3 @@
-
 import React from "react";
 import { User } from "lucide-react";
 
@@ -16,9 +15,59 @@ const ProfileSidebarTabs = ({
   activeSub,
   setActiveSub,
   isOwnProfile,
-  tabs = [],           // Array of sub-tab names (About, Education, etc)
+  tabs = [],
+  showOnlyMainTabs = false,    // add this prop, defaults to false!
+  orientation = "vertical"     // horizontal for mobile, vertical for desktop
 }) => {
-  // Responsive design using Tailwind's breakpoints
+  // ---- PUBLIC PROFILE: Only show subtabs ----
+  if (showOnlyMainTabs) {
+    // Only display the subtabs (About, Skills...), NO main sidebar tabs!
+    // Keep responsive: horizontal for mobile, vertical for desktop
+    if (orientation === "horizontal") {
+      return (
+        <div className="w-full flex flex-row gap-2 overflow-x-auto border-b bg-white">
+          {tabs.map(subTab => (
+            <button
+              key={subTab}
+              className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition
+                ${activeSub === subTab
+                  ? "bg-green-100 text-green-800"
+                  : "hover:bg-gray-100 text-gray-700"
+                }`}
+              onClick={() => setActiveSub(subTab)}
+            >
+              {subTab}
+            </button>
+          ))}
+        </div>
+      );
+    } else {
+      // vertical
+      return (
+        <div className="w-full h-fit sm:max-w-[240px] bg-white rounded-2xl shadow p-2">
+          <ul>
+            {tabs.map(subTab => (
+              <li key={subTab}>
+                <button
+                  className={`w-full text-left py-2 px-3 my-1 rounded-lg font-semibold text-sm
+                    ${activeSub === subTab
+                      ? "bg-green-100 text-green-800"
+                      : "hover:bg-gray-100 text-gray-700"
+                    }`}
+                  onClick={() => setActiveSub(subTab)}
+                >
+                  {subTab}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+  }
+
+  // ---- PRIVATE PROFILE: Original sidebar/mainTabs + subTabs ----
+
   return (
     <>
       {/* Mobile/tablet: horizontal main tabbar */}
@@ -35,7 +84,6 @@ const ProfileSidebarTabs = ({
               `}
               onClick={() => {
                 setActiveMain(tab.value);
-                // Set default subtab when switching back to "Account"
                 if(tab.value === "account" && tabs.length) setActiveSub(tabs[0]);
               }}
             >

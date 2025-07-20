@@ -10,18 +10,25 @@ import { UserPlus, MessageCircle, Check, MoreVertical } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
 import MyPostsTab from "../components/tabs/MyPostsTab";
 
-const TABS = ["About", "Education", "Experience", "Skills" ,"Posts"];
+const TABS = ["About", "Education", "Experience", "Skills", "Posts"];
 
 const UserPublicProfile = () => {
   const { userId } = useParams();
   const [profile, setProfile] = useState(null);
-  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("About");
   const [currentUserId, setCurrentUserId] = useState(null);
-  const [connectionStatus, setConnectionStatus] = useState("connect"); 
+  const [connectionStatus, setConnectionStatus] = useState("connect");
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
+
+  // Responsive flag
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   // Get logged-in user ID from JWT
   useEffect(() => {
@@ -118,7 +125,11 @@ const UserPublicProfile = () => {
 
   if (loading) {
     return (
-      <div className="text-center text-gray-500 py-20">Loading profile...</div>
+      <div className="main_container">
+        <div className="profile_container w-full sm:w-[90%] md:w-[80%] m-auto mt-6 border border-gray-300 rounded-md">
+          <div className="p-10 text-center text-gray-500">Loading profile...</div>
+        </div>
+      </div>
     );
   }
 
@@ -132,7 +143,7 @@ const UserPublicProfile = () => {
   const fullName = onboarding.firstName
     ? `${onboarding.firstName} ${onboarding.lastName}`
     : profile.name;
-console.log(userId)
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "About":
@@ -141,23 +152,23 @@ console.log(userId)
         return <EducationTab education={onboarding.education || []} />;
       case "Experience":
         return <ExperienceTab experience={onboarding.experience || []} />;
-      case "Resumes":
-        return <ResumeTab onboarding={profile.onboarding} />;
       case "Skills":
         return <SkillsTab onboarding={profile.onboarding} />;
-       case "Posts":
-        return <MyPostsTab userId={userId}  />;
+      case "Posts":
+        return <MyPostsTab userId={userId} />;
       default:
         return null;
     }
-    
   };
 
   const showActions = currentUserId && currentUserId !== userId;
 
+  // Responsive layout wrapper
   return (
-    <>
-      <div className="w-[80%] min-h-[90vh] m-auto mb-20 bg-white rounded-2xl mt-6 overflow-hidden border border-gray-300">
+    <div className="main_container bg-[#f8fafc] min-h-[100vh]">
+      <div className="w-full sm:w-[95%] md:w-[80%] min-h-[90vh] m-auto mb-20 bg-white rounded-2xl mt-6 overflow-hidden border border-gray-300 shadow-md">
+
+        {/* Banner */}
         <div className="relative h-40 bg-gray-100 rounded-t-2xl overflow-hidden">
           {onboarding.banner ? (
             <img
@@ -195,8 +206,10 @@ console.log(userId)
             </div>
           )}
         </div>
-        <div className="flex justify-between items-center px-8 pt-4 pb-6">
-          <div className="flex items-center">
+        {/* Profile Info Row */}
+        <div className="flex flex-col md:flex-row justify-between items-center px-4 sm:px-8 pt-4 pb-6 gap-3 md:gap-0">
+          {/* Left: profile pic + info */}
+          <div className="flex flex-col md:flex-row items-center">
             <div className="relative">
               <img
                 src={
@@ -205,21 +218,22 @@ console.log(userId)
                     : "/default-avatar.png"
                 }
                 alt="Profile"
-                className="w-28 h-28 rounded-full border-4 border-white object-cover shadow -mt-14"
+                className="w-24 md:w-28 h-24 md:h-28 rounded-full border-4 border-white object-cover shadow -mt-12 md:-mt-14"
               />
             </div>
-            <div className="ml-4">
-              <p className="font-semibold text-xl">{fullName}</p>
+            <div className="ml-0 md:ml-4 mt-3 md:mt-0 text-center md:text-left">
+              <p className="font-semibold text-lg md:text-xl">{fullName}</p>
               <p className="text-gray-500 mt-1">
                 {onboarding.preferredRoles?.[0] || "Professional"}
               </p>
-              <p className="text-blue-500 text-bold font-bold">
+              <span className="text-blue-500 font-bold hover:underline cursor-default">
                 {profile.connections.length} Connections
-              </p>
+              </span>
             </div>
           </div>
+          {/* Right: actions */}
           {showActions && (
-            <div className="flex gap-2">
+            <div className="flex gap-2 mt-4 md:mt-0">
               {connectionStatus === "connect" && (
                 <button
                   onClick={handleConnect}
@@ -246,22 +260,48 @@ console.log(userId)
             </div>
           )}
         </div>
-        <div className="w-[95%] m-auto mt-6 flex gap-6 h-full">
-          <ProfileSidebarTabs
-            activeMain="account"
-            setActiveMain={() => {}}
-            activeSub={activeTab}
-            setActiveSub={setActiveTab}
-            isOwnProfile={false}
-            tabs={TABS}
-            showOnlyMainTabs={true}
-          />
-          <div className="w-full shadow rounded-2xl bg-gray-50 min-h-[300px] p-6">
-            {renderTabContent()}
+
+        {/* --- Responsive Tabs & Content --- */}
+        <div className="w-full px-0 sm:px-2 md:px-6 py-0 md:py-2">
+          <div className="block md:flex md:gap-6 w-full">
+            {/* Sidebar tabs */}
+            <div className="w-full md:w-64 sticky top-2 z-20">
+              {/* Horizontal (mobile) */}
+              <div className="block md:hidden border-b">
+                <ProfileSidebarTabs
+                  activeMain="account"
+                  setActiveMain={() => {}}
+                  activeSub={activeTab}
+                  setActiveSub={setActiveTab}
+                  isOwnProfile={false}
+                  tabs={TABS}
+                  showOnlyMainTabs={true}
+                  orientation="horizontal"
+                />
+              </div>
+              {/* Vertical (desktop) */}
+              <div className="hidden md:block">
+                <ProfileSidebarTabs
+                  activeMain="account"
+                  setActiveMain={() => {}}
+                  activeSub={activeTab}
+                  setActiveSub={setActiveTab}
+                  isOwnProfile={false}
+                  tabs={TABS}
+                  showOnlyMainTabs={true}
+                  orientation="vertical"
+                />
+              </div>
+            </div>
+            {/* Content */}
+            <div className="flex-1 w-full bg-gray-50 rounded-2xl min-h-[300px] p-2 sm:p-4 md:p-6 shadow-inner">
+              {renderTabContent()}
+            </div>
           </div>
         </div>
+
       </div>
-    </>
+    </div>
   );
 };
 
