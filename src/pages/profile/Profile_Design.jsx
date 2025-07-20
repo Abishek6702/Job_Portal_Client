@@ -20,11 +20,9 @@ const mainTabs = [
 ];
 
 const Profile_Design = () => {
-  // State for main tab and sub-tab
   const [activeMain, setActiveMain] = useState("account");
   const [activeSub, setActiveSub] = useState("Personal Information");
 
-  // Render content for detail area
   const renderDetail = () => {
     if (activeMain === "account") {
       switch (activeSub) {
@@ -55,14 +53,12 @@ const Profile_Design = () => {
       <Navbar />
       <div className="w-[80%] h-[100vh] m-auto mb-20 bg-white rounded-2xl mt-6 overflow-hidden border border-gray-300">
         <div>
-          {/* Cover Image */}
           <div className="relative h-32 sm:h-40 bg-gray-100">
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
               alt="Cover"
               className="w-full h-full object-cover rounded-t-2xl"
             />
-            {/* Profile Avatar */}
             <div className="absolute -bottom-20 left-6">
               <img
                 src="https://randomuser.me/api/portraits/men/32.jpg"
@@ -72,7 +68,6 @@ const Profile_Design = () => {
             </div>
           </div>
 
-          {/* Info and Actions */}
           <div className="flex flex-col sm:flex-row justify-between items-end sm:items-center px-16 pt-4 pb-6">
             <div className="flex items-center">
               <div className="ml-24">
@@ -80,7 +75,6 @@ const Profile_Design = () => {
                 <div className="text-gray-500 text-sm">367 friends</div>
               </div>
             </div>
-            {/* Action Buttons */}
             <div className="flex gap-2 mt-4 sm:mt-0">
               <button className="bg-blue-600 text-white px-5 py-1.5 rounded-full font-medium flex items-center gap-2 ">
                 <UserPlus size={18} />
@@ -94,7 +88,6 @@ const Profile_Design = () => {
           </div>
         </div>
 
-        {/* profile tabs */}
         <div className="w-[95%] m-auto mt-6 flex gap-6 h-full ">
           <Profile_Design_Tabs
             activeMain={activeMain}

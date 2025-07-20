@@ -3,9 +3,7 @@ import team from "../assets/about_team.svg";
 const About = () => {
   return (
     <section className="flex flex-col md:flex-row items-center bg-white rounded-2xl shadow-md p-8 md:p-12 max-w-5xl mx-auto mb-10 relative overflow-hidden">
-      {/* Decorative background shape */}
-
-      {/* Left: Text Content */}
+    
       <div className="md:w-1/2 z-10">
         <p className="text-blue-600 font-semibold mb-2 text-2xl">About Us</p>
         <h2 className="text-3xl font-bold mb-4">
@@ -34,7 +32,6 @@ const About = () => {
         </button>
       </div>
 
-      {/* Right: Image */}
       <div className="md:w-1/2 flex justify-center mt-8 md:mt-0 ">
         <img
           src={team}

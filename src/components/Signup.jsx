@@ -9,15 +9,12 @@ const SignupForm = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    // Candidate fields
     name: "",
     email: "",
     phone: "",
-    // Employer fields
     companyName: "",
     companyEmail: "",
     companyPhone: "",
-    // Common fields
     password: "",
     confirmPassword: "",
   });

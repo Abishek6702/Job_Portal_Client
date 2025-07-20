@@ -1,9 +1,8 @@
 import React from "react";
 
 const MainContent = ({ activeSection, profile }) => {
-  // You can expand this switch to render different sections
   switch (activeSection) {
-    case 1: // Profile Information
+    case 1: 
       return (
         <div className="flex-1 bg-white rounded-xl border p-8">
           <div className="font-bold text-2xl mb-6">Profile Information</div>

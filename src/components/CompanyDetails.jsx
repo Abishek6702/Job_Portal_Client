@@ -3,6 +3,7 @@ import { Link, Element, scroller } from "react-scroll";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppProvider";
 import { jwtDecode } from "jwt-decode";
+import nodata from "../assets/cuate.svg"
 
 const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
   const { state } = useLocation();
@@ -38,11 +39,11 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
   };
 
   const visibleJobs = jobs.slice(0, visibleCount);
-  // console.log("company detail selected:", companyDetails);
   if (!companyDetails || Object.keys(companyDetails).length === 0) {
     return (
-      <div className=" hidden main_conatiner h-fit p-4 md:grid col-span-8 mt-4  rounded-lg items-center justify-center  ">
-        <p className="font-semibold text-2xl text-gray-300"></p>
+      <div className=" hidden main_conatiner md:grid col-span-8 absolute mt-10 items-center justify-center  ">
+        <img src={nodata} className="w-80" />
+        <p className="text-center text-xl font-semibold text-gray-500 mt-4">No Results Found</p>
       </div>
     );
   }
@@ -50,11 +51,11 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
     console.log("job id for job : ", visibleJobs);
   }
   const getAppliedJobsFromToken = () => {
-    const token = localStorage.getItem("token"); // Get token from localStorage (or wherever you store it)
+    const token = localStorage.getItem("token"); 
     if (token) {
       const decodedToken = jwtDecode(token);
       console.log("token decoded", decodedToken);
-      return decodedToken.appliedjobs || []; // Assuming the appliedJobs are in the token
+      return decodedToken.appliedjobs || []; 
     }
     return [];
   };
@@ -63,7 +64,7 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
 
   return (
     <div
-      className={` hidden sm:block p-8 rounded-lg mt-4 border border-gray-300 h-[100vh] overflow-auto sticky top-0  bg-white  ${
+      className={` p-4 md:p-8 rounded-lg mt-4 border border-gray-300 h-[100vh] overflow-auto sticky top-0 bg-white  ${
         fullScreen
           ? `grid col-span-12 p-8 rounded-lg mt-4 border border-gray-300 bg-white`
           : `col-span-8`
@@ -100,7 +101,6 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
         </div>
       </div>
 
-      {/* Tabs (scroll links) */}
       <div className="sticky top-[-35px] bg-white z-10 p-2 border-b-1 border-gray-400 mt-8 flex gap-6">
         {tabs.map((tab) => (
           <Link
@@ -118,7 +118,6 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
         ))}
       </div>
 
-      {/* About Section */}
       <Element name="about-section" className="pt-8">
         <h2 className="text-lg font-semibold mb-2 ">About</h2>
         <p
@@ -165,7 +164,6 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
         </div>
       </Element>
 
-      {/* Jobs Section */}
       <Element
         name="jobs-section"
         className="mt-4 pt-4 border-t border-gray-300"
@@ -175,9 +173,9 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
         {jobs.length ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {visibleJobs.map((job, index) => {
-              const jobId = job._id.toString(); // Make sure to convert to string for comparison
+              const jobId = job._id.toString(); 
               const isApplied = appliedJobs.includes(jobId);
-              const isJobSaved = savedJobs.includes(job._id); // Check if job is saved
+              const isJobSaved = savedJobs.includes(job._id); 
               return (
                 <div
                   key={index}
@@ -192,23 +190,22 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
                     className="absolute right-5 top-5 cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
-                      toggleSaveJob(job._id); // Toggle save on click
+                      toggleSaveJob(job._id); 
                     }}
                   >
                     {isJobSaved ? (
                       <path
                         d="M11 0H3C1 0 0 1 0 3V18L7 14L14 18V3C14 1 13 0 11 0ZM9.5 7.75H4.5C4.086 7.75 3.75 7.414 3.75 7C3.75 6.586 4.086 6.25 4.5 6.25H9.5C9.914 6.25 10.25 6.586 10.25 7C10.25 7.414 9.914 7.75 9.5 7.75Z"
-                        fill="black" // Saved state color
+                        fill="black" 
                       />
                     ) : (
                       <path
                         d="M12 0.25H4C1.582 0.25 0.25 1.582 0.25 4V19C0.25 19.268 0.393023 19.5149 0.624023 19.6479C0.740023 19.716 0.87 19.75 1 19.75C1.128 19.75 1.25707 19.717 1.37207 19.651L8 15.863L14.6279 19.65C14.8599 19.783 15.146 19.782 15.376 19.647C15.607 19.513 15.75 19.266 15.75 18.999V3.99902C15.75 1.58202 14.418 0.25 12 0.25ZM14.25 17.707L8.37207 14.349C8.14207 14.217 7.85793 14.217 7.62793 14.349L1.75 17.708V4C1.75 2.423 2.423 1.75 4 1.75H12C13.577 1.75 14.25 2.423 14.25 4V17.707ZM11.75 6C11.75 6.414 11.414 6.75 11 6.75H5C4.586 6.75 4.25 6.414 4.25 6C4.25 5.586 4.586 5.25 5 5.25H11C11.414 5.25 11.75 5.586 11.75 6Z"
-                        fill="black" // Unsaved state color
+                        fill="black" 
                       />
                     )}
                   </svg>
 
-                  {/* Company Info */}
                   <div className="flex items-center gap-2">
                     <img
                       src={`${import.meta.env.VITE_API_BASE_URL}/${company_logo}`}
@@ -218,11 +215,9 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
                     <p className="font-bold text-gray-400">{company_name}</p>
                   </div>
 
-                  {/* Job Details */}
                   <p className="font-semibold mt-2">{job.position}</p>
                   <p className="text-sm text-gray-600 mt-1">{job.location}</p>
 
-                  {/* Apply Button & Date */}
                   <div className="mt-4 flex justify-between items-center">
                     <button
                       className="border px-4 py-1 cursor-pointer border-blue-600 rounded-full text-blue-600 font-semibold text-sm"
@@ -294,7 +289,6 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
         )}
       </Element>
 
-      {/* People Section - Static Design */}
       <Element
         name="people-section"
         className=" mt-4 pt-4 border-t-1 border-gray-300"
@@ -302,7 +296,6 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
         <h2 className="text-lg font-semibold mb-4">People</h2>
 
         <div className="flex flex-col sm:flex-row gap-6">
-          {/* Card 1 */}
           <div className="flex-1">
             <p className="text-sm font-medium mb-2">
               580 employees who studied industrial design and Product design
@@ -322,7 +315,6 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
             </div>
           </div>
 
-          {/* Card 2 */}
           <div className="flex-1">
             <p className="text-sm font-medium mb-2">
               26 employees work in {company_name}
@@ -343,7 +335,6 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
           </div>
         </div>
 
-        {/* Show More */}
         <div className="mt-6 text-right">
           <button className="text-medium font-large text-purple-600 hover:underline inline-flex items-center">
             <p className="font-bold cursor-pointer">Show More People </p>
@@ -365,7 +356,6 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
         </div>
       </Element>
 
-      {/* Life Section */}
       <Element
         name="life-section"
         className=" mt-4 pt-4 border-t-1 border-gray-300"

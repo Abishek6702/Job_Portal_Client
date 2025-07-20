@@ -24,10 +24,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import ConfirmModal from "../components/ConfirmModal.jsx";
 import SkillsTab from "../components/tabs/SkillsTab.jsx";
 import MyPostsTab from "../components/tabs/MyPostsTab.jsx";
+import MySettingsTab from "../components/tabs/MySettingsTab.jsx";
 
 const UserProfile = () => {
   const navigate = useNavigate();
-  const { userId: routeUserId } = useParams(); // If you use route params for profile
+  const { userId: routeUserId } = useParams(); 
   const [profile, setProfile] = useState(null);
   const [appliedJob, setAppliedJob] = useState([]);
   const token = localStorage.getItem("token");
@@ -61,12 +62,9 @@ const UserProfile = () => {
       const fetchId = routeUserId || userId;
       if (!fetchId) return;
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/api/auth/${fetchId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/${fetchId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (!res.ok) throw new Error("Failed to fetch profile");
         const data = await res.json();
         setProfile(data);
@@ -83,9 +81,7 @@ const UserProfile = () => {
     const fetchAppliedJobs = async () => {
       try {
         const response = await axios.get(
-          `${
-            import.meta.env.VITE_API_BASE_URL
-          }/api/applications/${userId}/applied-jobs`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/applications/${userId}/applied-jobs`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const applications = Array.isArray(response.data.appliedJobs)
@@ -185,17 +181,14 @@ const UserProfile = () => {
     );
   }
 
-  // Safe check for onboarding
   const onboarding = profile.onboarding || {};
   const fullName = onboarding.firstName
     ? `${onboarding.firstName} ${onboarding.lastName}`
     : profile.name;
   console.log("sms", profile);
 
-  // Is this the logged-in user's own profile?
   const isOwnProfile = userId && profile && userId === profile._id;
 
-  // Main tab content
   const renderDetail = () => {
     if (activeMain === "account") {
       switch (activeSub) {
@@ -239,7 +232,10 @@ const UserProfile = () => {
       );
     }
     if (activeMain === "myPosts" && isOwnProfile) {
-      return <MyPostsTab userId={userId} token={token} />;
+      return <MyPostsTab userId={userId} token={token} profile={profile}/>;
+    }
+    if (activeMain === "settings" && isOwnProfile) {
+      return <MySettingsTab userId={userId} token={token} />;
     }
 
     return null;
@@ -253,18 +249,14 @@ const UserProfile = () => {
 
   return (
     <>
-      {/* <Navbar /> */}
       <div className="main_container">
         <div className="w-[80%] min-h-[90vh] m-auto mb-20 bg-white rounded-2xl mt-6 overflow-hidden border border-gray-300">
-          {/* Banner */}
           <div className="relative h-40 bg-gray-100 rounded-t-2xl overflow-hidden">
             {profile.onboarding?.banner ? (
               <img
-                src={`${
-                  import.meta.env.VITE_API_BASE_URL
-                }/${profile.onboarding.banner.replace(/\\/g, "/")}`}
+                src={`${import.meta.env.VITE_API_BASE_URL}/${profile.onboarding.banner}`}
                 alt="Cover"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-fit"
               />
             ) : (
               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -290,16 +282,13 @@ const UserProfile = () => {
               </>
             )}
           </div>
-          {/* Info Row */}
           <div className="flex justify-between items-center px-8 pt-4 pb-6">
             <div className="flex items-center">
               <div className="relative">
                 <img
                   src={
                     profile.onboarding?.profileImage
-                      ? `${import.meta.env.VITE_API_BASE_URL}/${
-                          profile.onboarding.profileImage
-                        }`
+                      ? `${import.meta.env.VITE_API_BASE_URL}/${profile.onboarding.profileImage}`
                       : undefined
                   }
                   alt="Profile"
@@ -307,7 +296,7 @@ const UserProfile = () => {
                 />
                 <input
                   type="file"
-                  accept="image/*"  
+                  accept="image/*"
                   ref={profileImageInputRef}
                   style={{ display: "none" }}
                   onChange={handleProfileImageChange}
@@ -336,7 +325,6 @@ const UserProfile = () => {
                 </button>
               </div>
             </div>
-            {/* Right: Buttons */}
             <div className="flex gap-2">
               {!isOwnProfile && (
                 <>
@@ -388,14 +376,13 @@ const UserProfile = () => {
               onCancel={() => setShowModal(false)}
             />
           )}
-          {/* Modal for Edit Form */}
           {showEditForm && (
             <div
               className="fixed inset-0 tint flex items-center justify-center z-50"
               onClick={() => setShowCloseConfirm(true)}
             >
               <div
-                className="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative"
+                className="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative border h-[90vh] overflow-auto"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -424,7 +411,6 @@ const UserProfile = () => {
               </div>
             </div>
           )}
-          {/* Main Content: Sidebar + Detail */}
           <div className="w-[95%] m-auto mt-6 flex gap-6 h-full sticky top-0  mb-4">
             <ProfileSidebarTabs
               activeMain={activeMain}

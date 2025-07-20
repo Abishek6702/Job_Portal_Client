@@ -47,13 +47,11 @@ const SelectedApplications = () => {
   const [selectedExperience, setSelectedExperience] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
 
-  // Status modal states
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [statusModalApplication, setStatusModalApplication] = useState(null);
 
   const selectAllRef = useRef(null);
 
-  // Fetch applications on mount or jobId change
   useEffect(() => {
     const fetchApplications = async () => {
       try {
@@ -74,7 +72,6 @@ const SelectedApplications = () => {
         });
         const allApplications = await res.json();
 
-        // Only applications for this job and status "selected" or "not selected"
         const filteredApplications = allApplications.filter(
           (app) =>
             app.jobId &&
@@ -106,7 +103,6 @@ const SelectedApplications = () => {
     }
   }, [jobId]);
 
-  // Filtering and sorting
   const getFilteredAndSortedApplications = () => {
     let result = [...applications];
     if (selectedStatus) {
@@ -140,7 +136,6 @@ const SelectedApplications = () => {
 
   const filteredAndSortedApplications = getFilteredAndSortedApplications();
 
-  // Pagination
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentApplications = filteredAndSortedApplications.slice(
@@ -151,7 +146,6 @@ const SelectedApplications = () => {
     filteredAndSortedApplications.length / rowsPerPage
   );
 
-  // Update indeterminate state of Select All checkbox
   useEffect(() => {
     if (!selectAllRef.current) return;
 
@@ -165,7 +159,6 @@ const SelectedApplications = () => {
     }
   }, [selectedApplications, currentApplications]);
 
-  // Handlers
   const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const handleNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
@@ -216,7 +209,6 @@ const SelectedApplications = () => {
     });
   };
 
-  // Select individual application checkbox
   const handleSelectApplication = (appId) => {
     setSelectedApplications((prev) =>
       prev.includes(appId)
@@ -225,7 +217,6 @@ const SelectedApplications = () => {
     );
   };
 
-  // Select/Deselect all applications on current page
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectedApplications(currentApplications.map((app) => app._id));
@@ -234,7 +225,6 @@ const SelectedApplications = () => {
     }
   };
 
-  // Download all selected resumes with delay to avoid popup blocking
   const downloadSelectedResumes = () => {
     selectedApplications.forEach((appId, index) => {
       setTimeout(() => {
@@ -272,9 +262,7 @@ const SelectedApplications = () => {
         Selected & Not Selected{" "}
         <span className="text-blue-600">({applications.length})</span>
       </h2>
-      {/* Filters */}
       <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-        {/* Location Search */}
         <div className="relative">
           <input
             type="search"
@@ -287,7 +275,6 @@ const SelectedApplications = () => {
             <Search className="w-5 h-5" />
           </div>
         </div>
-        {/* Experience Filter */}
         <div className="relative">
           <select
             className="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 appearance-none pr-10 placeholder-gray-400 outline-none"
@@ -305,7 +292,6 @@ const SelectedApplications = () => {
             <ChevronDown />
           </div>
         </div>
-        {/* Status Filter */}
         <div className="relative">
           <select
             className="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 appearance-none pr-10 placeholder-gray-400 outline-none"
@@ -320,7 +306,6 @@ const SelectedApplications = () => {
             <ChevronDown />
           </div>
         </div>
-        {/* Date Sort */}
         <div className="relative">
           <select
             className="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 appearance-none pr-10 placeholder-gray-400 outline-none"
@@ -335,7 +320,6 @@ const SelectedApplications = () => {
             <ChevronDown />
           </div>
         </div>
-        {/* Clear Filters Button */}
         <div className="flex justify-center lg:justify-start">
           <button
             className="p-2 bg-blue-600 text-white font-semibold rounded-lg border border-gray-300 cursor-pointer"
@@ -344,7 +328,6 @@ const SelectedApplications = () => {
             Clear Filters
           </button>
         </div>
-        {/* Download Selected Resumes Button */}
         <div className="flex justify-center lg:justify-end">
           <button
             onClick={downloadSelectedResumes}
@@ -359,7 +342,6 @@ const SelectedApplications = () => {
           </button>
         </div>
       </div>
-      {/* Applications Table */}
       <div className="overflow-x-auto rounded-lg shadow-sm">
         <table className="min-w-full divide-y divide-gray-200 bg-white">
           <thead className="bg-gray-50 sticky top-0">
@@ -448,7 +430,6 @@ const SelectedApplications = () => {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap flex justify-center gap-2">
-                  {/* View Details Button */}
                   <button
                     title="View Details"
                     className="p-2 rounded bg-gray-100 hover:bg-blue-100"
@@ -456,7 +437,6 @@ const SelectedApplications = () => {
                   >
                     <Eye className="w-4 h-4 text-blue-600" />
                   </button>
-                  {/* Change Status Button */}
                   <button
                     onClick={() =>
                       window.open(
@@ -475,7 +455,6 @@ const SelectedApplications = () => {
           </tbody>
         </table>
       </div>
-      {/* Pagination */}
       <div className="flex justify-between items-center mt-6">
         <button
           className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
@@ -495,7 +474,6 @@ const SelectedApplications = () => {
           Next
         </button>
       </div>
-      {/* Details Modal */}
       {isDetailsModalOpen && selectedApplication && (
         <InProgressDetailModel
           application={selectedApplication}
@@ -503,14 +481,12 @@ const SelectedApplications = () => {
           onEditStatus={openStatusModal}
         />
       )}
-      {/* Status Change Modal */}
       {isStatusModalOpen && statusModalApplication && (
         <InprogressApplicationStatusChange
           application={statusModalApplication}
           onClose={() => setIsStatusModalOpen(false)}
           onStatusUpdated={() => {
             setIsStatusModalOpen(false);
-            // Optionally refetch applications here
           }}
         />
       )}

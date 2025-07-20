@@ -1,3 +1,4 @@
+import { FileText, Lightbulb } from 'lucide-react';
 import React from 'react';
 
 const SkillsTab = ({ onboarding }) => {
@@ -9,7 +10,9 @@ const SkillsTab = ({ onboarding }) => {
 
   return (
     <div className="p-6">
-      <h2 className="text-lg font-semibold mb-4">Skills</h2>
+      <h3 className="font-bold text-xl mb-8 flex items-center gap-3 text-blue-800">
+        <Lightbulb size={28} /> Skills
+      </h3>
       {skills.length === 0 ? (
         <p className="text-gray-500">No skills added yet.</p>
       ) : (

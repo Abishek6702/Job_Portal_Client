@@ -17,7 +17,6 @@ const ApplicationDetailsModal = ({ application, onClose, onEditStatus }) => {
   return (
     <div className="fixed inset-0 z-50 tint flex justify-center items-start overflow-y-auto">
       <div className="bg-white rounded-2xl w-full max-w-3xl m-2 shadow-xl overflow-hidden">
-        {/* Header */}
         <div className="flex justify-between items-center px-6 py-4 bg-gray-50">
           <div className="flex gap-2">
             <h2 className="text-xl font-semibold text-gray-900">
@@ -56,7 +55,6 @@ const ApplicationDetailsModal = ({ application, onClose, onEditStatus }) => {
           </button>
         </div>
 
-        {/* Content */}
         <div className="px-6 py-6 space-y-6">
           <div className="flex justify-end">
             <button
@@ -68,7 +66,6 @@ const ApplicationDetailsModal = ({ application, onClose, onEditStatus }) => {
             </button>
           </div>
 
-          {/* Contact Information */}
           <section className="rounded-lg shadow-sm p-5 mt-[-14px]">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
               Contact Information
@@ -88,7 +85,6 @@ const ApplicationDetailsModal = ({ application, onClose, onEditStatus }) => {
           
 
 
-          {/* Resume */}
           <section className="rounded-lg shadow-sm p-5">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Resume</h3>
             <div className="flex items-center space-x-4 bg-gray-50 p-4 rounded-md">
@@ -119,7 +115,6 @@ const ApplicationDetailsModal = ({ application, onClose, onEditStatus }) => {
             </div>
           </section>
 
-          {/* --- NEW: Education Section --- */}
           <section className="rounded-lg shadow-sm p-5 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
               Education
@@ -150,7 +145,6 @@ const ApplicationDetailsModal = ({ application, onClose, onEditStatus }) => {
             )}
           </section>
 
-          {/* --- NEW: Experience Details Section --- */}
           <section className="rounded-lg shadow-sm p-5 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
               Detailed Experience
@@ -181,7 +175,6 @@ const ApplicationDetailsModal = ({ application, onClose, onEditStatus }) => {
             )}
           </section>
 
-          {/* --- NEW: Questions and Answers Section --- */}
           <section className="rounded-lg shadow-sm p-5 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
               Questions &amp; Answers

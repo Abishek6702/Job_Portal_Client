@@ -32,7 +32,6 @@ const blogs = [
 
 const Blogs = () => (
   <section className="bg-blue-50 py-16 relative overflow-hidden">
-    {/* Decorative shapes */}
 
     <div className="relative z-10 max-w-6xl mx-auto px-4">
       <p className="text-[#078bf7] font-semibold text-3xl">Blogs</p>

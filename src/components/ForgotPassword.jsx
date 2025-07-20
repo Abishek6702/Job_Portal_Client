@@ -27,7 +27,6 @@ const ForgotPassword = () => {
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/send-reset-otp`, {
-
         method: "POST",
         headers: {
           "Content-Type": "application/json",

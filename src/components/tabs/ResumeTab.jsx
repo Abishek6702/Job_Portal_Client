@@ -16,16 +16,12 @@ const ResumeTab = ({ onboarding }) => {
     const formData = new FormData();
     formData.append("resume", file);
     try {
-      await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/api/onboarding/resume`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/onboarding/resume`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       window.location.reload();
     } catch (error) {
       alert("Failed to upload resume.");
@@ -34,7 +30,7 @@ const ResumeTab = ({ onboarding }) => {
 
   return (
     <div className=" rounded-2xl  p-8">
-      <h3 className="font-bold text-2xl mb-8 flex items-center gap-3 text-blue-800">
+      <h3 className="font-bold text-xl mb-8 flex items-center gap-3 text-blue-800">
         <FileText size={28} /> Resume
       </h3>
       <div className="flex flex-col md:flex-row md:items-center gap-6">
@@ -48,9 +44,7 @@ const ResumeTab = ({ onboarding }) => {
                 </div>
                 <div className="flex items-center justify-center gap-4 mt-2">
                   <a
-                    href={`${import.meta.env.VITE_API_BASE_URL}/${
-                      onboarding.resume
-                    }`}
+                    href={`${import.meta.env.VITE_API_BASE_URL}/${onboarding.resume}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white rounded px-4 py-2 text-sm font-medium transition"

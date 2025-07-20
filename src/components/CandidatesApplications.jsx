@@ -7,8 +7,8 @@ const CandidatesApplication = () => {
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState([]);
-  const [searchFilter, setSearchFilter] = useState(""); // Combined search for company name and job title
-  const [locationFilter, setLocationFilter] = useState(""); // Location search
+  const [searchFilter, setSearchFilter] = useState(""); 
+  const [locationFilter, setLocationFilter] = useState(""); 
 
   useEffect(() => {
     const fetchJobsForEmployer = async () => {
@@ -56,7 +56,7 @@ const CandidatesApplication = () => {
         );
 
         setJobs(myJobs);
-        setFilteredJobs(myJobs); // Set filtered jobs initially to all jobs
+        setFilteredJobs(myJobs); 
       } catch (error) {
         console.error("Error fetching jobs:", error);
       } finally {
@@ -94,13 +94,13 @@ const CandidatesApplication = () => {
     const diffInWeeks = Math.floor(diffInDays / 7);
 
     if (diffInDays < 1) {
-      return `${Math.floor(diffInHours)}h`; // Less than 1 day, show hours
+      return `${Math.floor(diffInHours)}h`; 
     } else if (diffInDays < 7) {
-      return `${diffInDays}d`; // Less than a week, show days
+      return `${diffInDays}d`; 
     } else if (diffInWeeks < 4) {
-      return `${diffInWeeks}w`; // Less than 4 weeks, show weeks
+      return `${diffInWeeks}w`; 
     } else {
-      return `${Math.floor(diffInDays / 30)}m`; // More than 4 weeks, show months
+      return `${Math.floor(diffInDays / 30)}m`; 
     }
   };
 
@@ -109,17 +109,14 @@ const CandidatesApplication = () => {
       const lowerCaseSearchFilter = searchFilter.toLowerCase();
       const lowerCaseLocationFilter = locationFilter.toLowerCase();
 
-      // Check combined filter (company name and job title)
       const matchesSearch =
         job.companyId.company_name.toLowerCase().includes(lowerCaseSearchFilter) ||
         job.position.toLowerCase().includes(lowerCaseSearchFilter);
 
-      // Check location filter
       const matchesLocation = job.location
         .toLowerCase()
         .includes(lowerCaseLocationFilter);
 
-      // Check workplace filter
 
       return matchesSearch && matchesLocation;
     });
@@ -133,16 +130,14 @@ const CandidatesApplication = () => {
 
   const getApplicationCount = (jobId) => {
     return applications.filter(app => {
-      // Check if app.jobId exists and has an _id property
       if (app.jobId && app.jobId._id) {
-        // Only count if status is "pending" or "rejected"
         const status = app.status?.toLowerCase();
         return (
           app.jobId._id === jobId &&
           (status === "pending" || status === "rejected")
         );
       }
-      return false; // Return false for applications where jobId is missing or invalid
+      return false; 
     }).length;
   };
   
@@ -158,7 +153,6 @@ const CandidatesApplication = () => {
         <div className="px-6 py-4 min-h-screen bg-white">
           <h2 className="text-2xl font-bold mb-4">Jobs Posted</h2>
 
-          {/* Search Filters */}
           <div className="">
             <div className="mb-2 sm:flex items-center justify-center sm:border border-gray-300 rounded-full sm:w-[60%] m-auto">
               <div className=" w-full sm:w-[50%] text-gray-500">
@@ -188,7 +182,6 @@ const CandidatesApplication = () => {
             </div>
           </div>
 
-          {/* Job List */}
           {loading ? (
             <p>Loading jobs...</p>
           ) : filteredJobs.length === 0 ? (
@@ -203,7 +196,6 @@ const CandidatesApplication = () => {
                 >
                   <div className="card w-full">
                     <div className="relative card-container border border-gray-300 rounded-md p-4 h-full flex flex-col justify-between">
-                      {/* Top Row: Company Info & Bookmark */}
                       <div className="card-title flex items-center justify-between">
                         <div className="company-name flex gap-2">
                           <img
@@ -217,9 +209,8 @@ const CandidatesApplication = () => {
                         </div>
                       </div>
 
-                      {/* Position & Location */}
                       <div className="card-body mt-4">
-                        <p className="text-xl md:text-2xl font-semibold">
+                        <p className="text-xl md:text-2xl font-semibold truncate max-w-[370px]">
                           {job.position}
                         </p>
                         <p className="font-medium text-gray-600">

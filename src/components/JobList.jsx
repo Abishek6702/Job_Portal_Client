@@ -254,7 +254,7 @@ const JobList = () => {
                   </div>
 
                   <div className="card-body mt-4">
-                    <p className="text-xl md:text-2xl font-semibold">
+                    <p className="text-xl md:text-2xl font-semibold truncate max-w-[370px]">
                       {job.position}
                     </p>
                     <p className="font-medium text-gray-600">{job.location}</p>

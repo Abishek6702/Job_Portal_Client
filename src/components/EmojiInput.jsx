@@ -16,7 +16,6 @@ const EmojiInput = ({
   const pickerRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Close picker on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -41,7 +40,6 @@ const EmojiInput = ({
     return () => {
       if (imagePreview) URL.revokeObjectURL(imagePreview);
     };
-    // eslint-disable-next-line
   }, [imageFile]);
 
   const handleEmojiClick = (emojiData) => {
@@ -63,7 +61,6 @@ const EmojiInput = ({
 
   return (
     <div className="relative flex flex-col w-full">
-      {/* Image Preview */}
       {imagePreview && (
         <div className="mb-2 flex items-center relative">
           <img
@@ -126,7 +123,6 @@ const EmojiInput = ({
             />
           </div>
         )}
-        {/* Image upload button */}
         <input
           type="file"
           accept="image/*"

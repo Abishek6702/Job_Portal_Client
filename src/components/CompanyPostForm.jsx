@@ -9,7 +9,6 @@ export default function CompanyPostForm() {
   const steps = [
     "Company Info",
     "About",
-    "People",
     "Images",
     "Submit",
   ];
@@ -130,7 +129,7 @@ export default function CompanyPostForm() {
   };
 
   const handleConfirmExit = () => {
-    navigate(-1); // or any other logic
+    navigate(-1); 
   };
 
   return (
@@ -292,7 +291,7 @@ export default function CompanyPostForm() {
       )}
 
       {/* Step 2: People */}
-      {step === 2 && (
+      {/* {step === 2 && (
         <div className="flex flex-col space-y-4 w-[80%] m-auto">
           <h3 className="text-lg font-semibold mb-2">People</h3>
           {formData.people.map((person, index) => (
@@ -315,10 +314,10 @@ export default function CompanyPostForm() {
             + Add Person
           </button>
         </div>
-      )}
+      )} */}
 
       {/* Step 3: Images */}
-      {step === 3 && (
+      {step === 2 && (
         <div className="flex flex-col space-y-4 w-[80%] m-auto">
           <div>
             <label className="block text-lg font-semibold mb-1">Company Logo</label>
@@ -342,7 +341,7 @@ export default function CompanyPostForm() {
       )}
 
           {/* Step 4: Submit */}
-          {step === 4 && (
+          {step === 3 && (
         <div className="flex flex-col space-y-6 w-full max-w-2xl mx-auto px-4">
             <div>
             <p className="text-center">Please review all the information before submitting.</p>

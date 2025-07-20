@@ -5,10 +5,10 @@ import { Search } from "lucide-react";
 import { initSocket } from "../utils/socket";
 import MyNetworks from "../components/MyNetworks";
 import UserCard from "../components/UserCard";
-import Connections from "../components/Connections"; // <-- Import your Connections component
+import Connections from "../components/Connections";
 
 const Network = () => {
-  const [allUsers, setAllUsers] = useState([]); // All users for "All" tab
+  const [allUsers, setAllUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [socket, setSocket] = useState(null);
@@ -20,7 +20,6 @@ const Network = () => {
   const queryParams = new URLSearchParams(location.search);
   const activeTab = queryParams.get("tab") || "all";
 
-  // Get current user ID from JWT and setup socket
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -36,7 +35,6 @@ const Network = () => {
     }
   }, []);
 
-  // Fetch current user's data (connections, sentRequests, etc.)
   useEffect(() => {
     if (currentUserId) {
       fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/${currentUserId}`)
@@ -46,7 +44,6 @@ const Network = () => {
     }
   }, [currentUserId]);
 
-  // Fetch all users (for "All" tab)
   useEffect(() => {
     const token = localStorage.getItem("token");
     setLoading(true);
@@ -61,7 +58,6 @@ const Network = () => {
       .catch(() => setLoading(false));
   }, []);
 
-  // Filter users for "All" tab
   const filteredUsers = allUsers
     .filter((user) => {
       if (user._id === currentUserId) return false;
@@ -77,7 +73,6 @@ const Network = () => {
       return name.toLowerCase().includes(search.toLowerCase());
     });
 
-  // Counts for sidebar
   const connectionCount = currentUserData?.connections?.length || 0;
   const allCount = allUsers.filter(
     (user) =>
@@ -87,12 +82,10 @@ const Network = () => {
       !currentUserData?.sentRequests?.includes(user._id)
   ).length;
 
-  // Handle sidebar tab change
   const handleTabChange = (tab) => {
     navigate(`/network?tab=${tab}`);
-    setSearch(""); // Clear search on tab change
+    setSearch("");
   };
-  // Filter connections from allUsers
   const connectedUsers = allUsers.filter((user) =>
     currentUserData?.connections?.includes(user._id)
   );
@@ -101,10 +94,11 @@ const Network = () => {
     <>
       <div className="w-[95%] mx-auto py-8 ">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold hidden md:block">Connect With Professionals</h2>
+          <h2 className="text-2xl font-semibold hidden md:block">
+            Connect With Professionals
+          </h2>
           {activeTab === "all" && (
-      <div className="m-auto md:m-0 relative">
-
+            <div className="m-auto md:m-0 relative">
               <input
                 type="text"
                 className="border rounded-full px-4 py-2 w-64 outline-none border-gray-300"
@@ -124,7 +118,7 @@ const Network = () => {
               counts={{
                 all: allCount,
                 connections: connectionCount,
-                groups: 0, // update when groups are implemented
+                groups: 0,
               }}
             />
           </div>

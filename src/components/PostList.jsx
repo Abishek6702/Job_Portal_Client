@@ -1,5 +1,6 @@
 import React from "react";
 import Post from "./Post";
+import nodata from "../assets/cuate.svg"
 
 const PostList = ({ posts, profile, loading }) => {
   if (loading) {
@@ -7,7 +8,8 @@ const PostList = ({ posts, profile, loading }) => {
   }
 
   if (!posts || posts.length === 0) {
-    return <div className="text-center py-8">No posts available. Be the first to post!</div>;
+    return <div className="text-center py-8">
+      <img src={nodata} className="w-60 m-auto" />No posts available. Be the first to post!</div>;
   }
   console.log(posts)
 

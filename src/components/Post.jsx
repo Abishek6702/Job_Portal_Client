@@ -13,24 +13,21 @@ import { Smile } from "lucide-react";
 import EmojiPicker from "emoji-picker-react";
 import { useRef } from "react";
 
-// Helper to get full image URL or fallback avatar
 const getImageUrl = (relativePath, fallbackName = "User") => {
   if (relativePath && relativePath.trim() !== "") {
-    // Normalize path: replace backslashes with forward slashes
     const normalizedPath = relativePath.replace(/\\/g, "/");
 
-    // Check if path already includes the base directory
     if (normalizedPath.startsWith("uploads/")) {
       return `${import.meta.env.VITE_API_BASE_URL}/${normalizedPath}`;
     }
-    return `${import.meta.env.VITE_API_BASE_URL}/uploads/images/${normalizedPath}`;
+    return `${
+      import.meta.env.VITE_API_BASE_URL
+    }/uploads/images/${normalizedPath}`;
   }
-  // Fallback avatar (ui-avatars.com)
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}`;
 };
 
 const Post = ({ post, profile }) => {
-  // Defensive: handle both string and object for like
   const myId = profile?._id;
   const [isLiked, setIsLiked] = useState(
     post.likes.some((like) =>
@@ -43,9 +40,8 @@ const Post = ({ post, profile }) => {
   const [comments, setComments] = useState(post.comments);
   const [newComment, setNewComment] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-const emojiPickerRef = useRef(null);
-const inputRef = useRef(null);
-
+  const emojiPickerRef = useRef(null);
+  const inputRef = useRef(null);
 
   const [showAllComments, setShowAllComments] = useState(false);
 
@@ -57,7 +53,6 @@ const inputRef = useRef(null);
     ? sortedComments
     : sortedComments.slice(0, 1);
 
-  // Debug: log post and profile data
   useEffect(() => {
     console.log("Post data from backend:", post);
     console.log("Post author image:", post.author?.onboarding?.profileImage);
@@ -95,7 +90,6 @@ const inputRef = useRef(null);
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      // Toggle like state based on backend response
       setIsLiked(!isLiked);
       setLikeCount(
         res.data.likes ? res.data.likes.length : likeCount + (isLiked ? -1 : 1)
@@ -122,39 +116,38 @@ const inputRef = useRef(null);
   };
 
   const handleEmojiClick = (emojiData) => {
-  const input = inputRef.current;
-  const start = input.selectionStart;
-  const end = input.selectionEnd;
-  const updated =
-    newComment.substring(0, start) + emojiData.emoji + newComment.substring(end);
+    const input = inputRef.current;
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    const updated =
+      newComment.substring(0, start) +
+      emojiData.emoji +
+      newComment.substring(end);
 
-  setNewComment(updated);
-  setTimeout(() => input.focus(), 0);
-  setShowEmojiPicker(false);
-};
-
-
-  useEffect(() => {
-  const handleClickOutside = (e) => {
-    if (
-      emojiPickerRef.current &&
-      !emojiPickerRef.current.contains(e.target) &&
-      !inputRef.current.contains(e.target)
-    ) {
-      setShowEmojiPicker(false);
-    }
+    setNewComment(updated);
+    setTimeout(() => input.focus(), 0);
+    setShowEmojiPicker(false);
   };
 
-  if (showEmojiPicker) {
-    document.addEventListener("mousedown", handleClickOutside);
-  }
-  return () => document.removeEventListener("mousedown", handleClickOutside);
-}, [showEmojiPicker]);
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(e.target) &&
+        !inputRef.current.contains(e.target)
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
 
+    if (showEmojiPicker) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showEmojiPicker]);
 
   return (
     <div className="bg-white rounded-2xl shadow p-4 mb-4">
-      {/* Post header */}
       <div className="flex items-center gap-3 mb-3">
         <img
           src={getImageUrl(
@@ -172,26 +165,25 @@ const inputRef = useRef(null);
         </span>
       </div>
 
-      {/* Post content */}
       <p className="mb-3">{post.content}</p>
       {post.image && (
         <img
           src={
             post.image.startsWith("uploads/")
-              ? `${import.meta.env.VITE_API_BASE_URL}/${post.image.replace(/\\/g, "/")}`
-              : `${import.meta.env.VITE_API_BASE_URL}/uploads/resources/${post.image.replace(
+              ? `${import.meta.env.VITE_API_BASE_URL}/${post.image.replace(
                   /\\/g,
                   "/"
                 )}`
+              : `${
+                  import.meta.env.VITE_API_BASE_URL
+                }/uploads/resources/${post.image.replace(/\\/g, "/")}`
           }
           alt="Post"
           className="w-full rounded-lg mb-3"
         />
       )}
 
-      {/* Action buttons */}
       <div className="flex border-b border-gray-300  py-2 mb-3 text-gray-500 text-md font-semibold">
-        {/* Like Button */}
         <button onClick={handleLike} className="flex items-center px-4 py-1">
           {isLiked ? (
             <>
@@ -209,20 +201,17 @@ const inputRef = useRef(null);
           )}
         </button>
 
-        {/* Comment Button */}
         <button className="flex items-center px-4 py-1 ">
           <MessageCircle className="w-4 h-4 mr-1" />
           {comments.length} Comment
         </button>
 
-        {/* Share Button */}
         <button className="flex items-center px-4 py-1 ">
           <Share2 className="w-4 h-4 mr-1" />
           Share
         </button>
       </div>
 
-      {/* Comments section */}
       <div className="space-y-2">
         {visibleComments.map((comment, index) => {
           const commentUserImg = getImageUrl(
@@ -252,7 +241,6 @@ const inputRef = useRef(null);
           );
         })}
 
-        {/* Toggle Button */}
         {comments.length > 1 && (
           <button
             onClick={() => setShowAllComments((prev) => !prev)}
@@ -264,50 +252,51 @@ const inputRef = useRef(null);
           </button>
         )}
 
-        {/* Add comment */}
         <div className="flex gap-2 mt-3 relative">
-  <img
-    src={getImageUrl(profile?.onboarding?.profileImage, profile?.name)}
-    alt={profile?.name || "You"}
-    className="w-8 h-8 rounded-full"
-  />
-  <div className="flex-1 relative">
-    <input
-      ref={inputRef}
-      type="text"
-      className="w-full bg-gray-100 rounded-full px-4 py-2 outline-none pr-10"
-      placeholder="Write a comment..."
-      value={newComment}
-      onChange={(e) => setNewComment(e.target.value)}
-    />
-    <button
-      type="button"
-      className="absolute right-10 top-2 text-gray-500 hover:text-gray-700"
-      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-    >
-      <Smile className="w-5 h-5" />
-    </button>
-    <button
-      onClick={handleComment}
-      className="absolute right-2 top-1.5 text-blue-500"
-    >
-      <SendHorizonal />
-    </button>
-    {showEmojiPicker && (
-      <div ref={emojiPickerRef} className="absolute bottom-full right-0 z-50">
-        <EmojiPicker
-          onEmojiClick={handleEmojiClick}
-          width={320}
-          height={350}
-          theme="light"
-          previewConfig={{ showPreview: false }}
-          frequentlyUsedEmoji={[]}
-        />
-      </div>
-    )}
-  </div>
-</div>
-
+          <img
+            src={getImageUrl(profile?.onboarding?.profileImage, profile?.name)}
+            alt={profile?.name || "You"}
+            className="w-8 h-8 rounded-full"
+          />
+          <div className="flex-1 relative">
+            <input
+              ref={inputRef}
+              type="text"
+              className="w-full bg-gray-100 rounded-full px-4 py-2 outline-none pr-10"
+              placeholder="Write a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <button
+              type="button"
+              className="absolute right-10 top-2 text-gray-500 hover:text-gray-700"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
+              <Smile className="w-5 h-5" />
+            </button>
+            <button
+              onClick={handleComment}
+              className="absolute right-2 top-1.5 text-blue-500"
+            >
+              <SendHorizonal />
+            </button>
+            {showEmojiPicker && (
+              <div
+                ref={emojiPickerRef}
+                className="absolute bottom-full right-0 z-50"
+              >
+                <EmojiPicker
+                  onEmojiClick={handleEmojiClick}
+                  width={320}
+                  height={350}
+                  theme="light"
+                  previewConfig={{ showPreview: false }}
+                  frequentlyUsedEmoji={[]}
+                />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

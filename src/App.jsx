@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import LoginForm from "./components/LoginForm";
 import ForgotPassword from "./components/ForgotPassword";
 import VerifyOtp from "./components/VerifyOtp";
@@ -9,7 +11,6 @@ import ResetPassword from "./components/ResetPassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import UserDashboard from "./pages/UserDashboard";
 import EmployerDashboard from "./pages/EmployerDashboard";
-// import Navbar from "./components/Navbar";
 import Resumes from "./pages/Resumes";
 import Companies from "./pages/Companies";
 import ELearning from "./pages/ELearning";
@@ -42,6 +43,8 @@ import UserPublicProfile from "./pages/UserPublicProfile";
 import Messages from "./pages/Messages";
 import { ToastContainer } from "react-toastify";
 import NotificationModal from "./pages/NotificationPage";
+import InterviewPrepration from "./pages/InterviewPrepration";
+import ScoreChecker from "./pages/ScoreChecker";
 
 function App() {
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -57,59 +60,295 @@ function App() {
       }
     }
   }, []);
-  console.log("sa", currentUserId);
 
   return (
     <>
-    <ToastContainer    position="top-right" autoClose={1500} />
+      <ToastContainer position="top-right" autoClose={1500} />
       <Routes>
-        {/* Routes WITHOUT Navbar */}
+        {/* PUBLIC ROUTES (NO TOKEN REQUIRED) */}
         <Route path="/" element={<LoginForm />} />
         <Route path="/forget-password" element={<ForgotPassword />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/signup" element={<SignupForm />} />
-        <Route path="/onbordingform" element={<OnboardingForm />} />
-        <Route path="/jobapplicationform" element={<JobApplicationForm />} />
-        <Route path="/employer-dashboard/*" element={<EmployerDashboard />} />
-        <Route path="/job-post" element={<JobPostForm />} />
 
-        {/* Routes WITH Navbar */}
+        {/*PROTECTED ROUTES  */}
+        <Route
+          path="/onbordingform"
+          element={
+            <ProtectedRoute>
+              <OnboardingForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/jobapplicationform"
+          element={
+            <ProtectedRoute>
+              <JobApplicationForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/employer-dashboard/*"
+          element={
+            <ProtectedRoute>
+              <EmployerDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/job-post"
+          element={
+            <ProtectedRoute>
+              <JobPostForm />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* PROTECTED ROUTES (WITH NAVBAR VIA MAINLAYOUT)*/}
+        {/* Protected routes make the navigate after closing and opening tabs if token expired navigate to main page */}
         <Route element={<MainLayout currentUserId={currentUserId} />}>
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/employee-dashboard" element={<UserDashboard />} />
-          <Route path="/jobs" element={<JobBoard />} />
-          <Route path="/resumes" element={<Resumes />} />
-          <Route path="/companies" element={<Companies />} />
-          <Route path="/e-learning" element={<ELearning />} />
-          <Route path="/network" element={<Network />} />
-          <Route path="/submitsucess" element={<SubmitFormSucess />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/Employer-sidebar" element={<EmployerSideBar />} />
-          <Route path="/footer" element={<Footer />} />
-          <Route path="/job-sucess" element={<JobPostSucess />} />
-          <Route path="/job-list" element={<JobList />} />
-          <Route path="/company-post" element={<CompanyPostForm />} />
-          <Route path="/delete-confirm" element={<DeleteConfirmation />} />
-          <Route path="/exit-confirm" element={<ExitConfirmation />} />
-          <Route path="/employer-navbar" element={<EmployerNavbar />} />
-          <Route path="/curousel" element={<AutoCarousel />} />
+          <Route
+            path="/admin-dashboard"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/employee-dashboard"
+            element={
+              <ProtectedRoute>
+                <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/jobs"
+            element={
+              <ProtectedRoute>
+                <JobBoard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resumes"
+            element={
+              <ProtectedRoute>
+                <Resumes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/companies"
+            element={
+              <ProtectedRoute>
+                <Companies />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/e-learning"
+            element={
+              <ProtectedRoute>
+                <ELearning />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/network"
+            element={
+              <ProtectedRoute>
+                <Network />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/submitsucess"
+            element={
+              <ProtectedRoute>
+                <SubmitFormSucess />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Employer-sidebar"
+            element={
+              <ProtectedRoute>
+                <EmployerSideBar />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/footer"
+            element={
+              <ProtectedRoute>
+                <Footer />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/job-sucess"
+            element={
+              <ProtectedRoute>
+                <JobPostSucess />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/job-list"
+            element={
+              <ProtectedRoute>
+                <JobList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/company-post"
+            element={
+              <ProtectedRoute>
+                <CompanyPostForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/delete-confirm"
+            element={
+              <ProtectedRoute>
+                <DeleteConfirmation />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/exit-confirm"
+            element={
+              <ProtectedRoute>
+                <ExitConfirmation />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/employer-navbar"
+            element={
+              <ProtectedRoute>
+                <EmployerNavbar />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curousel"
+            element={
+              <ProtectedRoute>
+                <AutoCarousel />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/job-application/:jobId"
-            element={<ApplicationListing />}
+            element={
+              <ProtectedRoute>
+                <ApplicationListing />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/applied-jobs" element={<AppliedJobs />} />
-          <Route path="/landing" element={<LandingPage />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/feeds" element={<Feeds />} />
-          <Route path="/profile-design" element={<Profile_Design />} />
+          <Route
+            path="/applied-jobs"
+            element={
+              <ProtectedRoute>
+                <AppliedJobs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/landing"
+            element={
+              <ProtectedRoute>
+                <LandingPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/feeds"
+            element={
+              <ProtectedRoute>
+                <Feeds />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile-design"
+            element={
+              <ProtectedRoute>
+                <Profile_Design />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/notifications"
-            element={<NotificationPage userId={currentUserId} />}
+            element={
+              <ProtectedRoute>
+                <NotificationPage userId={currentUserId} />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/profile/:userId" element={<UserPublicProfile />} />
-          <Route path="/messages/*" element={<Messages/>}/>
-          <Route path="/notifications_model" element={<NotificationModal/>}/>
+          <Route
+            path="/profile/:userId"
+            element={
+              <ProtectedRoute>
+                <UserPublicProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/messages/*"
+            element={
+              <ProtectedRoute>
+                <Messages />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications_model"
+            element={
+              <ProtectedRoute>
+                <NotificationModal />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interview-prep"
+            element={
+              <ProtectedRoute>
+                <InterviewPrepration />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/score-checker"
+            element={
+              <ProtectedRoute>
+                <ScoreChecker />
+              </ProtectedRoute>
+            }
+          />
         </Route>
       </Routes>
     </>

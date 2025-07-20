@@ -16,7 +16,6 @@ export default function InprogressApplicationStatusChange({
   onClose,
   onStatusUpdated,
 }) {
-  // For single: use application.status/notes, for bulk: empty
   const [selectedStatus, setSelectedStatus] = useState(
     isBulk ? "" : application?.status || ""
   );
@@ -24,7 +23,6 @@ export default function InprogressApplicationStatusChange({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Only render if valid
   if (!isBulk && !application) return null;
   if (isBulk && (!applicationIds || applicationIds.length === 0)) return null;
 
@@ -35,7 +33,6 @@ export default function InprogressApplicationStatusChange({
       setError("Please select a status");
       return;
     }
-    // For single, skip if no change
     if (
       !isBulk &&
       selectedStatus === application.status &&
@@ -94,7 +91,6 @@ export default function InprogressApplicationStatusChange({
   return (
     <div className="fixed inset-0 tint flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative border border-gray-300">
-        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 text-2xl font-bold"
@@ -103,14 +99,12 @@ export default function InprogressApplicationStatusChange({
         >
           &times;
         </button>
-        {/* Title */}
         <h2 className="text-2xl font-semibold mb-4">
           {isBulk
             ? `Change Status for ${applicationIds.length} Applications`
             : "Change Status"}
         </h2>
         <hr className="mb-4 text-gray-300" />
-        {/* Current Status (only for single) */}
         {!isBulk && (
           <div className="mb-4 flex items-center gap-2">
             <span className="font-medium">Current Status :</span>
@@ -123,7 +117,6 @@ export default function InprogressApplicationStatusChange({
             </span>
           </div>
         )}
-        {/* Change Status Form */}
         <form onSubmit={handleSubmit}>
           <div className="mb-4 font-medium">Select new status:</div>
           <div className="flex flex-col gap-2 mb-6">
@@ -163,7 +156,6 @@ export default function InprogressApplicationStatusChange({
             </div>
           </div>
           {error && <div className="text-red-500 mb-4 text-sm">{error}</div>}
-          {/* Buttons */}
           <div className="flex justify-end gap-3">
             <button
               type="button"

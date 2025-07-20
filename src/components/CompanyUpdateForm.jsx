@@ -7,7 +7,7 @@ import { ArrowLeft, X } from "lucide-react";
 export default function CompanyUpdateForm({ company, onCancel }) {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const steps = ["Company Info", "About", "People", "Images", "Submit"];
+  const steps = ["Company Info", "About", "Images", "Submit"];
   const [step, setStep] = useState(0);
 
   const [formData, setFormData] = useState({
@@ -135,11 +135,11 @@ export default function CompanyUpdateForm({ company, onCancel }) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update company data"); // Changed message
+        throw new Error(data.message || "Failed to update company data"); 
       }
 
-      alert("Company data updated successfully!"); // Changed message
-      onCancel(); // Exit edit mode after successful submission
+      alert("Company data updated successfully!"); 
+      onCancel(); 
       navigate("/employer-dashboard");
     } catch (err) {
       console.error("Error:", err.message);
@@ -152,7 +152,7 @@ export default function CompanyUpdateForm({ company, onCancel }) {
   };
 
   const handleConfirmExit = () => {
-    navigate(-1); // or any other logic
+    navigate(-1); 
   };
 
   return (
@@ -179,8 +179,8 @@ export default function CompanyUpdateForm({ company, onCancel }) {
 
       {/* Step 0: Company Info */}
       {step === 0 && (
-        <div className="flex flex-wrap gap-4 w-[80%] m-auto">
-          <div className="w-[48%]">
+        <div className="flex flex-wrap gap-4 md:w-[80%] m-auto">
+          <div className="md:w-[48%]">
             <label className="block text-lg font-semibold mb-1">
               Company Name
             </label>
@@ -192,7 +192,7 @@ export default function CompanyUpdateForm({ company, onCancel }) {
             />
           </div>
 
-          <div className="w-[48%]">
+          <div className="md:w-[48%]">
             <label className="block text-lg font-semibold mb-1">
               Company Type
             </label>
@@ -206,7 +206,7 @@ export default function CompanyUpdateForm({ company, onCancel }) {
             </select>
           </div>
 
-          <div className="w-[48%]">
+          <div className="md:w-[48%]">
             <label className="block text-lg font-semibold mb-1">Location</label>
             <input
               className="input w-full border border-gray-300 rounded-sm p-2 text-sm outline-none"
@@ -216,7 +216,7 @@ export default function CompanyUpdateForm({ company, onCancel }) {
             />
           </div>
 
-          <div className="w-[48%]">
+          <div className="md:w-[48%]">
             <label className="block text-lg font-semibold mb-1">
               Followers Count
             </label>
@@ -228,7 +228,7 @@ export default function CompanyUpdateForm({ company, onCancel }) {
             />
           </div>
 
-          <div className="w-[48%]">
+          <div className="md:w-[48%]">
             <label className="block text-lg font-semibold mb-1">
               Employee Count
             </label>
@@ -240,7 +240,7 @@ export default function CompanyUpdateForm({ company, onCancel }) {
             />
           </div>
 
-          <div className="w-[48%]">
+          <div className="md:w-[48%]">
             <label className="block text-lg font-semibold mb-1">
               Website URL
             </label>
@@ -251,7 +251,7 @@ export default function CompanyUpdateForm({ company, onCancel }) {
               onChange={(e) => handleChange("site_url", e.target.value)}
             />
           </div>
-          <div className="w-[48%]">
+          <div className="md:w-[48%]">
             <label className="block text-lg font-semibold mb-1">
               Founded
             </label>
@@ -262,7 +262,7 @@ export default function CompanyUpdateForm({ company, onCancel }) {
               onChange={(e) => handleChange("founded", e.target.value)}
             />
           </div>
-          <div className="w-[48%]">
+          <div className="md:w-[48%]">
             <label className="block text-lg font-semibold mb-1">
               Revenue
             </label>
@@ -321,7 +321,7 @@ export default function CompanyUpdateForm({ company, onCancel }) {
         </div>
       )}
 
-      {/* Step 2: People */}
+      {/* Step 2: People
       {step === 2 && (
         <div className="flex flex-col space-y-4 w-[80%] m-auto">
           <h3 className="text-lg font-semibold mb-2">People</h3>
@@ -349,10 +349,10 @@ export default function CompanyUpdateForm({ company, onCancel }) {
             + Add Person
           </button>
         </div>
-      )}
+      )} */}
 
       {/* Step 3: Images */}
-      {step === 3 && (
+      {step === 2 && (
         <div className="flex flex-col space-y-4 w-[80%] m-auto">
           <div>
             <label className="block text-lg font-semibold mb-1">
@@ -378,7 +378,7 @@ export default function CompanyUpdateForm({ company, onCancel }) {
       )}
 
       {/* Step 4: Submit */}
-      {step === 4 && (
+      {step === 3 && (
         <div className="flex flex-col space-y-6 w-full max-w-2xl mx-auto px-4">
           <div>
             <p className="text-center">

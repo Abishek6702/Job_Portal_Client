@@ -72,12 +72,12 @@ const EmployerSideBar = () => {
 
   return (
     <div
-      className={`relative min-h-screen bg-gray-900 text-white transition-all duration-300 ${
+      className={`relative min-h-screen bg-gray-900 text-white transition-all duration-300 p-1 ${
         collapsed ? "w-16" : "w-64"
       }`}
     >
       <button
-        className="text-sm px-4 py-3 hover:bg-gray-800 w-full text-left flex items-center gap-2"
+        className="text-sm px-4 py-5 hover:bg-gray-800 w-full text-left flex items-center gap-2"
         onClick={() => setCollapsed(!collapsed)}
       >
         {collapsed ? <Menu /> : <X />}
@@ -91,8 +91,8 @@ const EmployerSideBar = () => {
           onMouseLeave={handleMouseLeave}
         >
           <button
-            className={`w-full flex items-center justify-between cursor-pointer px-4 py-3 text-md
-              hover:bg-white hover:text-gray-700 hover:rounded-lg hover:w-[95%] mx-auto
+            className={`w-full flex items-center justify-between cursor-pointer px-4 py-5 text-md
+              hover:bg-white hover:text-gray-700 hover:rounded-lg hover:w-[96%] mx-auto
               ${
                 isMenuActive(item)
                   ? "bg-white text-gray-700  font-bold rounded-lg w-[80%]  "

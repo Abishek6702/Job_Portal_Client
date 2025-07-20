@@ -24,31 +24,18 @@ export default function JobPostForm() {
 
   const [formData, setFormData] = useState({
     companyId: "",
-    // companyName: "",
     position: "",
     location: "",
     workplace: "",
-    // whereYouWillDoIt: "",
-    // applyMethod: "",
-    // reportingTo: [],
+
     interviewProcess: "",
-    // team: "",
     salaryRange: "",
-    // tools: [],
     additionalBenefits: [],
     jobDescription: [{ title: "", content: [""] }],
     requirements: [{ title: "", content: [""] }],
-    // companyOverview: {
-    //   founded: "",
-    //   type: "",
-    //   industry: "",
-    //   sector: "",
-    //   revenue: "",
-    //   size: "",
-    // },
+
     deadlineToApply: "",
-    // companyLogo: "",
-    // companyImages: [],
+
     additionalInfo: [],
   });
 
@@ -84,44 +71,29 @@ export default function JobPostForm() {
       const safeJSON = (value) => JSON.stringify(value ?? "");
 
       form.append("companyId", formData.companyId);
-      // form.append("companyName", formData.companyName);
       form.append("position", formData.position);
       form.append("location", formData.location);
       form.append("workplace", formData.workplace);
-      // form.append("whereYouWillDoIt", formData.whereYouWillDoIt);
-      // form.append("applyMethod", formData.applyMethod);
       form.append("interviewProcess", formData.interviewProcess);
-      // form.append("team", formData.team);
       form.append("salaryRange", formData.salaryRange);
       form.append("deadlineToApply", formData.deadlineToApply);
 
-      // form.append("reportingTo", safeJSON(formData.reportingTo));
-      // form.append("tools", safeJSON(formData.tools));
       form.append("additionalBenefits", safeJSON(formData.additionalBenefits));
       form.append("jobDescription", safeJSON(formData.jobDescription));
       form.append("requirements", safeJSON(formData.requirements));
-      // form.append("companyOverview", safeJSON(formData.companyOverview));
       form.append("additionalInfo", safeJSON(formData.additionalInfo));
 
-      // if (formData.companyLogo instanceof File) {
-      //   form.append("companyLogo", formData.companyLogo);
-      // }
-
-      // if (formData.companyImages?.length > 0) {
-      //   formData.companyImages.forEach((file) => {
-      //     if (file instanceof File) {
-      //       form.append("companyImages", file);
-      //     }
-      //   });
-      // }
-
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/jobs`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: form,
-      });
+     
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/jobs`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: form,
+        }
+      );
 
       const data = await response.json();
 
@@ -184,8 +156,12 @@ export default function JobPostForm() {
     <div className="max-w-4xl mx-auto p-6 bg-gray-50 rounded-xl shadow-md mt-10">
       <div className="back-icon flex items-center justify-between">
         <div className="icon w-full flex items-center justify-between ">
-          <ArrowLeft onClick={prevStep} disabled={step === 0} className="cursor-pointer"/>
-          
+          <ArrowLeft
+            onClick={prevStep}
+            disabled={step === 0}
+            className="cursor-pointer"
+          />
+
           <X onClick={handleClose} className="cursor-pointer" />
           {showModal && (
             <ExitConfirmation
@@ -203,7 +179,6 @@ export default function JobPostForm() {
       </div>
       <p className="text-2xl font-bold mb-6 text-center">{steps[step]}</p>
 
-      {/* Step 0: Company Info */}
       {step === 0 && (
         <div className="flex flex-col space-y-4 w-[80%] m-auto">
           <div className="hidden">
@@ -256,7 +231,6 @@ export default function JobPostForm() {
         </div>
       )}
 
-      {/* Step 1: Job Info */}
       {step === 1 && (
         <div className="flex flex-col space-y-6 w-full max-w-2xl mx-auto px-4">
           <div>
@@ -284,7 +258,6 @@ export default function JobPostForm() {
         </div>
       )}
 
-      {/* Step 2: Job Description & Requirements */}
       {step === 2 && (
         <div className="space-y-6 w-[90%] m-auto">
           <h3 className="font-semibold text-lg">Job Description</h3>
@@ -359,7 +332,6 @@ export default function JobPostForm() {
         </div>
       )}
 
-      {/* Step 3: Benefits & Extras */}
       {step === 3 && (
         <div className="flex flex-col space-y-6 w-full max-w-2xl mx-auto px-4">
           <div>
@@ -387,7 +359,6 @@ export default function JobPostForm() {
         </div>
       )}
 
-      {/* Step 4: Additional Info */}
       {step === 4 && (
         <div className="">
           <div className=" w-[50%] m-auto">
@@ -449,11 +420,9 @@ export default function JobPostForm() {
         </div>
       )}
 
-      {/* Step 5: Review & Submit */}
       {step === 5 && (
         <div className="space-y-8">
           <p className="text-2xl font-bold text-center">Review Your Job Post</p>
-          {/* Company Info */}
           <div className="bg-gray-100 p-4 rounded">
             <h3 className="text-lg font-semibold mb-2">Company Info</h3>
             {formData.companyLogo && (
@@ -497,7 +466,6 @@ export default function JobPostForm() {
               <strong>Workplace:</strong> {formData.workplace}
             </p>
           </div>
-          {/* Job Info */}
           <div className="bg-gray-100 p-4 rounded">
             <h3 className="text-lg font-semibold mb-2">Job Info</h3>
             <p>
@@ -515,7 +483,6 @@ export default function JobPostForm() {
               </p>
             )}
           </div>
-          {/* Job Description */}
           <div className="bg-gray-100 p-4 rounded">
             <h3 className="text-lg font-semibold mb-2">Job Description</h3>
             {formData.jobDescription.map((desc, index) => (
@@ -529,7 +496,6 @@ export default function JobPostForm() {
               </div>
             ))}
           </div>
-          {/* Requirements */}
           <div className="bg-gray-100 p-4 rounded">
             <h3 className="text-lg font-semibold mb-2">Requirements</h3>
             {formData.requirements.map((req, index) => (
@@ -543,7 +509,6 @@ export default function JobPostForm() {
               </div>
             ))}
           </div>
-          {/* Benefits */}
           <div className="bg-gray-100 p-4 rounded">
             <h3 className="text-lg font-semibold mb-2">Benefits</h3>
             <ul className="list-disc list-inside">
@@ -552,7 +517,6 @@ export default function JobPostForm() {
               ))}
             </ul>
           </div>
-          {/* Company Overview */}
           <div className="bg-gray-100 p-4 rounded">
             <h3 className="text-lg font-semibold mb-2">
               Additional Information
@@ -570,21 +534,7 @@ export default function JobPostForm() {
               </div>
               <div className="card-container border border-gray-300 rounded-md p-4 cursor-pointer mb-5">
                 <div className="card-title flex items-center justify-between">
-                  {/* <div className="company-name flex gap-2">
-                    <img
-                      src={
-                        typeof formData.companyLogo === "string"
-                          ? formData.companyLogo
-                          : URL.createObjectURL(formData.companyLogo)
-                      }
-                      alt="Company Logo"
-                      className="w-6 h-6 rounded-full object-cover"
-                    />
-                    <p className="text-gray-500 font-medium">
-                      {" "}
-                      {formData.companyName}
-                    </p>
-                  </div> */}
+                  
                 </div>
                 <div className="card-body mt-4">
                   <p className="text-xl md:text-2xl font-semibold">
@@ -612,7 +562,6 @@ export default function JobPostForm() {
               </div>
             </div>
           </div>
-          {/* Submit Button */}
           <div className="text-center">
             <button
               className="mt-4 px-6 py-2 bg-green-600 text-white rounded cursor-pointer"
@@ -624,7 +573,6 @@ export default function JobPostForm() {
         </div>
       )}
 
-      {/* Navigation */}
       <div className="mt-8 flex justify-end w-[80%] m-auto p-2 ">
         {step < steps.length - 1 && (
           <button

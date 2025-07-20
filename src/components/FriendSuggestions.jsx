@@ -65,13 +65,12 @@ export default function FriendSuggestions() {
     const connections = profile.connections || [];
     return allUsers.filter(
       (user) =>
-        user.role === "employee" && // Only show employees
+        user.role === "employee" && 
         user._id !== profile._id &&
         !connections.includes(user._id)
     );
   }, [allUsers, profile]);
 
-  // Handle add friend UI (local only)
   useEffect(() => {
     setAdded(Array(suggestions.length).fill(false));
   }, [suggestions.length]);
@@ -101,14 +100,12 @@ export default function FriendSuggestions() {
           See All
         </button>
       </div>
-      <ul>
+      <ul className=" h-[85%] overflow-auto ">
         {suggestions.map((s, idx) => {
-          // Use user's profile image if available
           const profileImg =
             s.onboarding?.profileImage &&
             `${import.meta.env.VITE_API_BASE_URL}/${s.onboarding.profileImage}`;
 
-          // Get user's name from onboarding data
           const Name =
             s.onboarding?.firstName && s.onboarding?.lastName
               ? `${s.onboarding.firstName} ${s.onboarding.lastName}`

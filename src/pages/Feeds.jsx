@@ -13,7 +13,6 @@ const getUserIdFromToken = () => {
   if (!token) return null;
   try {
     const decoded = jwtDecode(token);
-    // Adjust according to your JWT payload
     return decoded.id || decoded.userId || decoded._id || null;
   } catch {
     return null;
@@ -22,32 +21,35 @@ const getUserIdFromToken = () => {
 
 const Feeds = () => {
   const [profile, setProfile] = useState(null);
-  const [posts, setPosts] = useState([]); // Add posts state
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch profile and posts
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
       const userId = getUserIdFromToken();
-      
+
       if (!userId || !token) {
         setLoading(false);
         return;
       }
 
       try {
-        // Fetch profile
-        const profileRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const profileRes = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/auth/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         const profileData = await profileRes.json();
         setProfile(profileData);
 
-        // Fetch posts
-        const postsRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/posts/feed`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const postsRes = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/posts/feed`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         const postsData = await postsRes.json();
         setPosts(postsData);
       } catch (err) {
@@ -56,11 +58,10 @@ const Feeds = () => {
         setLoading(false);
       }
     };
-    
+
     fetchData();
   }, []);
 
-  // Handle new post creation
   const handleNewPost = (newPost) => {
     setPosts([newPost, ...posts]);
   };
@@ -68,29 +69,18 @@ const Feeds = () => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-12 h-screen bg-gray-100 gap-6 p-4 overflow-hidden scroll">
-        {/* Left Sidebar */}
-        <div className="empty-container md:col-span-3 overflow-auto space-y-4 hidden md:block">
+        <div className="empty-container md:col-span-3 overflow-auto space-y-4 hidden lg:block">
           <ProfileCard profile={profile} loading={loading} />
-          <SuggestedGroups/>
-
+          <SuggestedGroups />
         </div>
 
-        {/* Main Feed */}
-        <div className="md:col-span-6 overflow-y-auto scroll">
-          <PostComposer 
-            profile={profile} 
-            onNewPost={handleNewPost} 
-          />
-          <PostList 
-            posts={posts} 
-            profile={profile} 
-            loading={loading} 
-          />
+        <div className="col-span-12 lg:col-span-6 overflow-y-auto scroll">
+          <PostComposer profile={profile} onNewPost={handleNewPost} />
+          <PostList posts={posts} profile={profile} loading={loading} />
         </div>
 
-        {/* Right Sidebar */}
-        <div className="md:col-span-3 hidden md:block  h-[90vh]">
-          <div className="fixed top-18 ">
+        <div className="md:col-span-3 hidden lg:block  h-[90vh]">
+          <div className="sticky top-18 ">
             <FriendSuggestions userId={getUserIdFromToken()} />
             <ProfileActivity />
           </div>

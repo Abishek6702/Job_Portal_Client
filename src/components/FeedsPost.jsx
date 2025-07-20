@@ -9,6 +9,7 @@ const FeedsPost = ({ onClose, onPostCreated }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [connectionType, setConnectionType] = useState("everyone"); 
 
   const textareaRef = useRef(null);
   const pickerRef = useRef(null);
@@ -23,10 +24,9 @@ const FeedsPost = ({ onClose, onPostCreated }) => {
     return () => {
       if (imagePreview) URL.revokeObjectURL(imagePreview);
     };
-    // eslint-disable-next-line
+    
   }, [image]);
 
-  // Close emoji picker on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -41,9 +41,7 @@ const FeedsPost = ({ onClose, onPostCreated }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showEmojiPicker]);
 
-  // Handle emoji selection
   const handleEmojiClick = (emojiData) => {
-    // Insert emoji at cursor position
     const textarea = textareaRef.current;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
@@ -74,6 +72,7 @@ const FeedsPost = ({ onClose, onPostCreated }) => {
 
       formData.append("content", content);
       if (image) formData.append("image", image);
+      formData.append("visibility", connectionType); 
 
       const res = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/api/posts`,
@@ -89,6 +88,7 @@ const FeedsPost = ({ onClose, onPostCreated }) => {
       onPostCreated(res.data);
       setContent("");
       removeImage();
+      setConnectionType("everyone");
     } catch (err) {
       console.error("Post creation error:", err);
     } finally {
@@ -109,7 +109,6 @@ const FeedsPost = ({ onClose, onPostCreated }) => {
           required
         />
 
-        {/* Image Preview */}
         {imagePreview && (
           <div className="relative mb-4 w-fit">
             <img
@@ -128,7 +127,6 @@ const FeedsPost = ({ onClose, onPostCreated }) => {
           </div>
         )}
 
-        {/* Attachment and Emoji Row */}
         <div className="flex items-center space-x-2 mb-2 relative">
           <div className="border rounded-full p-1.5 border-gray-300">
             <label className="cursor-pointer">
@@ -170,13 +168,13 @@ const FeedsPost = ({ onClose, onPostCreated }) => {
 
         <div className="border-t border-gray-300 mb-2 w-full"></div>
 
-        {/* Posting to Dropdown and Action Buttons */}
         <div className=" flex items-center justify-between">
           <div>
             <label className="mr-2 font-medium text-gray-800">Posting to</label>
             <select
               className="border border-gray-300 text-gray-600 rounded-lg px-2 py-1 outline-none"
-              defaultValue="everyone"
+              value={connectionType}
+              onChange={e => setConnectionType(e.target.value)}
             >
               <option value="everyone">Everyone</option>
               <option value="connections">Connections</option>

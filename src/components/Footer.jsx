@@ -11,14 +11,8 @@ const Footer = () => {
   return (
     <footer className="bg-white border-t border-gray-200 text-sm text-black">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Top Row */}
         <div className="flex flex-col lg:flex-row justify-between gap-10">
-          {/* Language Selector (placeholder) */}
-          {/* <div className="hidden lg:flex items-center w-[20%] px-3 py-1.5 rounded-full gap-2">   */}
-            {/* Add language selector here if needed */}
-          {/* </div> */}
-
-          {/* Links Section */}
+         
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 flex-1">
             <div>
               <h4 className="font-semibold mb-3 text-[16px]">Company</h4>
@@ -54,7 +48,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* App Store Buttons */}
           <div className="flex flex-col gap-3 mt-6 ">
             <button className="flex items-center  gap-2 border rounded-full px-6 py-2 font-semibold justify-center">
               <img src={playstore} alt="Google Play" className="w-6 h-6" />
@@ -67,9 +60,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom Row */}
         <div className="border-t pt-4 mt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Social Icons */}
           <div className="flex gap-4">
             <img
               src={facebook}
@@ -93,7 +84,6 @@ const Footer = () => {
             />
           </div>
 
-          {/* Copyright */}
           <div className="flex items-center gap-1 text-center">
            
             <img src={copywright} alt="Copyright" className="w-4 h-4" />

@@ -4,7 +4,7 @@ function SuggestionCard({ logo, title, category, followers, connections, onFollo
   return (
 
     
-    <div className="bg-white border-t border-gray-300  p-2 mb-2 w-full max-w-sm">
+    <div className="bg-white border-t border-gray-300  p-2 mb-2 w-full max-w-sm ">
 
       
       <div className="flex items-center mb-3">

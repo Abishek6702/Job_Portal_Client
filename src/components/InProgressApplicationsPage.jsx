@@ -28,7 +28,6 @@ const InProgressApplicationsPage = () => {
 
   const [selectedApplications, setSelectedApplications] = useState([]);
 
-  // Filters and sorting state
   const [searchLocation, setSearchLocation] = useState("");
   const [experienceRange, setExperienceRange] = useState({ min: 0, max: 100 });
   const [dateSortOrder, setDateSortOrder] = useState("");
@@ -58,7 +57,6 @@ const InProgressApplicationsPage = () => {
 
   const selectAllRef = useRef(null);
 
-  // Fetch applications on mount or jobId change
   useEffect(() => {
     const fetchApplications = async () => {
       try {
@@ -108,7 +106,6 @@ const InProgressApplicationsPage = () => {
     }
   }, [jobId]);
 
-  // Filtering and sorting
   const getFilteredAndSortedApplications = () => {
     let result = [...applications];
 
@@ -152,7 +149,6 @@ const InProgressApplicationsPage = () => {
     filteredAndSortedApplications.length / rowsPerPage
   );
 
-  // Update indeterminate state of Select All checkbox
   useEffect(() => {
     if (!selectAllRef.current) return;
 
@@ -166,7 +162,6 @@ const InProgressApplicationsPage = () => {
     }
   }, [selectedApplications, currentApplications]);
 
-  // Handlers
   const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const handleNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
@@ -180,9 +175,9 @@ const InProgressApplicationsPage = () => {
     setIsDetailsModalOpen(false);
   };
   const openBulkStatusModal = () => {
-    setStatusModalApplication(null); // No single application
-    setStatusModalApplicationIds(selectedApplications); // Pass selected app IDs
-    setIsBulkStatus(true); // Indicate bulk mode
+    setStatusModalApplication(null); 
+    setStatusModalApplicationIds(selectedApplications); 
+    setIsBulkStatus(true); 
     setIsStatusModalOpen(true);
   };
 
@@ -289,7 +284,6 @@ const InProgressApplicationsPage = () => {
           </div>
         </div>
 
-        {/* Experience Filter */}
         <div className="relative">
           <select
             className="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 appearance-none pr-10 placeholder-gray-400 outline-none"
@@ -308,7 +302,6 @@ const InProgressApplicationsPage = () => {
           </div>
         </div>
 
-        {/* Date Sort */}
         <div className="relative">
           <select
             className="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 appearance-none pr-10 placeholder-gray-400 outline-none"
@@ -324,9 +317,7 @@ const InProgressApplicationsPage = () => {
           </div>
         </div>
 
-        {/* No status filter -- always in progress */}
-
-        {/* Clear Filters Button */}
+       
         <div className="flex justify-center lg:justify-start">
           <button
             className="p-2 bg-blue-600 text-white font-semibold rounded-lg border border-gray-300 cursor-pointer"
@@ -478,13 +469,11 @@ const InProgressApplicationsPage = () => {
           isBulk={isBulkStatus}
           onClose={() => setIsStatusModalOpen(false)}
           onStatusUpdated={() => {
-            // Optionally refetch applications or update state
             setSelectedApplications([]); // Clear selection after bulk update
           }}
         />
       )}
 
-      {/* Application Details Modal */}
 
       <InProgressDetailModel
         application={selectedApplication}
@@ -498,8 +487,7 @@ const InProgressApplicationsPage = () => {
           onClose={() => setIsStatusModalOpen(false)}
           onStatusUpdated={() => {
             setIsStatusModalOpen(false);
-            // Optionally refetch or update your applications list here
-          }} // or your refresh logic
+          }} 
           isBulk={isBulkStatus}
         />
       )}

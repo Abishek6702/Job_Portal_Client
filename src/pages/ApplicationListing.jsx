@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import {
   Eye,
   Mail,
@@ -24,14 +24,12 @@ const CandidatesApplication = () => {
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
-  // Status modal state
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [statusEditApplication, setStatusEditApplication] = useState(null);
   const [isBulkMode, setIsBulkMode] = useState(false);
 
   const [selectedApplications, setSelectedApplications] = useState([]);
 
-  // Filters and sorting state
   const [searchLocation, setSearchLocation] = useState("");
   const [experienceRange, setExperienceRange] = useState({ min: 0, max: 100 });
   const [dateSortOrder, setDateSortOrder] = useState("");
@@ -64,11 +62,14 @@ const CandidatesApplication = () => {
           return;
         }
 
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/applications`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/applications`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         const allApplications = await res.json();
-console.log("hi",applications)
+        console.log("hi", applications);
         const filteredApplications = allApplications.filter(
           (app) => app.jobId && app.jobId._id === jobId
         );
@@ -99,32 +100,32 @@ console.log("hi",applications)
   // Filtering and sorting
   const getFilteredAndSortedApplications = () => {
     let result = [...applications];
-  
+
     // Always exclude "In Progress" applications
     result = result.filter(
       (app) =>
         app.status?.toLowerCase() === "pending" ||
         app.status?.toLowerCase() === "rejected"
     );
-  
+
     if (searchLocation) {
       result = result.filter((app) =>
         app.location.toLowerCase().includes(searchLocation.toLowerCase())
       );
     }
-  
+
     result = result.filter(
       (app) =>
         app.experience >= experienceRange.min &&
         app.experience <= experienceRange.max
     );
-  
+
     if (selectedStatus) {
       result = result.filter(
         (app) => app.status?.toLowerCase() === selectedStatus.toLowerCase()
       );
     }
-  
+
     if (dateSortOrder === "newest") {
       result.sort(
         (a, b) =>
@@ -136,10 +137,9 @@ console.log("hi",applications)
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
     }
-  
+
     return result;
   };
-  
 
   const filteredAndSortedApplications = getFilteredAndSortedApplications();
 
@@ -150,9 +150,10 @@ console.log("hi",applications)
     indexOfFirstRow,
     indexOfLastRow
   );
-  const totalPages = Math.ceil(filteredAndSortedApplications.length / rowsPerPage);
+  const totalPages = Math.ceil(
+    filteredAndSortedApplications.length / rowsPerPage
+  );
 
-  // Update indeterminate state of Select All checkbox
   useEffect(() => {
     if (!selectAllRef.current) return;
 
@@ -166,7 +167,6 @@ console.log("hi",applications)
     }
   }, [selectedApplications, currentApplications]);
 
-  // Handlers
   const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const handleNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
@@ -230,7 +230,6 @@ console.log("hi",applications)
     });
   };
 
-  // Select individual application checkbox
   const handleSelectApplication = (appId) => {
     setSelectedApplications((prev) =>
       prev.includes(appId)
@@ -239,7 +238,6 @@ console.log("hi",applications)
     );
   };
 
-  // Select/Deselect all applications on current page
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectedApplications(currentApplications.map((app) => app._id));
@@ -253,22 +251,26 @@ console.log("hi",applications)
     selectedApplications.forEach((appId, index) => {
       setTimeout(() => {
         window.open(
-          `${import.meta.env.VITE_API_BASE_URL}/api/applications/download/${appId}`,
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/applications/download/${appId}`,
           "_blank"
         );
       }, index * 500);
     });
   };
 
-  // Refresh applications after status change
   const handleStatusChange = async () => {
     closeStatusModal();
     setSelectedApplications([]);
     setLoading(true);
     const token = localStorage.getItem("token");
-    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/applications`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/api/applications`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     const allApplications = await res.json();
     const filteredApplications = allApplications.filter(
       (app) => app.jobId && app.jobId._id === jobId
@@ -281,7 +283,7 @@ console.log("hi",applications)
   if (loading) {
     return <div className="text-center mt-10">Loading applications...</div>;
   }
-console.log(companyInfo)
+  console.log(companyInfo);
   return (
     <div className="container mx-auto px-4">
       <button
@@ -290,7 +292,6 @@ console.log(companyInfo)
       >
         <ArrowLeft className="w-5 h-5 cursor-pointer" />
         {companyInfo && (
-          
           <>
             <img
               src={`${import.meta.env.VITE_API_BASE_URL}/${companyInfo.logo}`}
@@ -303,22 +304,21 @@ console.log(companyInfo)
       </button>
 
       <h2 className="text-2xl font-bold mb-4">
-  Active Applicants{" "}
-  <span className="text-blue-600">
-    ({
-      applications.filter(
-        (app) =>
-          app.status?.toLowerCase() === "pending" ||
-          app.status?.toLowerCase() === "rejected"
-      ).length
-    })
-  </span>
-</h2>
+        Active Applicants{" "}
+        <span className="text-blue-600">
+          (
+          {
+            applications.filter(
+              (app) =>
+                app.status?.toLowerCase() === "pending" ||
+                app.status?.toLowerCase() === "rejected"
+            ).length
+          }
+          )
+        </span>
+      </h2>
 
-
-      {/* Filters */}
       <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
-        {/* Location Search */}
         <div className="relative">
           <input
             type="search"
@@ -332,7 +332,6 @@ console.log(companyInfo)
           </div>
         </div>
 
-        {/* Experience Filter */}
         <div className="relative">
           <select
             className="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 appearance-none pr-10 placeholder-gray-400 outline-none"
@@ -351,7 +350,6 @@ console.log(companyInfo)
           </div>
         </div>
 
-        {/* Date Sort */}
         <div className="relative">
           <select
             className="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 appearance-none pr-10 placeholder-gray-400 outline-none"
@@ -437,7 +435,8 @@ console.log(companyInfo)
                   ref={selectAllRef}
                   onChange={handleSelectAll}
                   checked={
-                    selectedApplications.length === currentApplications.length &&
+                    selectedApplications.length ===
+                      currentApplications.length &&
                     currentApplications.length > 0
                   }
                 />
@@ -502,10 +501,11 @@ console.log(companyInfo)
                     </p>
                   </a>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">{app.experience}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {app.experience}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <p
-                    // onClick={() => openStatusModal(app)}
                     className={`font-semibold p-1 rounded-lg px-2  ${
                       app.status === "pending"
                         ? "bg-yellow-100 text-yellow-700"
@@ -528,7 +528,9 @@ console.log(companyInfo)
                   <button
                     onClick={() =>
                       window.open(
-                        `${import.meta.env.VITE_API_BASE_URL}/api/applications/download/${app._id}`,
+                        `${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/api/applications/download/${app._id}`,
                         "_blank"
                       )
                     }
@@ -544,7 +546,6 @@ console.log(companyInfo)
         </table>
       </div>
 
-      {/* Status Change Modal */}
       {isStatusModalOpen && (
         <ApplicationStatusChange
           application={isBulkMode ? null : statusEditApplication}
@@ -555,7 +556,6 @@ console.log(companyInfo)
         />
       )}
 
-      {/* Application Details Modal */}
       {isDetailsModalOpen && selectedApplication && (
         <ApplicationDetailsModal
           application={selectedApplication}
@@ -567,7 +567,6 @@ console.log(companyInfo)
         />
       )}
 
-      {/* Pagination Controls */}
       <div className="flex justify-center gap-4 mt-4">
         <button
           onClick={handlePrevPage}

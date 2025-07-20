@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import SuggestionCard from "../components/SuggestionCard";
 
-// Example data (replace with API call later)
 const suggestions = [
   {
     logo: "https://logo.clearbit.com/adobe.com",

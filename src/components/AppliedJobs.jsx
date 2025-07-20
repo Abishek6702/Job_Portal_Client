@@ -6,8 +6,8 @@ const AppliedJobs = ({ jobs, userId }) => {
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [openDropdownId, setOpenDropdownId] = useState(null); // track which dropdown is open
-  const dropdownRefs = useRef({}); // store refs for multiple dropdowns
+  const [openDropdownId, setOpenDropdownId] = useState(null); 
+  const dropdownRefs = useRef({}); 
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -34,7 +34,6 @@ const AppliedJobs = ({ jobs, userId }) => {
 
         const applications = await response.json();
 
-        // Filter applications by userId
         const filtered = applications.filter(
           (app) => app.userId._id === userId
         );
@@ -47,7 +46,6 @@ const AppliedJobs = ({ jobs, userId }) => {
     fetchApplications();
   }, [userId]);
 
-  // Close dropdown if clicked outside any open dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -87,7 +85,6 @@ const AppliedJobs = ({ jobs, userId }) => {
   };
 
   const withdrawApplication = async (jobId) => {
-    // Find the application object for this jobId
     const application = filteredApplications.find(
       (app) => app.jobId && app.jobId._id === jobId
     );
@@ -164,7 +161,6 @@ const AppliedJobs = ({ jobs, userId }) => {
               key={job._id}
               className="border border-gray-300 rounded-xl p-4 flex gap-4 items-start relative mb-12"
             >
-              {/* Logo */}
               <img
                 src={
                   job.companyLogo
@@ -177,7 +173,6 @@ const AppliedJobs = ({ jobs, userId }) => {
                 alt={job.companyName}
                 className="w-16 h-16 object-contain rounded-full border"
               />
-              {/* Job Info */}
               <div className="flex flex-col justify-between w-full">
                 <div>
                   <h3 className="text-lg font-bold text-gray-800">
@@ -204,7 +199,6 @@ const AppliedJobs = ({ jobs, userId }) => {
                 </div>
               </div>
 
-              {/* Dropdown Trigger */}
               <div
                 className="relative"
                 ref={(el) => (dropdownRefs.current[job._id] = el)}
@@ -219,7 +213,6 @@ const AppliedJobs = ({ jobs, userId }) => {
                   <EllipsisVertical size={20} />
                 </button>
 
-                {/* Dropdown Menu */}
                 {openDropdownId === job._id && (
                   <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                     <button
@@ -242,11 +235,9 @@ const AppliedJobs = ({ jobs, userId }) => {
         })}
       </div>
 
-      {/* Modal for application details */}
       {isModalOpen && selectedApplication && (
         <div className="fixed inset-0 z-50 tint flex justify-center items-start overflow-y-auto">
           <div className="bg-white rounded-2xl w-full max-w-3xl m-4 shadow-xl overflow-hidden">
-            {/* Header */}
             <div className="flex justify-between items-center px-6 py-4 bg-gray-50">
               <div className="flex gap-2">
                 <h2 className="text-xl font-semibold text-gray-900">
@@ -284,9 +275,7 @@ const AppliedJobs = ({ jobs, userId }) => {
               </button>
             </div>
 
-            {/* Content */}
             <div className="px-6 py-6 space-y-6">
-              {/* Contact Information */}
               <section className="rounded-lg shadow-sm p-5">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">
                   Contact Information
@@ -308,7 +297,6 @@ const AppliedJobs = ({ jobs, userId }) => {
                 </div>
               </section>
 
-              {/* Experience */}
               <section className="rounded-lg shadow-sm p-5">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">
                   Relevant Experience
@@ -331,7 +319,6 @@ const AppliedJobs = ({ jobs, userId }) => {
                 </div>
               </section>
 
-              {/* Dates Available */}
               <section className="rounded-lg shadow-sm p-5 border border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">
                   Dates Available
@@ -356,7 +343,6 @@ const AppliedJobs = ({ jobs, userId }) => {
                 )}
               </section>
 
-              {/* Previous Work Experience */}
               <section className="rounded-lg shadow-sm p-5 border border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">
                   Previous Work Experience
@@ -387,7 +373,6 @@ const AppliedJobs = ({ jobs, userId }) => {
                 )}
               </section>
 
-              {/* Resume */}
               <section className="rounded-lg shadow-sm p-5">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">
                   Resume

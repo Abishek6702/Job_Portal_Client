@@ -47,78 +47,72 @@ export default function OnboardingEditForm({ initialData, onClose }) {
       },
     ],
     preferredRoles: [""],
-    salaryExpectation: "",
-     skills: [],
-  skillsInput: ""
+    skills: [],
+    skillsInput: "",
   });
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-  if (initialData) {
-    setFormData(prev => ({
-      ...prev,
-      ...initialData,
-      skillsInput: Array.isArray(initialData.skills)
-        ? initialData.skills.join(", ")
-        : (initialData.skills || "")
-    }));
-  }
-}, [initialData]);
-
-
+    if (initialData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...initialData,
+        skillsInput: Array.isArray(initialData.skills)
+          ? initialData.skills.join(", ")
+          : initialData.skills || "",
+      }));
+    }
+  }, [initialData]);
 
   const nextStep = () =>
     setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
-  // Handle step click from progress bar
   const handleStepClick = (idx) => {
     setCurrentStep(idx);
   };
 
- const handleSubmit = async () => {
-  setSubmitting(true);
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Token not found");
-    const decodedToken = jwtDecode(token);
-    const userId = decodedToken.id;
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Token not found");
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.id;
 
-    const form = new FormData();
-    form.append("userId", userId);
-    form.append("firstName", formData.firstName);
-    form.append("lastName", formData.lastName);
-    form.append("location", formData.location);
-    form.append("salaryExpectation", formData.salaryExpectation);
-    form.append("education", JSON.stringify(formData.education));
-    form.append("experience", JSON.stringify(formData.experience));
-    form.append("preferredRoles", JSON.stringify(formData.preferredRoles));
-    form.append("skills", JSON.stringify(formData.skills));
+      const form = new FormData();
+      form.append("userId", userId);
+      form.append("firstName", formData.firstName);
+      form.append("lastName", formData.lastName);
+      form.append("location", formData.location);
+      form.append("education", JSON.stringify(formData.education));
+      form.append("experience", JSON.stringify(formData.experience));
+      form.append("preferredRoles", JSON.stringify(formData.preferredRoles));
+      form.append("skills", JSON.stringify(formData.skills));
 
-    const response = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/api/onboarding/onboarding`,
-      {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: form,
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/onboarding/onboarding`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: form,
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("Onboarding updated successfully!");
+        window.location.reload();
+        if (onClose) onClose();
+        else navigate("/");
+      } else {
+        alert("Update failed: " + data.error);
       }
-    );
-
-    const data = await response.json();
-    if (response.ok) {
-      toast.success("Onboarding updated successfully!");
-      window.location.reload();
-      if (onClose) onClose();
-      else navigate("/");
-    } else {
-      alert("Update failed: " + data.error);
+    } catch (error) {
+      alert("Error: " + error.message);
     }
-  } catch (error) {
-    alert("Error: " + error.message);
-  }
-  setSubmitting(false);
-};
-
+    setSubmitting(false);
+  };
 
   const stepProps = { formData, setFormData };
   let StepComponent;
@@ -143,7 +137,7 @@ export default function OnboardingEditForm({ initialData, onClose }) {
   }
 
   return (
-    <div className="max-w-3xl mx-auto bg-white p-8 rounded shadow">
+    <div className="max-w-3xl mx-auto bg-white p-8 rounded shadow overflow-auto">
       <ProgressBar
         steps={steps}
         currentStep={currentStep}

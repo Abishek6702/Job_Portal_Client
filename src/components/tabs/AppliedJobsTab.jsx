@@ -66,8 +66,8 @@ const AppliedJobsTab = ({ jobs = [], savedJobs = [], toggleSaveJob }) => {
 
   return (
     <>
-      <div className=" p-6">
-        <h3 className="font-bold text-2xl  flex items-center gap-3 text-blue-800">
+      <div className="">
+        <h3 className="font-bold text-xl  flex items-center gap-3 text-blue-800 mb-4">
           <Briefcase size={26} /> Applied Jobs
         </h3>
         {loading ? (
@@ -87,7 +87,6 @@ const AppliedJobsTab = ({ jobs = [], savedJobs = [], toggleSaveJob }) => {
                   className="relative flex items-start gap-5 bg-gradient-to-br from-blue-50 via-white to-white border border-blue-100 rounded-xl shadow hover:shadow-md transition p-6 cursor-pointer"
                   onClick={() => handleCardClick(job)}
                 >
-                  {/* Bookmark Toggle */}
                   <div className="absolute top-5 right-5 z-10">
                     <button
                       type="button"
@@ -117,7 +116,6 @@ const AppliedJobsTab = ({ jobs = [], savedJobs = [], toggleSaveJob }) => {
                       />
                     </button>
                   </div>
-                  {/* Logo */}
                   <div className="flex-shrink-0 w-16 h-16 rounded-full bg-white border border-gray-300 flex items-center justify-center overflow-hidden shadow">
                     {job.companyId?.company_logo ? (
                       <img
@@ -134,7 +132,6 @@ const AppliedJobsTab = ({ jobs = [], savedJobs = [], toggleSaveJob }) => {
                       </span>
                     )}
                   </div>
-                  {/* Details */}
                   <div className="flex-1 flex flex-col justify-between min-w-0">
                     <div>
                       <h4 className="text-lg font-semibold text-gray-800 truncate">
@@ -145,7 +142,6 @@ const AppliedJobsTab = ({ jobs = [], savedJobs = [], toggleSaveJob }) => {
                       </p>
                       <p className="text-gray-500 text-sm">{job.location}</p>
                     </div>
-                    {/* Actions */}
                     <div className="flex items-center justify-between mt-4">
                       <div className="">
                         <span className="border border-blue-300 text-blue-600 py-1 px-4 rounded-full text-xs font-semibold bg-blue-50">
@@ -181,7 +177,6 @@ const AppliedJobsTab = ({ jobs = [], savedJobs = [], toggleSaveJob }) => {
         )}
       </div>
 
-      {/* Modal for Application Details */}
       <ApplicationModal
         application={selectedApp}
         job={selectedJob}

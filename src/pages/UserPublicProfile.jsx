@@ -10,7 +10,7 @@ import { UserPlus, MessageCircle, Check, MoreVertical } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
 import MyPostsTab from "../components/tabs/MyPostsTab";
 
-const TABS = ["About", "Education", "Experience", "Resumes", "Skills" ,"Posts"];
+const TABS = ["About", "Education", "Experience", "Skills" ,"Posts"];
 
 const UserPublicProfile = () => {
   const { userId } = useParams();
@@ -19,7 +19,7 @@ const UserPublicProfile = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("About");
   const [currentUserId, setCurrentUserId] = useState(null);
-  const [connectionStatus, setConnectionStatus] = useState("connect"); // "connect", "pending", "connected"
+  const [connectionStatus, setConnectionStatus] = useState("connect"); 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
 
@@ -62,7 +62,6 @@ const UserPublicProfile = () => {
       });
   }, [currentUserId, userId]);
 
-  // Handle connect button
   const handleConnect = async () => {
     setConnectionStatus("pending");
     try {
@@ -84,7 +83,6 @@ const UserPublicProfile = () => {
     }
   };
 
-  // Handle remove connection
   const handleRemoveConnection = async () => {
     setMenuOpen(false);
     try {
@@ -106,7 +104,6 @@ const UserPublicProfile = () => {
     }
   };
 
-  // Close menu on outside click
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -136,7 +133,6 @@ const UserPublicProfile = () => {
     ? `${onboarding.firstName} ${onboarding.lastName}`
     : profile.name;
 console.log(userId)
-  // Render tab content just like your main profile
   const renderTabContent = () => {
     switch (activeTab) {
       case "About":
@@ -157,13 +153,11 @@ console.log(userId)
     
   };
 
-  // Show connect/message only if viewing someone else's profile
   const showActions = currentUserId && currentUserId !== userId;
 
   return (
     <>
       <div className="w-[80%] min-h-[90vh] m-auto mb-20 bg-white rounded-2xl mt-6 overflow-hidden border border-gray-300">
-        {/* Banner */}
         <div className="relative h-40 bg-gray-100 rounded-t-2xl overflow-hidden">
           {onboarding.banner ? (
             <img
@@ -176,7 +170,6 @@ console.log(userId)
               <span className="text-gray-500">No banner image</span>
             </div>
           )}
-          {/* Menu icon in banner, top-right */}
           {showActions && connectionStatus === "connected" && (
             <div className="absolute top-2 right-2 z-30" ref={menuRef}>
               <button
@@ -202,7 +195,6 @@ console.log(userId)
             </div>
           )}
         </div>
-        {/* Profile Info */}
         <div className="flex justify-between items-center px-8 pt-4 pb-6">
           <div className="flex items-center">
             <div className="relative">
@@ -226,7 +218,6 @@ console.log(userId)
               </p>
             </div>
           </div>
-          {/* Action Buttons */}
           {showActions && (
             <div className="flex gap-2">
               {connectionStatus === "connect" && (
@@ -255,9 +246,7 @@ console.log(userId)
             </div>
           )}
         </div>
-        {/* Tabbed Content */}
         <div className="w-[95%] m-auto mt-6 flex gap-6 h-full">
-          {/* Sidebar Tabs */}
           <ProfileSidebarTabs
             activeMain="account"
             setActiveMain={() => {}}

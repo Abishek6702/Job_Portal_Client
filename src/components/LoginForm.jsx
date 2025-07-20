@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import login_img from "../assets/login.png";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -6,7 +6,55 @@ import { jwtDecode } from "jwt-decode";
 import AutoCarousel from "./AutoCarousel";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
-import logo from "../assets/logomain.svg"
+import logo from "../assets/logomain.svg";
+
+function autoRedirectBasedOnToken(navigate) {
+  const token = localStorage.getItem('token');
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+
+      if (decoded.exp && decoded.exp > currentTime) {
+        const role = decoded.role;
+        const onboardingComplete = decoded.onboardingstatus;
+        switch (role) {
+          case "admin":
+            navigate("/admin-dashboard");
+            return;
+          case "employee":
+            if (onboardingComplete) {
+              navigate("/feeds");
+            } else {
+              navigate("/onbordingform");
+            }
+            return;
+          case "employer":
+            navigate("/employer-dashboard");
+            return;
+          case "instructor":
+            navigate("/instructor-dashboard");
+            return;
+          default:
+            navigate("/"); 
+            return;
+        }
+      } else {
+        localStorage.removeItem("token");
+        navigate("/"); 
+      }
+    } catch (e) {
+    
+      localStorage.removeItem("token");
+      navigate("/"); 
+    }
+  } else {
+   
+    navigate("/"); 
+  }
+}
+
+
 const LoginForm = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -15,6 +63,10 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  useEffect(() => {
+    autoRedirectBasedOnToken(navigate);
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -39,34 +91,10 @@ const LoginForm = () => {
 
       localStorage.setItem("token", data.token);
 
-      const decoded = jwtDecode(data.token);
-      const role = decoded.role;
-      const onboardingComplete = decoded.onboardingstatus;
-      console.log("token decoded", decoded);
+      autoRedirectBasedOnToken(navigate);
+
       toast.success("Login Sucessfull");
-
       setSuccess("Login successful!");
-
-      switch (role) {
-        case "admin":
-          navigate("/admin-dashboard");
-          break;
-        case "employee":
-          if (onboardingComplete) {
-            navigate("/feeds");
-          } else {
-            navigate("/onbordingform");
-          }
-          break;
-        case "employer":
-          navigate("/employer-dashboard");
-          break;
-        case "instructor":
-          navigate("/instructor-dashboard");
-          break;
-        default:
-          navigate("/");
-      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -77,7 +105,6 @@ const LoginForm = () => {
   return (
     <div className="main-container flex">
       <div className="left-container w-[100%] h-[100vh] flex align-center ">
-      
         <div className="content-container w-[100%] px-8 m-auto ">
           <div className=" w-50 ">
             <img src={logo} className="" />
@@ -86,10 +113,7 @@ const LoginForm = () => {
 
           <form className="login-form mt-[25px]" onSubmit={handleLogin}>
             <div className="email mb-2">
-              <label
-                htmlFor="email"
-                className=" font-medium text-gray-700"
-              >
+              <label htmlFor="email" className=" font-medium text-gray-700">
                 E-mail Id
               </label>
               <input
@@ -103,10 +127,7 @@ const LoginForm = () => {
             </div>
 
             <div className="password relative mb-2">
-              <label
-                htmlFor="password"
-                className=" font-medium text-gray-700"
-              >
+              <label htmlFor="password" className=" font-medium text-gray-700">
                 Password
               </label>
               <input

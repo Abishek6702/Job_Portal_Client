@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import UserCard from "../components/UserCard";
 import { Search } from "lucide-react";
-
+import nodata from "../assets/cuate.svg"
 const Connections = ({ currentUserId }) => {
   const [search, setSearch] = useState("");
   const [connList, setConnList] = useState([]);
@@ -9,7 +9,6 @@ const Connections = ({ currentUserId }) => {
   const [currentUserData, setCurrentUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch current user's data (connections, sentRequests, etc.)
   useEffect(() => {
     if (!currentUserId) return;
 
@@ -33,7 +32,7 @@ const Connections = ({ currentUserId }) => {
       .finally(() => setLoading(false));
   }, []);
 
-  // Filter connected users (same logic as Network.jsx)
+  // Filter connected users 
   useEffect(() => {
     if (!currentUserData || allUsers.length === 0) return;
 
@@ -64,7 +63,6 @@ const Connections = ({ currentUserId }) => {
 
       if (!response.ok) throw new Error("Failed to remove connection");
 
-      // Remove from UI
       setConnList((prev) => prev.filter((u) => u._id !== removeUserId));
     } catch (error) {
       alert("Failed to remove connection");
@@ -87,7 +85,7 @@ const Connections = ({ currentUserId }) => {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-6 relative ">
+      <div className="flex md:justify-between items-center md:mb-6 relative  md:mt-0 mb-10 mt-6 justify-center ">
         <input
           type="text"
           className="border absolute   md:-top-14 md:right-0 rounded-full px-4 py-2 w-64 outline-none border-gray-300"
@@ -100,6 +98,7 @@ const Connections = ({ currentUserId }) => {
 
       {filteredConnections.length === 0 ? (
         <div className="col-span-full text-gray-500 text-center py-12">
+          <img src={nodata} className="w-60 m-auto" />
           You haven't made any connections yet.
         </div>
       ) : (

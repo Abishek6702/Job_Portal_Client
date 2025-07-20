@@ -35,18 +35,7 @@ const EmployerNavbar = () => {
         <img src={logo} alt="Job Portal" className="h-6 md:h-6" />
       </div>
       <div className="flex items-center gap-6 text-gray-600 text-sm md:text-base">
-        <div className="hidden md:flex items-center gap-1 cursor-pointer">
-          <HelpCircle size={18} />
-          <span className="hidden sm:inline">Help</span>
-        </div>
-        <div className="flex  items-center gap-1 cursor-pointer">
-          <Bell size={18} />
-          <span className="hidden sm:inline">Notifications</span>
-        </div>
-        <div className="hidden md:flex  items-center gap-1 cursor-pointer">
-          <Mail size={18} />
-          <span className="hidden sm:inline">Messages</span>
-        </div>
+        
         <div
           className=" profile_container flex items-center gap-2 "
           onClick={handleProfileClick}

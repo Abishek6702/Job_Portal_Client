@@ -15,7 +15,7 @@ export const MessageProvider = ({ children }) => {
   const [typingUsers, setTypingUsers] = useState({});
   const [unreadLoading, setUnreadLoading] = useState(false);
 
-  // 1. Socket connection
+  // Socket connection
   useEffect(() => {
     const token = localStorage.getItem("token");
     const newSocket = io(`${import.meta.env.VITE_API_BASE_URL}`, {
@@ -26,7 +26,7 @@ export const MessageProvider = ({ children }) => {
     return () => newSocket.disconnect();
   }, []);
 
-  // 2. Fetch initial unread counts
+  // Fetch initial unread counts
   useEffect(() => {
     const fetchUnreadCounts = async () => {
       setUnreadLoading(true);
@@ -47,33 +47,30 @@ export const MessageProvider = ({ children }) => {
     if (socket) fetchUnreadCounts();
   }, [socket]);
 
-  // 3. Socket event listeners
-useEffect(() => {
-  if (!socket) return;
+  // Socket event listeners
+  useEffect(() => {
+    if (!socket) return;
 
-  const handleUnreadUpdate = ({ senderId, increment }) => {
-    // If the chat with senderId is currently open, set count to 0 instantly
-    const openChatUserId = window.location.pathname.split("/").pop();
-    if (senderId === openChatUserId) {
-      setUnreadCounts((prev) => ({ ...prev, [senderId]: 0 }));
-    } else {
-      setUnreadCounts((prev) => ({
-        ...prev,
-        [senderId]: increment ? (prev[senderId] || 0) + 1 : 0,
-      }));
-    }
-  };
+    const handleUnreadUpdate = ({ senderId, increment }) => {
+      const openChatUserId = window.location.pathname.split("/").pop();
+      if (senderId === openChatUserId) {
+        setUnreadCounts((prev) => ({ ...prev, [senderId]: 0 }));
+      } else {
+        setUnreadCounts((prev) => ({
+          ...prev,
+          [senderId]: increment ? (prev[senderId] || 0) + 1 : 0,
+        }));
+      }
+    };
 
-  socket.on("update-unread-count", handleUnreadUpdate);
+    socket.on("update-unread-count", handleUnreadUpdate);
 
-  return () => {
-    socket.off("update-unread-count", handleUnreadUpdate);
-  };
-}, [socket]);
+    return () => {
+      socket.off("update-unread-count", handleUnreadUpdate);
+    };
+  }, [socket]);
 
-
-
-  // 4. Mark as read (when chat is opened)
+  // Mark as read (when chat is opened)
   const markMessagesRead = useCallback(async (senderId) => {
     try {
       const token = localStorage.getItem("token");
@@ -85,7 +82,7 @@ useEffect(() => {
     } catch (err) {}
   }, []);
 
-  // 5. Join user room for sockets
+  // Join user room for sockets
   const joinUserRoom = useCallback(
     (userId) => {
       if (socket) socket.emit("join-user", userId);

@@ -30,7 +30,7 @@ const Navbar = ({ socket, currentUserId }) => {
 
   const [showServices, setShowServices] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [profile, setProfile] = useState(null); // <-- Add this
+  const [profile, setProfile] = useState(null); 
   const location = useLocation();
 
   useEffect(() => {
@@ -40,8 +40,7 @@ const Navbar = ({ socket, currentUserId }) => {
       let userId;
       try {
         const decoded = jwtDecode(token);
-        userId = decoded.id; // assumes your JWT payload has an 'id' field
-        // console.log("Decoded user id:", userId);
+        userId = decoded.id; 
       } catch (e) {
         console.error("Invalid token", e);
         return;
@@ -70,7 +69,6 @@ const Navbar = ({ socket, currentUserId }) => {
   const toggleDropdown = () => setShowServices((prev) => !prev);
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
-  // Menu items for reuse
   const MenuItems = (
     <>
       <NavLink
@@ -114,7 +112,9 @@ const Navbar = ({ socket, currentUserId }) => {
           onClick={toggleDropdown}
           className="flex items-center gap-1 cursor-pointer outline-none"
         >
-          <Settings />
+          <Settings className={
+              isServiceActive ? "text-blue-500 font-semibold" : "text-gray-800"
+            } />
           <p
             className={
               isServiceActive ? "text-blue-500 font-semibold" : "text-gray-800"
@@ -211,7 +211,6 @@ const Navbar = ({ socket, currentUserId }) => {
       </NavLink>
     </>
   );
-  // console.log("Fetched profile:", profile);
   return (
     <div className="bg-white sticky top-0 z-40 shadow-sm px-4 sm:px-6 py-3 rounded-md">
       <div className="flex items-center justify-between">
@@ -222,13 +221,11 @@ const Navbar = ({ socket, currentUserId }) => {
           >
             <Menu />
           </button>
-          {/* Logo */}
           <Link to="/" className="font-bold py-1 rounded-md text-gray-700">
             <img src={logo} className="h-6" alt="Logo" />
           </Link>
         </div>
 
-        {/* Desktop Menu */}
         <div className="hidden lg:flex gap-6 text-sm font-medium text-gray-600 text-[16px] items-center">
           {MenuItems}
         </div>
@@ -251,21 +248,19 @@ const Navbar = ({ socket, currentUserId }) => {
             profile.onboarding.profileImage ? (
               <img
                 src={
-                  `https://job-portal-server-odzx.onrender.com/` +
+                  `${import.meta.env.VITE_API_BASE_URL}/` +
                   profile.onboarding.profileImage.replace(/\\/g, "/")
                 }
                 alt="Profile"
                 className="w-7 h-7 rounded-full  object-cover "
               />
             ) : (
-              // Fallback avatar (can use a default image or an icon)
               <CircleUser className="w-6 h-6 text-gray-400" />
             )}
           </NavLink>
         </div>
       </div>
 
-      {/* Mobile/Tablet Menu*/}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 tint flex">
           <div className="bg-white w-64 h-full p-6 flex flex-col gap-6 shadow-lg relative">

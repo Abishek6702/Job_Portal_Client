@@ -4,26 +4,31 @@ import React, { useState, useEffect } from "react";
 const ProfileCard = ({ profile, loading }) => {
   const [postCount, setPostCount] = useState(0);
 
-  useEffect(() => {
+ useEffect(() => {
   if (profile) {
-    const token = localStorage.getItem("token"); // Get token from localStorage
+    const token = localStorage.getItem("token");
+    console.log("Fetching posts for user:", profile._id);
 
     fetch(`${import.meta.env.VITE_API_BASE_URL}/api/posts/my-posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}` 
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ userId: profile._id }) 
+      body: JSON.stringify({ userId: profile._id }),
     })
       .then((res) => res.json())
-      .then((data) => setPostCount(Array.isArray(data) ? data.length : 0))
+      .then((data) => {
+        console.log("Fetched posts ak:", data);
+        setPostCount(Array.isArray(data) ? data.length : 0);
+      })
       .catch((err) => {
         console.error("Error fetching posts:", err);
         setPostCount(0);
       });
   }
 }, [profile]);
+
 
 console.log("sk", postCount);
 
@@ -60,15 +65,18 @@ console.log("sk", postCount);
     <div className="">
     <div className=" bg-white rounded-2xl shadow p-3 ml-9  max-w-xs mx-auto">
       <div className="relative h-25 mb-10 rounded-xl">
-        <img
-          src={
-            profile.onboarding?.profileImage
-              ? `${import.meta.env.VITE_API_BASE_URL}/${profile.onboarding.banner}`
-              : undefined
-          }
-          alt="Cover"
-          className="w-full h-full object-fit rounded-xl"
-        />
+      {profile.onboarding?.banner ? (
+  <img
+    src={`${import.meta.env.VITE_API_BASE_URL}/${profile.onboarding.banner}`}
+    alt="Cover"
+    className="w-full h-full object-cover rounded-xl"
+  />
+) : (
+  <div className="w-full h-full bg-gray-200 rounded-xl flex items-center justify-center text-gray-500 text-sm">
+    No Banner Image
+  </div>
+)}
+
         <div className="absolute top-[70px] left-[50%] translate-x-[-50%] rounded-full border">
           <img
             src={
@@ -95,11 +103,7 @@ console.log("sk", postCount);
           <div className="text-xs text-gray-400">Connections</div>
         </div>
       </div>
-      {/* 
-      <button className="mt-4 w-full bg-blue-500 text-white rounded-xl py-2 font-semibold hover:bg-blue-600 transition cursor-pointer">
-        My Profile
-      </button> 
-      */}
+      
     </div>
     </div>
   );

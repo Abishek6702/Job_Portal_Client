@@ -62,11 +62,10 @@ const ClientFeedback = () => {
         </h2>
         <div className="max-w-4xl mx-auto relative">
           
-          {/* Decorative avatars */}
           <div className="absolute top-0 left-0 -ml-24 flex flex-wrap justify-center w-24">
             {avatars.slice(0, 4).map((avatar, index) => {
-              const top = Math.floor(Math.random() * 40); // 0 to 40px
-              const left = Math.floor(Math.random() * 40); // 0 to 40px
+              const top = Math.floor(Math.random() * 40); 
+              const left = Math.floor(Math.random() * 40); 
               return (
                 <img
                   key={index}
@@ -101,12 +100,9 @@ const ClientFeedback = () => {
             })}
           </div>
 
-          {/* Main testimonial card */}
           <div className="bg-white rounded-3xl shadow-xl p-8 relative z-10">
-            {/* Quotation Mark */}
             <div className="text-center text-5xl text-blue-500 ">&ldquo;</div>
 
-            {/* Testimonial Content */}
             <div
               className={`transition-opacity duration-300  ${
                 transitioning ? "opacity-0" : "opacity-100"
@@ -140,7 +136,6 @@ const ClientFeedback = () => {
             </div>
           </div>
 
-          {/* Carousel Indicators */}
           <div className="flex justify-center mt-4">
             {testimonials.map((_, index) => (
               <button

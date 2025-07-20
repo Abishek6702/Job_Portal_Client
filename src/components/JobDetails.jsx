@@ -19,10 +19,9 @@ const JobDetails = ({ onClose, job, isExpanded }) => {
 
   const handleClose = (e) => {
     e.stopPropagation();
-    onClose(); // <-- Make sure to use onClose, not onclose
+    onClose();
   };
 
-  // Intersection Observer to highlight active section
   useEffect(() => {
     const sections = [
       { ref: descriptionRef, id: "description" },
@@ -73,7 +72,6 @@ const JobDetails = ({ onClose, job, isExpanded }) => {
       }`}
     >
       <div className="content-container h-[95vh] overflow-auto sticky top-2 bg-gray-50 rounded-sm p-12 ">
-        {/* Save and Close Icons on the same line at the top right */}
 
         <div className="company-content">
           <div className="company-name">
@@ -124,7 +122,6 @@ const JobDetails = ({ onClose, job, isExpanded }) => {
                     </svg>
                   )}
                 </div>
-                {/* Close Icon */}
                 <button
                   onClick={handleClose}
                   className="p-2 rounded-full hover:bg-gray-200"

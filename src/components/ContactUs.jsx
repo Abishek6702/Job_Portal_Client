@@ -11,14 +11,13 @@ import {
 
 const icons = [
   { component: FacebookIcon, href: "#" },
-  { component: Globe, href: "#" }, // Use Globe as a placeholder for Google
+  { component: Globe, href: "#" }, 
   { component: Instagram, href: "#" },
   { component: Github, href: "#" },
   { component: Twitter, href: "#" },
 ];
 const ContactUs = () => (
   <section className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto my-16 px-8 rounded-2xl shadow-md ">
-    {/* Left Side */}
     <div className="md:w-1/2 mb-10 md:mb-0 md:pr-10  px-4">
       <p className="text-blue-600 font-semibold text-2xl mb-2">Contact Us</p>
       <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-snug">
@@ -30,7 +29,6 @@ const ContactUs = () => (
         veniam, quis nostrud exercitation ullamco laboris nisi.
       </p>
 
-      {/* Social Icons */}
       <div className="flex items-center space-x-4 mb-6">
         {icons.map(({ component: Icon, href }, i) => (
           <a
@@ -43,7 +41,6 @@ const ContactUs = () => (
         ))}
       </div>
 
-      {/* Call Us Button */}
       <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full flex items-center gap-2">
         <svg
           width="18"
@@ -61,7 +58,6 @@ const ContactUs = () => (
       </button>
     </div>
 
-    {/* Right Side: Form */}
     <div className="md:w-1/2 w-full bg-white/10 backdrop-blur-lg p-10 rounded-3xl  border-white/20">
       <form className="space-y-3 ">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

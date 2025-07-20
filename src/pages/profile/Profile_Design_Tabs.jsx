@@ -5,18 +5,17 @@ const accountTabs = [
   "Personal Information",
   "Education",
   "Experience",
-  "Resumes"
+  "Resumes",
 ];
 
 const Profile_Design_Tabs = ({
   activeMain,
   setActiveMain,
   activeSub,
-  setActiveSub
+  setActiveSub,
 }) => {
   return (
     <div className="w-full h-fit sm:max-w-[260px] bg-white rounded-2xl shadow p-0 overflow-hidden">
-      {/* Account Preferences */}
       <button
         className={`flex items-center w-full px-6 pt-6 pb-4 text-gray-700 font-semibold text-lg focus:outline-none transition
           ${activeMain === "account" ? "bg-gray-50" : ""}
@@ -26,7 +25,6 @@ const Profile_Design_Tabs = ({
         <User className="w-6 h-6 mr-3" />
         Account Preferences
       </button>
-      {/* Sub-tabs only if Account Preferences is active */}
       {activeMain === "account" && (
         <ul className="mb-2">
           {accountTabs.map((tab) => (

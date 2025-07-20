@@ -28,7 +28,6 @@ export default function PreferencesStep({ formData, setFormData }) {
       salaryExpectation: e.target.value,
     }));
 
-  // Handle comma-separated skills input
   const handleSkillsChange = (e) => {
     const value = e.target.value;
     setFormData((prev) => ({
@@ -43,51 +42,65 @@ export default function PreferencesStep({ formData, setFormData }) {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Preferences</h2>
-      <div>
-        <label>Preferred Roles</label>
-        {formData.preferredRoles.map((role, idx) => (
-          <div key={idx} className="w-full items-center mb-2">
-            <input
-              placeholder="Preferred Role"
-              value={role}
-              onChange={(e) => handleRoleChange(idx, e)}
-              className="border border-gray-300 outline-none rounded-lg w-[80%] p-1 m-1"
-            />
-            {formData.preferredRoles.length > 1 && (
-              <button
-                type="button"
-                onClick={() => removeRole(idx)}
-                className="text-red-500 ml-2"
-              >
-                <X />
-              </button>
-            )}
+      <h2 className="text-xl font-bold ">Preferences</h2>
+      <p className="mb-6 text-gray-700">Set your job preferences</p>
+
+
+      <div className="roles grid grid-cols-2 ">
+        <div className="mb-6 w-[700px]  ">
+          <div className="font-bold mb-2">Current Roles</div>
+          <div className="max-h-[200px] overflow-y-auto pr-2 w-">
+            {formData.preferredRoles.map((role, idx) => (
+              <div key={idx} className="relative flex items-center gap-2 mb-2  ">
+                <input
+                  placeholder="Current Role"
+                  value={role}
+                  onChange={(e) => handleRoleChange(idx, e)}
+                  className="border w-[700px]  p-2 border-gray-300 rounded-md outline-none flex-1"
+                />
+                {formData.preferredRoles.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeRole(idx)}
+                    className="text-red-500"
+                  >
+                    <X />
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
-        <button type="button" onClick={addRole} className="text-blue-500 mb-2">
+          {/* <button
+          type="button"
+          onClick={addRole}
+          className="text-blue-500 mt-2"
+        >
           Add Role
-        </button>
+        </button> */}
+        </div>
       </div>
-      <div className="mb-4">
-        <label>Salary Expectation</label>
-        <input
-          name="salaryExpectation"
-          type="number"
-          value={formData.salaryExpectation}
-          onChange={handleSalaryChange}
-          className="border border-gray-300 outline-none rounded-lg p-2 w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label>Mention Your Skills (comma separated)</label>
-        <input
-          type="text"
-          value={formData.skillsInput}
-          onChange={handleSkillsChange}
-          className="border border-gray-300 outline-none rounded-lg p-2 w-full"
-          placeholder="e.g. JavaScript, React, Node.js"
-        />
+
+      <div className="grid grid-cols-2 gap-6 mb-6 ">
+        {/* <div className="flex flex-col gap-1">
+          <label className="font-bold">Salary Expectation</label>
+          <input
+            name="salaryExpectation"
+            type="number"
+            value={formData.salaryExpectation}
+            onChange={handleSalaryChange}
+            className="border p-2 border-gray-300 rounded-md outline-none"
+          />
+        </div> */}
+        <div className="flex flex-col gap-1">
+          <label className="font-bold">Skills (comma separated)</label>
+          <textarea
+            type="text"
+            value={formData.skillsInput}
+            onChange={handleSkillsChange}
+            className="border w-[700px] p-2 border-gray-300 rounded-md outline-none"
+            placeholder="e.g. JavaScript, React, Node.js"
+          />
+        </div>
       </div>
     </div>
   );

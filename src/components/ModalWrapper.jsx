@@ -1,4 +1,3 @@
-// components/ModalWrapper.jsx
 import { useEffect } from "react";
 import ReactDOM from "react-dom";
 

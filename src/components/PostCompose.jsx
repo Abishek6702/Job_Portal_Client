@@ -8,7 +8,6 @@ const PostComposer = ({ profile, onNewPost  }) => {
     onNewPost(newPost);
     setShowComponent(false);
   };
-  // Only use the image if it exists, otherwise render nothing
   const profileImg =
     profile && profile.onboarding && profile.onboarding.profileImage
       ? `${import.meta.env.VITE_API_BASE_URL}/${profile.onboarding.profileImage}`

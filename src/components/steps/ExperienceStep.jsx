@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ConfirmModal from "../ConfirmModal"; 
-import { X } from "lucide-react";
+import ConfirmModal from "../ConfirmModal";
+import { Plus, X } from "lucide-react";
 
 export default function ExperienceStep({ formData, setFormData }) {
   const [showModal, setShowModal] = useState(false);
@@ -25,13 +25,11 @@ export default function ExperienceStep({ formData, setFormData }) {
     }));
   };
 
-  // Show modal and remember which index to delete
   const handleDeleteClick = idx => {
     setDeleteIdx(idx);
     setShowModal(true);
   };
 
-  // Confirm deletion
   const handleConfirmDelete = () => {
     setFormData(prev => {
       const arr = [...prev.experience];
@@ -42,35 +40,102 @@ export default function ExperienceStep({ formData, setFormData }) {
     setDeleteIdx(null);
   };
 
-  // Cancel deletion
   const handleCancelDelete = () => {
     setShowModal(false);
     setDeleteIdx(null);
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4">Experience</h2>
-      {formData.experience.map((exp, idx) => (
-        <div key={idx} className="shadow bg-gray-50 p-2 mb-4 rounded relative">
-          <input name="company" placeholder="Company" value={exp.company} onChange={e => handleArrayChange(idx, e)} className="border p-1 m-1 border-gray-300 outline-none rounded-lg" />
-          <input name="yearFrom" placeholder="Year From" value={exp.yearFrom} onChange={e => handleArrayChange(idx, e)} className="border p-1 m-1 border-gray-300 outline-none rounded-lg" />
-          <input name="yearTo" placeholder="Year To" value={exp.yearTo} onChange={e => handleArrayChange(idx, e)} className="border p-1 m-1 border-gray-300 outline-none rounded-lg" />
-          <input name="title" placeholder="Title" value={exp.title} onChange={e => handleArrayChange(idx, e)} className="border p-1 m-1 border-gray-300 outline-none rounded-lg" />
-          <input name="location" placeholder="Location" value={exp.location} onChange={e => handleArrayChange(idx, e)} className="border p-1 m-1 border-gray-300 outline-none rounded-lg" />
-          <input name="description" placeholder="Description" value={exp.description} onChange={e => handleArrayChange(idx, e)} className="border p-1 m-1 border-gray-300 outline-none rounded-lg" />
-          {formData.experience.length > 1 && (
-            <button
-              type="button"
-              onClick={() => handleDeleteClick(idx)}
-              className="text-red-500 ml-2 absolute right-2 top-2"
-            >
-              <X/>
-            </button>
-          )}
-        </div>
-      ))}
-      <button type="button" onClick={addItem} className="text-blue-500 mb-2">Add Experience</button>
+    <div className="">
+      <h2 className="text-xl font-bold mb-1">Experience</h2>
+      <div className="flex items-center justify-between">
+      <p className="mb-4 text-gray-700">Add your work experience</p>
+      <button type="button" onClick={addItem} className="flex items-center text-white font-semibold mb-2 bg-blue-500 p-1 rounded-lg px-2">
+        <Plus className="w-5"/>
+        Add Experience
+      </button>
+      </div>
+      <div className="max-h-[400px] overflow-y-auto pr-2 ">
+        {formData.experience.map((exp, idx) => (
+          <div key={idx} className="relative p-4 mb-6 rounded  border-gray-200 bg-white">
+            {formData.experience.length > 1 && (
+              <button
+                type="button"
+                onClick={() => handleDeleteClick(idx)}
+                className="absolute right-2 top-2 text-red-500"
+              >
+                <X />
+              </button>
+            )}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-1">
+                <label className="font-bold">Company</label>
+                <input
+                  name="company"
+                  placeholder="Company"
+                  value={exp.company}
+                  onChange={e => handleArrayChange(idx, e)}
+                  className="border p-2 border-gray-300 rounded-md outline-none"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="font-bold">Title</label>
+                <input
+                  name="title"
+                  placeholder="Title"
+                  value={exp.title}
+                  onChange={e => handleArrayChange(idx, e)}
+                  className="border p-2 border-gray-300 rounded-md outline-none"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="font-bold">Location</label>
+                <input
+                  name="location"
+                  placeholder="Location"
+                  value={exp.location}
+                  onChange={e => handleArrayChange(idx, e)}
+                  className="border p-2 border-gray-300 rounded-md outline-none"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="font-bold">Year From</label>
+                <input
+                  name="yearFrom"
+                  type="date"
+                  placeholder="Year From"
+                  value={exp.yearFrom}
+                  onChange={e => handleArrayChange(idx, e)}
+                  className="border p-2 border-gray-300 rounded-md outline-none"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="font-bold">Year To</label>
+                <input
+                  name="yearTo"
+                  type="date"
+                  placeholder="Year To"
+                  value={exp.yearTo}
+                  onChange={e => handleArrayChange(idx, e)}
+                  className="border p-2 border-gray-300 rounded-md outline-none"
+                />
+              </div>
+              <div className="flex flex-col gap-1 ">
+                <label className="font-bold">Description</label>
+                <textarea
+                  name="description"
+                  placeholder="Description"
+                  value={exp.description}
+                  onChange={e => handleArrayChange(idx, e)}
+                  className="border p-2 border-gray-300 rounded-md outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      
 
       {showModal && (
         <ConfirmModal

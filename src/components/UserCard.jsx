@@ -25,7 +25,6 @@ const UserCard = ({
     setStatus(getInitialStatus());
   }, [currentUserData, user._id]);
 
-  // Close menu on outside click
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -75,7 +74,6 @@ const UserCard = ({
     navigate(`/messages/${user._id}`);
   };
 
-  // Remove connection handler
   const handleRemoveConnection = (e) => {
     e.stopPropagation();
     setMenuOpen(false);
@@ -85,73 +83,71 @@ const UserCard = ({
   };
 
   const handleConnect = async (e) => {
-  e.stopPropagation(); // Prevents card click
-  setStatus("pending"); // Optimistically update UI
-  try {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/connections/request`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        senderId: currentUserId,
-        receiverId: user._id,
-      }),
-    });
-    if (!response.ok) throw new Error("Failed to send connection request");
-    // Optionally, handle success (e.g., show toast)
-  } catch (error) {
-    setStatus("connect"); // Revert UI if error
-    alert("Failed to send connection request");
-  }
-};
-
+    e.stopPropagation();
+    setStatus("pending");
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/connections/request`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            senderId: currentUserId,
+            receiverId: user._id,
+          }),
+        }
+      );
+      if (!response.ok) throw new Error("Failed to send connection request");
+    } catch (error) {
+      setStatus("connect");
+      alert("Failed to send connection request");
+    }
+  };
 
   return (
     <div
       className=" bg-white rounded-xl p-0 flex flex-col items-center relative max-w-xs min-w-[220px] mx-auto overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
       onClick={handleProfileClick}
     >
-      {/* Banner */}
-      {/* Banner */}
-<div className="w-full h-24 rounded-t-xl overflow-hidden bg-gradient-to-r from-blue-400 to-blue-600 relative">
-  {bannerUrl ? (
-    <img
-      src={bannerUrl}
-      alt="Cover"
-      className="w-full h-full object-fit"
-    />
-  ) : (
-    <div className="w-full h-full bg-gradient-to-r from-blue-400 to-blue-600"></div>
-  )}
+      <div className="w-full h-24 rounded-t-xl overflow-hidden bg-gradient-to-r from-blue-400 to-blue-600 relative">
+        {bannerUrl ? (
+          <img
+            src={bannerUrl}
+            alt="Cover"
+            className="w-full h-full object-fit"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-400 ">
+            No banner image
+          </div>
+        )}
 
-  {/* Menu icon in banner, top-right */}
-  {showMenu && (
-    <div className="absolute top-2 right-2 z-30" ref={menuRef}>
-      <button
-        type="button"
-        className="p-2 rounded-full bg-white border border-gray-200 shadow"
-        onClick={e => {
-          e.stopPropagation();
-          setMenuOpen(open => !open);
-        }}
-      >
-        <MoreVertical className="w-5 h-5 text-gray-500 hover:text-gray-700" />
-      </button>
-      {menuOpen && (
-        <div className="absolute right-10 -top-2 mt-2 w-45 bg-white border border-gray-200 rounded-md shadow-lg z-50 ">
-          <button
-            className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
-            onClick={handleRemoveConnection}
-          >
-            Remove Connection
-          </button>
-        </div>
-      )}
-    </div>
-  )}
-</div>
+        {showMenu && (
+          <div className="absolute top-2 right-2 z-30" ref={menuRef}>
+            <button
+              type="button"
+              className="p-2 rounded-full bg-white border border-gray-200 shadow"
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuOpen((open) => !open);
+              }}
+            >
+              <MoreVertical className="w-5 h-5 text-gray-500 hover:text-gray-700" />
+            </button>
+            {menuOpen && (
+              <div className="absolute right-10 -top-2 mt-2 w-45 bg-white border border-gray-200 rounded-md shadow-lg z-50 ">
+                <button
+                  className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                  onClick={handleRemoveConnection}
+                >
+                  Remove Connection
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
-
-      {/* Profile Image */}
       <div className="absolute top-14 left-1/2 transform -translate-x-1/2">
         {profileUrl ? (
           <img
@@ -168,9 +164,7 @@ const UserCard = ({
         )}
       </div>
 
-      {/* Content */}
       <div className="pt-8 pb-4 px-4 text-center w-full">
-        {/* Name and Role */}
         <div className="mb-4">
           <h3 className="font-semibold text-lg text-gray-900 mb-1">{name}</h3>
           <p className="truncate max-w-[180px] mx-auto text-sm text-gray-600">
@@ -178,17 +172,16 @@ const UserCard = ({
           </p>
         </div>
 
-        {/* Connect/Message Button */}
         <div className="w-full">
           {showConnectButton && status === "connect" && (
-  <button
-    onClick={handleConnect}
-    className="w-full px-4 py-2 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center gap-2 font-medium hover:bg-blue-100 transition border border-blue-200"
-  >
-    <Plus size={16} />
-    Connect
-  </button>
-)}
+            <button
+              onClick={handleConnect}
+              className="w-full px-4 py-2 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center gap-2 font-medium hover:bg-blue-100 transition border border-blue-200"
+            >
+              <Plus size={16} />
+              Connect
+            </button>
+          )}
 
           {status === "pending" && (
             <button

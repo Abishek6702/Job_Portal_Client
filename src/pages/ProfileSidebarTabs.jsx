@@ -7,12 +7,11 @@ const ProfileSidebarTabs = ({
   activeSub,
   setActiveSub,
   isOwnProfile,
-  tabs = [],          // Array of tab names to show in sidebar
+  tabs = [],          
   showOnlyMainTabs = false,
 }) => {
   return (
     <div className="w-full h-fit sm:max-w-[260px] bg-white rounded-2xl shadow p-0 overflow-hidden">
-      {/* Account Preferences Header */}
       <button
         className={`flex items-center w-full px-6 pt-6 pb-4 text-gray-700 font-semibold text-lg focus:outline-none transition
           ${activeMain === "account" ? "bg-gray-50" : ""}
@@ -23,7 +22,6 @@ const ProfileSidebarTabs = ({
         Account Preferences
       </button>
 
-      {/* Render Sub Tabs only if Account Preferences is active */}
       {activeMain === "account" && (
         <ul className="mb-2">
           {tabs.map((tab) => (
@@ -48,8 +46,6 @@ const ProfileSidebarTabs = ({
         </ul>
       )}
 
-      {/* Optionally, you can add other main tabs here if needed */}
-      {/* For example, if isOwnProfile is true, you can render saved/applied jobs tabs here */}
       {!showOnlyMainTabs && isOwnProfile && (
         <>
           <hr className="my-2 mx-6 border-gray-200" />
@@ -60,7 +56,6 @@ const ProfileSidebarTabs = ({
               `}
               onClick={() => setActiveMain("saved")}
             >
-              {/* You can add an icon here */}
               Saved Jobs
             </li>
             <hr className="my-2 mx-6 border-gray-200" />
@@ -81,7 +76,15 @@ const ProfileSidebarTabs = ({
             >
               My Posts
             </li>
-            
+            <hr className="my-2 mx-6 border-gray-200" />
+            <li
+              className={`flex items-center h-12 px-6 text-gray-700 font-semibold text-lg cursor-pointer hover:bg-gray-50 transition
+                ${activeMain === "settings" ? "bg-gray-100" : ""}
+              `}
+              onClick={() => setActiveMain("settings")}
+            >
+              Settings
+            </li>
           </ul>
         </>
       )}

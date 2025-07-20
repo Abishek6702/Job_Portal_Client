@@ -34,7 +34,6 @@ const MessageDetail = ({ isMobile, onBack }) => {
     socket,
   } = useMessageContext();
 
-  // Fetch recipient's profile
   useEffect(() => {
     const fetchRecipientProfile = async () => {
       try {
@@ -54,7 +53,6 @@ const MessageDetail = ({ isMobile, onBack }) => {
     if (userId) fetchRecipientProfile();
   }, [userId]);
 
-  // Fetch messages
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -129,7 +127,6 @@ const MessageDetail = ({ isMobile, onBack }) => {
 
       setNewMessage("");
       setImageFile(null);
-      // Let the socket update messages
     } catch (error) {
       console.error("Error sending message:", error);
     }

@@ -12,7 +12,6 @@ export default function JobUpdateForm({ job, onClose }) {
   const [newQuestion, setNewQuestion] = useState("");
   const navigate = useNavigate();
 
-  // Steps and field groupings now match JobPostForm
   const steps = [
     "Job Info",
     "Job Info",
@@ -35,14 +34,10 @@ export default function JobUpdateForm({ job, onClose }) {
     requirements: [{ title: "", content: [""] }],
     deadlineToApply: "",
     additionalInfo: [],
-    // companyLogo: "",
-    // companyImages: [],
-    // applyMethod: "",
   });
 
   useEffect(() => {
     if (job) {
-      // Ensure dynamic fields are arrays, not undefined
       setFormData({
         ...formData,
         ...job,
@@ -52,7 +47,6 @@ export default function JobUpdateForm({ job, onClose }) {
         additionalInfo: job.additionalInfo || [],
       });
     }
-    // eslint-disable-next-line
   }, [job]);
 
   const handleChange = (field, value) => {
@@ -96,18 +90,6 @@ export default function JobUpdateForm({ job, onClose }) {
       form.append("jobDescription", safeJSON(formData.jobDescription));
       form.append("requirements", safeJSON(formData.requirements));
       form.append("additionalInfo", safeJSON(formData.additionalInfo));
-
-      // Uncomment if supporting companyLogo/companyImages
-      // if (formData.companyLogo instanceof File) {
-      //   form.append("companyLogo", formData.companyLogo);
-      // }
-      // if (formData.companyImages?.length > 0) {
-      //   formData.companyImages.forEach((file) => {
-      //     if (file instanceof File) {
-      //       form.append("companyImages", file);
-      //     }
-      //   });
-      // }
 
       const response = await fetch(
         `${import.meta.env.VITE_API_BASE_URL}/api/jobs/${job._id}`,
@@ -159,7 +141,8 @@ export default function JobUpdateForm({ job, onClose }) {
       .then((res) => res.json())
       .then((data) => {
         const filtered = data.filter(
-          (company) => company.createdBy && company.createdBy.toString() === userId
+          (company) =>
+            company.createdBy && company.createdBy.toString() === userId
         );
         setCompanyOptions(filtered);
       })
@@ -168,23 +151,24 @@ export default function JobUpdateForm({ job, onClose }) {
         console.error("Error fetching companies:", err);
       })
       .finally(() => setLoadingCompanies(false));
-    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     if (companyOptions.length > 0 && !formData.companyId) {
       handleChange("companyId", companyOptions[0]._id);
     }
-    // eslint-disable-next-line
   }, [companyOptions]);
 
   return (
     <div className="joblist_model_bg fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-[100%] z-10">
       <div className="w-full lg:w-[60%] relative top-20 m-auto p-6 border shadow-lg rounded-md bg-white">
-        {/* Header */}
         <div className="back-icon flex items-center justify-between">
           <div className="icon w-full flex items-center justify-between ">
-            <ArrowLeft onClick={prevStep} disabled={step === 0} className="cursor-pointer" />
+            <ArrowLeft
+              onClick={prevStep}
+              disabled={step === 0}
+              className="cursor-pointer"
+            />
             <X onClick={handleClose} className="cursor-pointer" />
             {showModal && (
               <ExitConfirmation
@@ -194,7 +178,6 @@ export default function JobUpdateForm({ job, onClose }) {
             )}
           </div>
         </div>
-        {/* Progress bar */}
         <div className="w-full bg-gray-200 h-2 rounded-full mb-6 mt-8">
           <div
             className="bg-blue-600 h-2 rounded-full"
@@ -203,7 +186,6 @@ export default function JobUpdateForm({ job, onClose }) {
         </div>
         <p className="text-2xl font-bold mb-6 text-center">{steps[step]}</p>
 
-        {/* Step 0: Job Info */}
         {step === 0 && (
           <div className="flex flex-col space-y-4 w-[80%] m-auto">
             <div className="hidden">
@@ -225,7 +207,9 @@ export default function JobUpdateForm({ job, onClose }) {
               </select>
             </div>
             <div>
-              <label className="block text-lg font-semibold mb-1">Position</label>
+              <label className="block text-lg font-semibold mb-1">
+                Position
+              </label>
               <input
                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Position"
@@ -234,7 +218,9 @@ export default function JobUpdateForm({ job, onClose }) {
               />
             </div>
             <div>
-              <label className="block text-lg font-semibold mb-1">Location</label>
+              <label className="block text-lg font-semibold mb-1">
+                Location
+              </label>
               <input
                 className="input w-full border border-gray-300 rounded-sm p-2 text-sm outline-none"
                 placeholder="Location"
@@ -256,7 +242,6 @@ export default function JobUpdateForm({ job, onClose }) {
           </div>
         )}
 
-        {/* Step 1: Job Info */}
         {step === 1 && (
           <div className="flex flex-col space-y-6 w-full max-w-2xl mx-auto px-4">
             <div>
@@ -278,13 +263,14 @@ export default function JobUpdateForm({ job, onClose }) {
                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Interview Process"
                 value={formData.interviewProcess}
-                onChange={(e) => handleChange("interviewProcess", e.target.value)}
+                onChange={(e) =>
+                  handleChange("interviewProcess", e.target.value)
+                }
               />
             </div>
           </div>
         )}
 
-        {/* Step 2: Job Description & Requirements */}
         {step === 2 && (
           <div className="space-y-6 w-[90%] m-auto">
             <h3 className="font-semibold text-lg">Job Description</h3>
@@ -295,7 +281,12 @@ export default function JobUpdateForm({ job, onClose }) {
                   placeholder="Title"
                   value={desc.title}
                   onChange={(e) =>
-                    updateDynamicField("jobDescription", i, "title", e.target.value)
+                    updateDynamicField(
+                      "jobDescription",
+                      i,
+                      "title",
+                      e.target.value
+                    )
                   }
                 />
                 <textarea
@@ -303,7 +294,12 @@ export default function JobUpdateForm({ job, onClose }) {
                   placeholder="Content (one per line)"
                   value={desc.content.join("\n")}
                   onChange={(e) =>
-                    updateDynamicField("jobDescription", i, "content", e.target.value)
+                    updateDynamicField(
+                      "jobDescription",
+                      i,
+                      "content",
+                      e.target.value
+                    )
                   }
                 />
               </div>
@@ -322,7 +318,12 @@ export default function JobUpdateForm({ job, onClose }) {
                   placeholder="Title"
                   value={req.title}
                   onChange={(e) =>
-                    updateDynamicField("requirements", i, "title", e.target.value)
+                    updateDynamicField(
+                      "requirements",
+                      i,
+                      "title",
+                      e.target.value
+                    )
                   }
                 />
                 <textarea
@@ -330,7 +331,12 @@ export default function JobUpdateForm({ job, onClose }) {
                   placeholder="Content (one per line)"
                   value={req.content.join("\n")}
                   onChange={(e) =>
-                    updateDynamicField("requirements", i, "content", e.target.value)
+                    updateDynamicField(
+                      "requirements",
+                      i,
+                      "content",
+                      e.target.value
+                    )
                   }
                 />
               </div>
@@ -344,11 +350,12 @@ export default function JobUpdateForm({ job, onClose }) {
           </div>
         )}
 
-        {/* Step 3: Benefits & Deadline */}
         {step === 3 && (
           <div className="flex flex-col space-y-6 w-full max-w-2xl mx-auto px-4">
             <div>
-              <label className="block text-lg font-semibold mb-1">Benefits</label>
+              <label className="block text-lg font-semibold mb-1">
+                Benefits
+              </label>
               <input
                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm outline-none"
                 placeholder="Benefits (comma separated)"
@@ -366,13 +373,14 @@ export default function JobUpdateForm({ job, onClose }) {
                 type="date"
                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm outline-none"
                 value={formData.deadlineToApply}
-                onChange={(e) => handleChange("deadlineToApply", e.target.value)}
+                onChange={(e) =>
+                  handleChange("deadlineToApply", e.target.value)
+                }
               />
             </div>
           </div>
         )}
 
-        {/* Step 4: Additional Info/questions */}
         {step === 4 && (
           <div className="w-[50%] m-auto">
             <label className="block text-lg font-semibold mb-1">
@@ -432,16 +440,14 @@ export default function JobUpdateForm({ job, onClose }) {
           </div>
         )}
 
-        {/* Step 5: Review & Submit */}
         {step === 5 && (
           <div className="space-y-8">
-            <p className="text-2xl font-bold text-center">Review Your Job Post</p>
-            {/* Company Info */}
+            <p className="text-2xl font-bold text-center">
+              Review Your Job Post
+            </p>
             <div className="bg-gray-100 p-4 rounded">
               <h3 className="text-lg font-semibold mb-2">Company Info</h3>
-              {/* <p>
-                <strong>Company ID:</strong> {formData.companyId}
-              </p> */}
+
               <p>
                 <strong>Location:</strong> {formData.location}
               </p>
@@ -449,7 +455,6 @@ export default function JobUpdateForm({ job, onClose }) {
                 <strong>Workplace:</strong> {formData.workplace}
               </p>
             </div>
-            {/* Job Info */}
             <div className="bg-gray-100 p-4 rounded">
               <h3 className="text-lg font-semibold mb-2">Job Info</h3>
               <p>
@@ -467,7 +472,6 @@ export default function JobUpdateForm({ job, onClose }) {
                 </p>
               )}
             </div>
-            {/* Job Description */}
             <div className="bg-gray-100 p-4 rounded">
               <h3 className="text-lg font-semibold mb-2">Job Description</h3>
               {formData.jobDescription.map((desc, index) => (
@@ -481,7 +485,6 @@ export default function JobUpdateForm({ job, onClose }) {
                 </div>
               ))}
             </div>
-            {/* Requirements */}
             <div className="bg-gray-100 p-4 rounded">
               <h3 className="text-lg font-semibold mb-2">Requirements</h3>
               {formData.requirements.map((req, index) => (
@@ -495,7 +498,6 @@ export default function JobUpdateForm({ job, onClose }) {
                 </div>
               ))}
             </div>
-            {/* Benefits */}
             <div className="bg-gray-100 p-4 rounded">
               <h3 className="text-lg font-semibold mb-2">Benefits</h3>
               <ul className="list-disc list-inside">
@@ -504,7 +506,6 @@ export default function JobUpdateForm({ job, onClose }) {
                 ))}
               </ul>
             </div>
-            {/* Additional Info */}
             <div className="bg-gray-100 p-4 rounded">
               <h3 className="text-lg font-semibold mb-2">
                 Additional Information
@@ -515,30 +516,13 @@ export default function JobUpdateForm({ job, onClose }) {
                 ))}
               </ul>
             </div>
-            {/* Card Preview */}
             <div className="card_container  flex items-center space-x-20">
               <div className="card ">
                 <div className="title mt-2 mb-4 p-2">
                   <p className="text-lg font-semibold ">Job Card Preview</p>
                 </div>
                 <div className="card-container border border-gray-300 rounded-md p-4 cursor-pointer mb-5">
-                  <div className="card-title flex items-center justify-between">
-                    {/* <div className="company-name flex gap-2">
-                      <img
-                        src={
-                          typeof formData.companyLogo === "string"
-                            ? formData.companyLogo
-                            : URL.createObjectURL(formData.companyLogo)
-                        }
-                        alt="Company Logo"
-                        className="w-6 h-6 rounded-full object-cover"
-                      />
-                      <p className="text-gray-500 font-medium">
-                        {" "}
-                        {formData.companyName}
-                      </p>
-                    </div> */}
-                  </div>
+                  <div className="card-title flex items-center justify-between"></div>
                   <div className="card-body mt-4">
                     <p className="text-xl md:text-2xl font-semibold">
                       {formData.position}
@@ -565,7 +549,6 @@ export default function JobUpdateForm({ job, onClose }) {
                 </div>
               </div>
             </div>
-            {/* Submit Button */}
             <div className="text-center">
               <button
                 className="mt-4 px-6 py-2 bg-green-600 text-white rounded cursor-pointer"
@@ -577,7 +560,6 @@ export default function JobUpdateForm({ job, onClose }) {
           </div>
         )}
 
-        {/* Navigation */}
         <div className="mt-8 flex justify-end w-[80%] m-auto p-2 ">
           {step < steps.length - 1 && (
             <button

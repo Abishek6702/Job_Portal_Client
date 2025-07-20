@@ -1,14 +1,36 @@
 import React, { useState, useEffect } from "react";
+import RangeSlider from "react-range-slider-input";
+import "react-range-slider-input/dist/style.css";
 import JobCardList from "../components/JobCardList";
 import JobDetails from "../components/JobDetails";
-import Navbar from "../components/Navbar";
-import { Funnel, MapPin, Search, X } from "lucide-react";
-import nodata from "../assets/cuate.svg"; // For filter and close icons
+import { jwtDecode } from "jwt-decode";
+import nodata from "../assets/cuate.svg";
+import { Funnel, Locate, Search } from "lucide-react";
 
 const filterOptions = {
   jobType: ["Full-time", "Freelance", "Internship", "Volunteer"],
   remote: ["On-site", "Remote", "Hybrid"],
   datePosted: ["Anytime", "Last 24 hours", "Last 7 days", "Last 30 days"],
+};
+
+const parseMinSalary = (salaryRange) => {
+  if (!salaryRange) return 0;
+  const parts = salaryRange.replace(/[$,]/g, "").split("-");
+  return parseInt(parts[0].trim(), 10) || 0;
+};
+
+const getDateFilterRange = (datePostedOption) => {
+  const now = new Date();
+  switch (datePostedOption) {
+    case "Last 24 hours":
+      return new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    case "Last 7 days":
+      return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    case "Last 30 days":
+      return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    default:
+      return new Date(0);
+  }
 };
 
 const JobBoard = () => {
@@ -20,34 +42,70 @@ const JobBoard = () => {
     remote: [],
     datePosted: "Anytime",
   });
+  const [salaryRange, setSalaryRange] = useState([0, 5000000]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [filteredJobs, setFilteredJobs] = useState([]);
-  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [appliedJobIds, setAppliedJobIds] = useState([]);
+  const [jobFilter, setJobFilter] = useState("all");
+  const [jobsLoading, setJobsLoading] = useState(false);
+  const [appliedLoading, setAppliedLoading] = useState(false);
+  const [hasInteractedWithSalarySlider, setHasInteractedWithSalarySlider] =
+    useState(false);
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
+  const [showJobDetailFull, setShowJobDetailFull] = useState(false);
 
   useEffect(() => {
-    // Fetch jobs from API
-    const fetchJobs = async () => {
-      const token = localStorage.getItem("token");
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/jobs`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!response.ok) throw new Error("Failed to fetch jobs");
-        const data = await response.json();
-        setJobs(data);
-      } catch (error) {
-        console.error("Error fetching jobs:", error.message);
-      }
-    };
-    fetchJobs();
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    // Filtering logic
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUserId(decodedToken.id);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+    setAppliedLoading(true);
+    const token = localStorage.getItem("token");
+    fetch(
+      `${
+        import.meta.env.VITE_API_BASE_URL
+      }/api/applications/${userId}/applied-jobs`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+      .then((res) => res.json())
+      .then((data) => setAppliedJobIds(data.appliedJobs || []))
+      .catch((err) => console.error("Error fetching applied jobs:", err))
+      .finally(() => setAppliedLoading(false));
+  }, [userId]);
+
+  useEffect(() => {
+    setJobsLoading(true);
+    const token = localStorage.getItem("token");
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/jobs`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then(setJobs)
+      .catch((err) => console.error("Error fetching jobs:", err))
+      .finally(() => setJobsLoading(false));
+  }, []);
+
+  useEffect(() => {
+    const filterDate = getDateFilterRange(filters.datePosted);
+
     setFilteredJobs(
       jobs.filter((job) => {
         const matchPosition =
@@ -61,49 +119,289 @@ const JobBoard = () => {
           filters.jobType.includes(job.workplace);
         const matchRemote =
           filters.remote.length === 0 || filters.remote.includes(job.workplace);
-        // Date posted filter logic as needed
-        return matchPosition && matchLocation && matchJobType && matchRemote;
+        const jobDate = new Date(job.postedAt);
+        const matchDatePosted =
+          filters.datePosted === "Anytime" || jobDate >= filterDate;
+        const jobMinSalary = parseMinSalary(job.salaryRange);
+        const matchSalary =
+          !hasInteractedWithSalarySlider ||
+          (jobMinSalary >= salaryRange[0] && jobMinSalary <= salaryRange[1]);
+        const applied = appliedJobIds.includes(job._id);
+        const matchAppliedStatus =
+          jobFilter === "all" ||
+          (jobFilter === "applied" && applied) ||
+          (jobFilter === "not_applied" && !applied);
+
+        return (
+          matchPosition &&
+          matchLocation &&
+          matchJobType &&
+          matchRemote &&
+          matchDatePosted &&
+          matchSalary &&
+          matchAppliedStatus
+        );
       })
     );
-  }, [jobs, position, location, filters]);
+  }, [
+    jobs,
+    position,
+    location,
+    filters,
+    salaryRange,
+    appliedJobIds,
+    jobFilter,
+    hasInteractedWithSalarySlider,
+  ]);
 
-  // Filter checkbox handler
   const handleCheckbox = (name, value) => {
-    setFilters((prev) => {
-      const arr = prev[name];
-      return {
-        ...prev,
-        [name]: arr.includes(value)
-          ? arr.filter((v) => v !== value)
-          : [...arr, value],
-      };
-    });
+    setFilters((prev) => ({
+      ...prev,
+      [name]: prev[name].includes(value)
+        ? prev[name].filter((v) => v !== value)
+        : [...prev[name], value],
+    }));
   };
 
-  // Date posted select handler
   const handleSelect = (e) => {
     setFilters((prev) => ({ ...prev, datePosted: e.target.value }));
   };
 
-  // Filter panel JSX (for reuse in sidebar and drawer)
-  const FilterPanel = (
-    <div className="bg-white border border-gray-200 rounded-xl p-6 w-full max-w-xs mx-auto shadow-md h-full overflow-y-auto">
-      <div className="flex justify-between items-center mb-4">
-        <span className="font-semibold text-lg">Filter</span>
+  const handleSelectJob = (job) => {
+    setSelectedJob(job);
+    if (isMobile) setShowJobDetailFull(true);
+  };
+  const handleCloseJobDetail = () => {
+    setShowJobDetailFull(false);
+    setTimeout(() => setSelectedJob(null), 250);
+  };
+
+  return (
+    <>
+      {isMobile && !showMobileFilter && (
         <button
-          className="text-red-500 text-sm cursor-pointer hover:underline"
-          onClick={() =>
-            setFilters({
-              jobType: [],
-              remote: [],
-              datePosted: "Anytime",
-            })
-          }
+          onClick={() => setShowMobileFilter(true)}
+          className="flex items-center  gap-2 fixed z-50 top-37 right-6 p-2 px-3 bg-white text-blue-600 rounded-full border "
         >
-          Clear all
+          <Funnel className="w-5" />
+          Filter
         </button>
+      )}
+
+      <div className="w-[98vw] mx-auto grid grid-cols-12 mt-4 h-[88vh] overflow-auto">
+        {!isMobile ? (
+          <div className="left-container col-span-3">
+            <div className="bg-white border border-gray-300 rounded-lg p-6 sticky top-10">
+              <div className="flex justify-between items-center mb-4">
+                <span className="font-semibold text-lg">Filter</span>
+                <button
+                  className="rounded-lg bg-red-100 text-red-600 font-semibold text-sm p-2"
+                  onClick={() => {
+                    setFilters({
+                      jobType: [],
+                      remote: [],
+                      datePosted: "Anytime",
+                    });
+                    setSalaryRange([0, 5000000]);
+                    setJobFilter("all");
+                    setHasInteractedWithSalarySlider(false);
+                  }}
+                >
+                  Clear all
+                </button>
+              </div>
+              <FilterForm
+                filters={filters}
+                salaryRange={salaryRange}
+                setSalaryRange={setSalaryRange}
+                setHasInteractedWithSalarySlider={
+                  setHasInteractedWithSalarySlider
+                }
+                jobFilter={jobFilter}
+                setJobFilter={setJobFilter}
+                handleCheckbox={handleCheckbox}
+                handleSelect={handleSelect}
+              />
+            </div>
+          </div>
+        ) : showMobileFilter ? (
+          <>
+            <div className="fixed z-50 inset-0 bg-white flex flex-col p-4 overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <span className="font-semibold text-lg">Filter</span>
+                <button
+                  className="rounded-lg bg-red-100 text-red-600 font-semibold text-sm px-3 py-1"
+                  onClick={() => {
+                    setFilters({
+                      jobType: [],
+                      remote: [],
+                      datePosted: "Anytime",
+                    });
+                    setSalaryRange([0, 5000000]);
+                    setJobFilter("all");
+                    setHasInteractedWithSalarySlider(false);
+                  }}
+                >
+                  Clear all
+                </button>
+                <button
+                  className="ml-2 rounded px-2 py-1 bg-gray-200 text-gray-700 font-semibold"
+                  onClick={() => setShowMobileFilter(false)}
+                >
+                  Close
+                </button>
+              </div>
+              <FilterForm
+                filters={filters}
+                salaryRange={salaryRange}
+                setSalaryRange={setSalaryRange}
+                setHasInteractedWithSalarySlider={
+                  setHasInteractedWithSalarySlider
+                }
+                jobFilter={jobFilter}
+                setJobFilter={setJobFilter}
+                handleCheckbox={handleCheckbox}
+                handleSelect={handleSelect}
+              />
+            </div>
+            <div
+              className="fixed inset-0 z-40 bg-black bg-opacity-30"
+              onClick={() => setShowMobileFilter(false)}
+            />
+          </>
+        ) : null}
+
+        <div
+          className={`right-container ${
+            isMobile ? "col-span-12" : "col-span-9"
+          } relative`}
+        >
+          <div className="search-container sticky top-0 z-10 bg-white px-2 w-full">
+            <div className="max-w-4xl mx-auto ">
+              <div className="flex items-center bg-white border border-gray-200 rounded-full px-6 py-2 shadow-sm">
+                <div className="flex items-center flex-1 gap-2">
+                  <Search className="w-5 text-gray-400 hidden md:block " />
+                  <input
+                    type="text"
+                    placeholder="Search job title or keyword"
+                    value={position}
+                    onChange={(e) => setPosition(e.target.value)}
+                    className="bg-transparent outline-none text-gray-600 placeholder-gray-400 w-full"
+                  />
+                </div>
+                <div className="h-8 border-l border-gray-200 mx-4"></div>
+                <div className="flex items-center flex-1 gap-2">
+                  <Locate className="w-5 text-gray-400 hidden md:block " />
+                  <input
+                    type="text"
+                    placeholder="Country or timezone"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="bg-transparent outline-none text-gray-600 placeholder-gray-400 w-full"
+                  />
+                </div>
+                <button
+                  type="button"
+                  className=" ml-4 flex items-center justify-center w-10 h-10 rounded-full bg-green-100 hover:bg-green-200 transition"
+                >
+                  <Search className="w-5 text-gray-400 " />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 mb-4 font-semibold text-gray-700 px-4">
+            {jobsLoading || appliedLoading ? (
+              <span>Loading jobs...</span>
+            ) : (
+              <p className="text-xl text-blue-500">
+                <span className="text-blue-600">{filteredJobs.length} </span>
+                Jobs results
+              </p>
+            )}
+          </div>
+          {jobsLoading || appliedLoading ? (
+            <div className="text-center py-10 text-gray-500">
+              Loading jobs...
+            </div>
+          ) : filteredJobs.length === 0 ? (
+            <div className="text-center py-10 text-gray-500">
+              <img src={nodata} className="w-100 m-auto" />
+              <p className="text-xl font-semibold">No Data Found</p>
+            </div>
+          ) : (
+            <div
+              className={`${
+                isMobile ? "h-[75vh]" : "md:h-[75vh] lg:h-[500px]"
+              } overflow-y-auto`}
+            >
+              <JobCardList
+                jobs={filteredJobs}
+                onSelectJob={handleSelectJob}
+                selectedJob={selectedJob}
+              />
+            </div>
+          )}
+          {selectedJob && (
+            <>
+              {!isMobile && (
+                <div
+                  className="fixed inset-0 z-40 bg-black/50"
+                  onClick={handleCloseJobDetail}
+                />
+              )}
+              {isMobile && showJobDetailFull && (
+                <div
+                  className="fixed inset-0 z-40 bg-black/20"
+                  onClick={handleCloseJobDetail}
+                />
+              )}
+              <div
+                className={`fixed ${
+                  isMobile && showJobDetailFull
+                    ? "inset-0 z-50 bg-white animate-fadeIn"
+                    : "top-0 right-0 h-full z-50"
+                } transition-transform duration-300`}
+                style={
+                  isMobile
+                    ? { width: "100vw", height: "100vh" }
+                    : {
+                        width: "50vw",
+                        maxWidth: "700px",
+                        boxShadow: "-2px 0 16px rgba(0,0,0,0.08)",
+                        transition: "transform 0.4s cubic-bezier(.4,0,.2,1)",
+                        transform:
+                          selectedJob && !showJobDetailFull
+                            ? "translateX(0)"
+                            : "translateX(110%)",
+                      }
+                }
+              >
+                <JobDetails
+                  job={selectedJob}
+                  onClose={handleCloseJobDetail}
+                  isExpanded={isMobile ? true : false}
+                />
+              </div>
+            </>
+          )}
+        </div>
       </div>
-      {/* Date Posted */}
+    </>
+  );
+};
+
+function FilterForm({
+  filters,
+  salaryRange,
+  setSalaryRange,
+  setHasInteractedWithSalarySlider,
+  jobFilter,
+  setJobFilter,
+  handleCheckbox,
+  handleSelect,
+}) {
+  return (
+    <>
       <div className="mb-4">
         <label className="block text-sm font-medium mb-1">Date Posted</label>
         <select
@@ -118,9 +416,8 @@ const JobBoard = () => {
           ))}
         </select>
       </div>
-      {/* Job Type */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Job Type</label>
+        <label className="block text-md font-medium mb-1">Job type</label>
         {filterOptions.jobType.map((type) => (
           <div key={type} className="flex items-center mb-1">
             <input
@@ -133,9 +430,8 @@ const JobBoard = () => {
           </div>
         ))}
       </div>
-      {/* On-site/Remote */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">On-site/Remote</label>
+        <label className="block text-md font-medium mb-1">On-site/remote</label>
         {filterOptions.remote.map((type) => (
           <div key={type} className="flex items-center mb-1">
             <input
@@ -148,170 +444,60 @@ const JobBoard = () => {
           </div>
         ))}
       </div>
-      {/* Range Salary (placeholder, implement as needed) */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Range Salary</label>
-        <input
-          type="range"
-          min="1000"
-          max="5000"
-          step="500"
-          className="w-full"
-          // Implement salary filter logic as needed
+        <label className="block text-md font-medium mb-3">Salary Range</label>
+        <RangeSlider
+          min={0}
+          max={5000000}
+          step={10000}
+          value={salaryRange}
+          onInput={(value) => {
+            setSalaryRange(value);
+            setHasInteractedWithSalarySlider(true);
+          }}
         />
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
-          <span>$1,000</span>
-          <span>$5,000+</span>
+        <div className="flex justify-between mt-2 text-sm">
+          <span>₹{salaryRange[0].toLocaleString()}</span>
+          <span>₹{salaryRange[1].toLocaleString()}</span>
         </div>
       </div>
-    </div>
-  );
-
-  // Sliding Job Details Panel styles
-  const slidingPanelStyles = {
-    position: "fixed",
-    top: 0,
-    right: 0,
-    width: "50%",
-    maxWidth: "95vw",
-    height: "100vh",
-    background: "#fff",
-    boxShadow: "-2px 0 16px rgba(0,0,0,0.08)",
-    zIndex: 50,
-    transform: selectedJob ? "translateX(0)" : "translateX(110%)",
-    transition: "transform 0.35s cubic-bezier(.4,0,.2,1)",
-    overflowY: "auto",
-  };
-
-  return (
-    <>
-      {/* <Navbar /> */}
-      {/* Fixed Search Bar */}
-      <div className="sticky mt-2 top-0 left-0 w-full z-30 bg-white px-2 py-3 ">
-        <div className="flex items-center justify-between max-w-5xl mx-auto gap-2">
-          {/* Filter button on mobile/tablet */}
-          <button
-            className="lg:hidden flex items-center gap-2 px-4 py-2 bg-white border rounded-lg shadow-sm"
-            onClick={() => setFilterDrawerOpen(true)}
-          >
-            <Funnel className="w-5 h-5" />
-            Filters
-          </button>
-          {/* Search bar */}
-          <form className="flex w-[60%] m-auto items-center border border-gray-300 rounded-full px-4 py-2 gap-4 mb-4">
-            <Search className="text-gray-400" />
-
+      <div className="mb-4">
+        <label className="block text-md font-medium mb-1">Job Status</label>
+        <div className="flex flex-col gap-1">
+          <label className="flex items-center">
             <input
-              type="text"
-              placeholder="Search job title or keyword"
-              value={position}
-              onChange={(e) => setPosition(e.target.value)}
-              className="flex-1 outline-none"
+              type="radio"
+              name="jobFilter"
+              checked={jobFilter === "all"}
+              onChange={() => setJobFilter("all")}
+              className="mr-2"
             />
-
-            <div className="w-px h-6 bg-gray-300" />
-
-            <div className="flex items-center flex-1">
-              <MapPin className="text-gray-400" />
-
-              <input
-                type="text"
-                placeholder="Country or timezone"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full outline-none ml-4"
-              />
-            </div>
-
-            <div className="ml-auto">
-              <button type="submit" className="rounded-full bg-green-100 p-2">
-                <Search className="text-gray-400" />
-              </button>
-            </div>
-          </form>
+            <span>All Jobs</span>
+          </label>
+          <label className="flex items-center">
+            <input
+              type="radio"
+              name="jobFilter"
+              checked={jobFilter === "applied"}
+              onChange={() => setJobFilter("applied")}
+              className="mr-2"
+            />
+            <span>Applied Jobs</span>
+          </label>
+          <label className="flex items-center">
+            <input
+              type="radio"
+              name="jobFilter"
+              checked={jobFilter === "not_applied"}
+              onChange={() => setJobFilter("not_applied")}
+              className="mr-2"
+            />
+            <span>Not Applied Jobs</span>
+          </label>
         </div>
       </div>
-
-      {/* Main Content */}
-      <div className=" max-w-7xl m-auto mt-6 px-2">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 relative">
-          {/* Sidebar filter: only visible on desktop */}
-          <div className="hidden lg:block lg:col-span-3">{FilterPanel}</div>
-          {/* Job Cards List */}
-          <div className="col-span-1 lg:col-span-9">
-            <div className="mb-2 font-semibold text-gray-700">
-              {filteredJobs.length} Job{filteredJobs.length !== 1 && "s"} result
-            </div>
-
-            {filteredJobs.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-96 text-gray-500">
-                <img
-                  src={nodata} // Replace with your image path or URL
-                  alt="No Results"
-                  className="w-68 h-68 "
-                />
-                <p className="text-lg font-medium">No matching jobs found</p>
-                <p className="text-sm mt-1 text-gray-400">
-                  Try adjusting your filters or search keywords.
-                </p>
-              </div>
-            ) : (
-              <JobCardList
-                jobs={filteredJobs}
-                onSelectJob={setSelectedJob}
-                selectedJob={selectedJob}
-              />
-            )}
-          </div>
-
-          {/* Sliding Job Details Panel */}
-          <div style={slidingPanelStyles}>
-            {selectedJob && (
-              <JobDetails
-                job={selectedJob}
-                onClose={() => setSelectedJob(null)}
-              />
-            )}
-          </div>
-        </div>
-        {/* Overlay when job details panel is open */}
-        {selectedJob && (
-          <div
-            className="fixed inset-0 tint z-40"
-            onClick={() => setSelectedJob(null)}
-          />
-        )}
-      </div>
-
-      {/* Mobile/Tablet Filter Drawer */}
-      {filterDrawerOpen && (
-        <>
-          <div
-            className="fixed inset-0 tint z-50"
-            onClick={() => setFilterDrawerOpen(false)}
-          />
-          <aside
-            className={`
-              fixed top-0 left-0 h-full w-80 max-w-[90vw] bg-white z-50 transition-transform duration-300 ease-in-out
-              ${filterDrawerOpen ? "translate-x-0" : "-translate-x-full"}
-              lg:hidden
-            `}
-          >
-            <div className="flex justify-between items-center p-4 border-b">
-              <span className="font-semibold text-lg">Filter</span>
-              <button
-                onClick={() => setFilterDrawerOpen(false)}
-                className="text-gray-500"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            <div className="p-4">{FilterPanel}</div>
-          </aside>
-        </>
-      )}
     </>
   );
-};
+}
 
 export default JobBoard;

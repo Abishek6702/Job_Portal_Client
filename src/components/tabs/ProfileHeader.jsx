@@ -20,7 +20,7 @@ const ProfileHeader = ({ profile }) => {
     formData.append("profileImage", file);
     try {
       await axios.put(
-        `http://localhost:3000/api/onboarding/profile-image`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/onboarding/profile-image`,
         formData,
         {
           headers: {
@@ -40,7 +40,7 @@ const ProfileHeader = ({ profile }) => {
       <div className="user_profile relative text-gray-500">
         {onboarding.profileImage ? (
           <img
-            src={`http://localhost:3000/${onboarding.profileImage}`}
+            src={`${import.meta.env.VITE_API_BASE_URL}/${onboarding.profileImage}`}
             alt="Profile"
             className="w-30 h-30 rounded-full object-cover"
           />
@@ -89,7 +89,6 @@ const ProfileHeader = ({ profile }) => {
           <p className="font-semibold text-2xl">{fullName}</p>
           <button className="border rounded-full p-2 px-6">Open to</button>
         </div>
-        {/* <p className="text-gray-600 font-md mt-2">{onboarding.jobtitle || "N/A"}</p> */}
         <p className="text-gray-500 font-md mt-2">{onboarding.location || "N/A"}</p>
       </div>
     </div>

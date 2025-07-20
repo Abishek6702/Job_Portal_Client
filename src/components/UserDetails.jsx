@@ -1,9 +1,9 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React from "react";
+import { useParams, Link } from "react-router-dom";
 
 const UserDetails = ({ users, loading }) => {
   const { userId } = useParams();
-  
+
   if (loading) {
     return (
       <div className="w-2/3 bg-white rounded shadow p-4">
@@ -12,8 +12,7 @@ const UserDetails = ({ users, loading }) => {
     );
   }
 
-  // Find the selected user
-  const selectedUser = users.find(user => user._id === userId);
+  const selectedUser = users.find((user) => user._id === userId);
 
   if (!selectedUser) {
     return (
@@ -26,7 +25,9 @@ const UserDetails = ({ users, loading }) => {
 
   const profileImg =
     selectedUser.onboarding?.profileImage &&
-    `${import.meta.env.VITE_API_BASE_URL}/${selectedUser.onboarding.profileImage}`;
+    `${import.meta.env.VITE_API_BASE_URL}/${
+      selectedUser.onboarding.profileImage
+    }`;
 
   const name =
     selectedUser.onboarding?.firstName && selectedUser.onboarding?.lastName
@@ -36,8 +37,8 @@ const UserDetails = ({ users, loading }) => {
   return (
     <div className="w-2/3 bg-white rounded shadow p-4">
       <div className="border-b pb-4 mb-4">
-        <Link 
-          to="/messages" 
+        <Link
+          to="/messages"
           className="text-blue-500 hover:text-blue-700 text-sm mb-2 inline-block"
         >
           ← Back to Messages
@@ -61,21 +62,22 @@ const UserDetails = ({ users, loading }) => {
           </div>
         </div>
       </div>
-      
-      {/* Additional user details */}
+
       <div className="space-y-3">
         <div>
           <h4 className="font-medium text-gray-700">Role</h4>
           <p className="text-gray-600 capitalize">{selectedUser.role}</p>
         </div>
-        
+
         {selectedUser.onboarding?.department && (
           <div>
             <h4 className="font-medium text-gray-700">Department</h4>
-            <p className="text-gray-600">{selectedUser.onboarding.department}</p>
+            <p className="text-gray-600">
+              {selectedUser.onboarding.department}
+            </p>
           </div>
         )}
-        
+
         {selectedUser.onboarding?.position && (
           <div>
             <h4 className="font-medium text-gray-700">Position</h4>
@@ -84,13 +86,11 @@ const UserDetails = ({ users, loading }) => {
         )}
       </div>
 
-      {/* Message area */}
       <div className="mt-6 pt-4 border-t">
         <h4 className="font-medium text-gray-700 mb-2">Messages</h4>
         <div className="text-gray-500 text-sm">
           Start a conversation with {name}
         </div>
-        {/* Add your messaging interface here */}
       </div>
     </div>
   );

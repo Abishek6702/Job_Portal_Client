@@ -4,7 +4,6 @@ import Navbar from "../components/Navbar";
 const Resumes = () => {
   return (
     <>
-      {/* <Navbar /> */}
       <div>resumes</div>
     </>
   );

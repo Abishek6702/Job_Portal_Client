@@ -27,7 +27,6 @@ const Messages = () => {
   const location = useLocation();
   const { userId } = useParams();
 
-  // Detect mobile
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
@@ -85,21 +84,17 @@ const Messages = () => {
     );
   }, [allUsers, profile]);
 
-  // Handler for selecting user in mobile
   const handleUserSelect = (userId) => {
     navigate(`/messages/${userId}`);
   };
 
-  // Handler for back button in mobile
   const handleBack = () => {
     navigate("/messages");
   };
 
-  // Responsive rendering
   let showUserList = true;
   let showMessageDetail = true;
   if (isMobile) {
-    // On mobile, show only one at a time
     if (location.pathname.match(/^\/messages\/[^/]+/)) {
       showUserList = false;
       showMessageDetail = true;

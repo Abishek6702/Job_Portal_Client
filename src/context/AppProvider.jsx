@@ -10,7 +10,7 @@ export const AppProvider = ({ children }) => {
   const [savedJobs, setSavedJobs] = useState([]);
   const [appliedJobs, setAppliedJobs] = useState([]);
 
-  // ✅ Get userId safely from token
+  //  Get userId  from token
   const getUserIdFromToken = () => {
     try {
       const token = localStorage.getItem("token");
@@ -25,13 +25,16 @@ export const AppProvider = ({ children }) => {
     return null;
   };
 
-  // ✅ Fetch saved jobs
+  //  Fetch saved jobs
   const fetchSavedJobs = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/jobs/saved`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/jobs/saved`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const savedIds = res.data.savedJobs.map((job) => job._id);
       setSavedJobs(savedIds);
     } catch (err) {
@@ -39,12 +42,14 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // ✅ Fetch applied jobs using userId
+  // Fetch applied jobs using userId
   const fetchAppliedJobs = async (userId) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/applications/${userId}/applied-jobs`,
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/applications/${userId}/applied-jobs`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,7 +63,7 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // ✅ Toggle save job logic
+  // Toggle save job logic
   const toggleSaveJob = async (jobId) => {
     try {
       const token = localStorage.getItem("token");
@@ -78,7 +83,7 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // ✅ Fetch jobs on component mount with valid user ID
+  // Fetch jobs on component mount with valid user ID
   useEffect(() => {
     const userId = getUserIdFromToken();
     if (userId) {

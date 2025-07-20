@@ -4,7 +4,6 @@ const FooterLanding = () => {
   return (
     <footer className="bg-[#2b7fff] text-white px-6 py-10">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
-        {/* Logo and Description */}
         <div>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 bg-white text-[#2b7fff] font-bold text-lg flex items-center justify-center rounded-full">
@@ -18,7 +17,6 @@ const FooterLanding = () => {
           </p>
         </div>
 
-        {/* Product Section */}
         <div>
           <h4 className="text-lg font-semibold mb-4">Product</h4>
           <ul className="space-y-2 text-sm">
@@ -30,7 +28,6 @@ const FooterLanding = () => {
           </ul>
         </div>
 
-        {/* Remaining Section */}
         <div>
           <h4 className="text-lg font-semibold mb-4">Company</h4>
           <ul className="space-y-2 text-sm">
@@ -42,7 +39,6 @@ const FooterLanding = () => {
           </ul>
         </div>
 
-        {/* Newsletter Subscription */}
         <div>
           <h4 className="text-lg font-semibold mb-4">Stay Updated</h4>
           <p className="text-sm mb-4">
@@ -64,7 +60,6 @@ const FooterLanding = () => {
         </div>
       </div>
 
-      {/* Divider */}
       <div className="mt-12 border-t border-white/30 pt-6 text-center text-sm text-white">
         © {new Date().getFullYear()} Agency. All rights reserved.
       </div>

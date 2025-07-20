@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BriefcaseBusiness, Users, Check, X } from "lucide-react";
 
-// Example icons for categories
 const ICONS = {
   connection: <Users className="w-6 h-6 text-blue-500" />,
   job: <BriefcaseBusiness className="w-6 h-6 text-green-500" />,
@@ -36,7 +35,9 @@ const NotificationModal = ({ userId, open, onClose }) => {
 
   useEffect(() => {
     if (!open || !userId) return;
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/notifications?userId=${userId}`)
+    fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/api/notifications?userId=${userId}`
+    )
       .then((res) => res.json())
       .then((data) => {
         setNotifications(data);
@@ -48,7 +49,9 @@ const NotificationModal = ({ userId, open, onClose }) => {
   const markAsRead = async (notifId) => {
     try {
       await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/notifications/mark-read/${notifId}`,
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/notifications/mark-read/${notifId}`,
         { method: "PATCH" }
       );
       setNotifications((prev) =>
@@ -59,14 +62,17 @@ const NotificationModal = ({ userId, open, onClose }) => {
 
   const handleApprove = async (notif) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/connections/accept`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          senderId: notif.senderId._id || notif.senderId,
-          receiverId: userId,
-        }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/connections/accept`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            senderId: notif.senderId._id || notif.senderId,
+            receiverId: userId,
+          }),
+        }
+      );
       if (res.ok) {
         await markAsRead(notif._id);
         setNotifications((prev) =>
@@ -89,14 +95,17 @@ const NotificationModal = ({ userId, open, onClose }) => {
 
   const handleReject = async (notif) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/connections/reject`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          senderId: notif.senderId._id || notif.senderId,
-          receiverId: userId,
-        }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/connections/reject`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            senderId: notif.senderId._id || notif.senderId,
+            receiverId: userId,
+          }),
+        }
+      );
       if (res.ok) {
         await markAsRead(notif._id);
         setNotifications((prev) => prev.filter((n) => n._id !== notif._id));
@@ -110,7 +119,8 @@ const NotificationModal = ({ userId, open, onClose }) => {
     (n) => n.type && n.type.startsWith("connection")
   );
   const jobNotifications = notifications.filter(
-    (n) => n.type && n.type.startsWith("job")
+    (n) =>
+      n.type && (n.type.startsWith("job") || n.type === "application_status")
   );
 
   let filtered = notifications;
@@ -128,12 +138,10 @@ const NotificationModal = ({ userId, open, onClose }) => {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-end bg-black/30">
-      {/* Arrow */}
+    <div className="fixed inset-0 z-50 flex items-start justify-end bg-black/30 ">
       <div className="absolute right-[70px] mt-[44px] w-4 h-4 bg-white rotate-45 shadow-sm "></div>
 
-      {/* Modal content */}
-      <div className="lg:w-[35%] mt-12 mr-14 rounded-lg shadow-2xl bg-white overflow-hidden animate-fade-in z-10 ">
+      <div className="lg:w-[35%]  mt-12 md:mr-14 rounded-lg shadow-2xl bg-white overflow-hidden animate-fade-in z-10 ">
         <div className="flex items-center justify-between p-6 pb-2 ">
           <h2 className="text-xl font-semibold">Notification</h2>
           <button
@@ -143,7 +151,6 @@ const NotificationModal = ({ userId, open, onClose }) => {
             <X />
           </button>
         </div>
-        {/* Tabs */}
         <div className="flex gap-2 p-2 ml-4 bg-gray-100 rounded-lg w-fit">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.key;
@@ -170,7 +177,6 @@ const NotificationModal = ({ userId, open, onClose }) => {
           })}
         </div>
 
-        {/* Notification Cards */}
         <div className="  p-4 space-y-3  h-[70vh] overflow-y-auto">
           {loading ? (
             <div className="text-gray-500 p-6">Loading...</div>
@@ -185,11 +191,12 @@ const NotificationModal = ({ userId, open, onClose }) => {
                   !n.read ? "border-gray-200 bg-gray-100" : "border-gray-200"
                 }`}
               >
-                {/* Icon */}
                 <div className="flex-shrink-0 mt-1">
                   {n.sender?.profileImage ? (
                     <img
-                      src={`${import.meta.env.VITE_API_BASE_URL}/${n.sender.profileImage}`}
+                      src={`${import.meta.env.VITE_API_BASE_URL}/${
+                        n.sender.profileImage
+                      }`}
                       alt="Profile"
                       className="w-8 h-8 rounded-full object-cover"
                     />
@@ -234,7 +241,6 @@ const NotificationModal = ({ userId, open, onClose }) => {
                   {n.detail && (
                     <div className="text-gray-600 text-sm mt-1">{n.detail}</div>
                   )}
-                  {/* Approve/Reject buttons for pending connection requests only */}
                   {n.type === "connection_request" && !n.read && (
                     <div className="flex gap-2 mt-3">
                       <button

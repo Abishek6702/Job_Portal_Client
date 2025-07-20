@@ -5,7 +5,6 @@ const ExitConfirmation = ({ onConfirm, onCancel }) => {
   return (
     <div className=" joblist_model_bg fixed inset-0  flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow w-[90%] max-w-md">
-        {/* Header */}
         <div className="flex justify-between items-center p-2 px-4 border-b border-gray-300">
           <h2 className="text-lg font-semibold">Exit Confirmation</h2>
           <button
@@ -16,14 +15,12 @@ const ExitConfirmation = ({ onConfirm, onCancel }) => {
           </button>
         </div>
 
-        {/* Body */}
         <div className="p-6">
           <p className="text-lg font-semibold text-gray-500">
             Are you sure you want to go back? Unsaved changes may be lost.
           </p>
         </div>
 
-        {/* Actions */}
         <div className="flex justify-around w-[90%] m-auto gap-4 mb-4">
           <button
             onClick={onConfirm}

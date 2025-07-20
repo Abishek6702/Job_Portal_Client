@@ -42,11 +42,11 @@ export default function ApplicationStatusChange({
         ? JSON.stringify({
             ids: applicationIds,
             status: selectedStatus,
-            notes: notes, // send notes for bulk too
+            notes: notes, 
           })
         : JSON.stringify({
             status: selectedStatus,
-            notes: notes, // send notes for single
+            notes: notes, 
           });
 
       if (isBulk) {
@@ -98,7 +98,6 @@ export default function ApplicationStatusChange({
   return (
     <div className="fixed inset-0 tint flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative border border-gray-300">
-        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 text-2xl font-bold"
@@ -107,14 +106,12 @@ export default function ApplicationStatusChange({
         >
           &times;
         </button>
-        {/* Title */}
         <h2 className="text-2xl font-semibold mb-4">
           {isBulk
             ? `Change Status for ${applicationIds.length} Selected Applications`
             : "Change Status"}
         </h2>
         <hr className="mb-4 text-gray-300" />
-        {/* Current Status (only for single) */}
         {!isBulk && (
           <div className="mb-4 flex items-center gap-2">
             <span className="font-medium">Current Status :</span>
@@ -127,7 +124,6 @@ export default function ApplicationStatusChange({
             </span>
           </div>
         )}
-        {/* Change Status Form */}
         <form onSubmit={handleSubmit}>
           <div className="mb-4 font-medium">Select new status:</div>
           <div className="flex flex-col gap-2 mb-6">
@@ -172,7 +168,6 @@ export default function ApplicationStatusChange({
             </div>
           </div>
           {error && <div className="text-red-500 mb-4 text-sm">{error}</div>}
-          {/* Buttons */}
           <div className="flex justify-end gap-3">
             <button
               type="button"

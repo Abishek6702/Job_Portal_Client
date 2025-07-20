@@ -42,7 +42,6 @@ const AutoCarousel = () => {
         {slides.map((slide, index) => (
           <div key={index} className="min-w-full h-[100vh] relative">
             <img src={slide.image} alt={`Slide ${index}`} className="w-full h-full object-cover" />
-            {/* Overlay Text */}
             <div className="  absolute bottom-[10%] left-0 right-0  p-6 text-white">
               <h2 className="text-3xl font-semibold mb-2">{slide.title}</h2>
               <p className="text-lg">{slide.subtitle}</p>
@@ -51,7 +50,6 @@ const AutoCarousel = () => {
         ))}
       </div>
 
-      {/* Dots */}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
         {slides.map((_, index) => (
           <button

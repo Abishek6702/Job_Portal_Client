@@ -13,7 +13,6 @@ import {
 const ApplicationModal = ({ application, job, onClose }) => {
   if (!application || !job) return null;
 
-  // Status badge color
   const statusStyles = {
     selected: "bg-green-100 text-green-700 border-green-300",
     "in progress": "bg-blue-100 text-blue-700 border-blue-300",
@@ -38,7 +37,6 @@ const ApplicationModal = ({ application, job, onClose }) => {
   return (
     <div className="fixed inset-0 tint flex items-center justify-center z-50 mt-14">
       <div className="relative w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-y-auto max-h-[90vh]">
-        {/* Close button */}
         <button
           className="absolute top-5 right-6 text-gray-400 cursor-pointer"
           onClick={onClose}
@@ -47,7 +45,6 @@ const ApplicationModal = ({ application, job, onClose }) => {
           <XCircle className="w-7 h-7" />
         </button>
 
-        {/* Header */}
         <div className="px-8 pt-8 pb-4 flex flex-col md:flex-row md:items-center md:justify-between border-b border-gray-100">
           <div className="">
             <div className="flex items-center gap-3 mb-1">
@@ -69,9 +66,7 @@ const ApplicationModal = ({ application, job, onClose }) => {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="px-8 py-6 space-y-6">
-          {/* Personal Info */}
           <Section title="Candidate">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Info
@@ -107,7 +102,6 @@ const ApplicationModal = ({ application, job, onClose }) => {
             </div>
           </Section>
 
-          {/* Experience Details */}
           {application.experienceDetails &&
             application.experienceDetails.length > 0 && (
               <Section title="Professional Experience">
@@ -139,7 +133,6 @@ const ApplicationModal = ({ application, job, onClose }) => {
               </Section>
             )}
 
-          {/* Education */}
           {application.education && application.education.length > 0 && (
             <Section title="Education">
               <ul className="divide-y divide-gray-100">
@@ -165,7 +158,6 @@ const ApplicationModal = ({ application, job, onClose }) => {
             </Section>
           )}
 
-          {/* Questions & Answers */}
           {application.questionsAndAnswers &&
             application.questionsAndAnswers.length > 0 && (
               <Section title="Additional Information">
@@ -184,7 +176,6 @@ const ApplicationModal = ({ application, job, onClose }) => {
               </Section>
             )}
 
-          {/* Resume */}
           {application.resume && (
             <Section title="Resume">
               <a

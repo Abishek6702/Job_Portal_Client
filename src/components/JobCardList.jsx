@@ -20,9 +20,9 @@ const JobCardList = ({ jobs, onSelectJob, selectedJob }) => {
 
   return (
     <>
-      <div className="main-container  col-span-12 md:col-span-4  p-4 ">
+      <div className="main-container  col-span-12 md:col-span-4  px-4 ">
         {jobs.map((job, index) => {
-          const jobId = job._id.toString(); // Make sure to convert to string for comparison
+          const jobId = job._id.toString(); 
           const isApplied = appliedJobs.includes(jobId);
           console.log("Job ID:", jobId);
           console.log("Applied Jobs:", appliedJobs);
@@ -38,7 +38,7 @@ const JobCardList = ({ jobs, onSelectJob, selectedJob }) => {
               <div className="card-title flex items-center justify-between">
                 <div className="company-name flex gap-2 ">
                   <img
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${job.companyId.company_logo}`} // fallback image if logo is null
+                    src={`${import.meta.env.VITE_API_BASE_URL}/${job.companyId.company_logo}`} 
                     alt="Company Logo"
                     className="w-6 h-6 rounded-full object-cover"
                   />

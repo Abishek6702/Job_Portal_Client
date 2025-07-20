@@ -8,8 +8,8 @@ const SelectedNotSelected = () => {
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState([]);
-  const [searchFilter, setSearchFilter] = useState(""); // Combined search for company name and job title
-  const [locationFilter, setLocationFilter] = useState(""); // Location search
+  const [searchFilter, setSearchFilter] = useState(""); 
+  const [locationFilter, setLocationFilter] = useState(""); 
 
   useEffect(() => {
     const fetchJobsForEmployer = async () => {
@@ -55,7 +55,7 @@ const SelectedNotSelected = () => {
         );
 
         setJobs(myJobs);
-        setFilteredJobs(myJobs); // Set filtered jobs initially to all jobs
+        setFilteredJobs(myJobs); 
       } catch (error) {
         console.error("Error fetching jobs:", error);
       } finally {
@@ -94,13 +94,13 @@ const SelectedNotSelected = () => {
     const diffInWeeks = Math.floor(diffInDays / 7);
 
     if (diffInDays < 1) {
-      return `${Math.floor(diffInHours)}h`; // Less than 1 day, show hours
+      return `${Math.floor(diffInHours)}h`; 
     } else if (diffInDays < 7) {
-      return `${diffInDays}d`; // Less than a week, show days
+      return `${diffInDays}d`; 
     } else if (diffInWeeks < 4) {
-      return `${diffInWeeks}w`; // Less than 4 weeks, show weeks
+      return `${diffInWeeks}w`;
     } else {
-      return `${Math.floor(diffInDays / 30)}m`; // More than 4 weeks, show months
+      return `${Math.floor(diffInDays / 30)}m`; 
     }
   };
 
@@ -109,12 +109,10 @@ const SelectedNotSelected = () => {
       const lowerCaseSearchFilter = searchFilter.toLowerCase();
       const lowerCaseLocationFilter = locationFilter.toLowerCase();
 
-      // Check combined filter (company name and job title)
       const matchesSearch =
         job.companyId.company_name.toLowerCase().includes(lowerCaseSearchFilter) ||
         job.position.toLowerCase().includes(lowerCaseSearchFilter);
 
-      // Check location filter
       const matchesLocation = job.location
         .toLowerCase()
         .includes(lowerCaseLocationFilter);
@@ -127,10 +125,8 @@ const SelectedNotSelected = () => {
 
   useEffect(() => {
     applyFilters();
-    // eslint-disable-next-line
   }, [searchFilter, locationFilter, jobs]);
 
-  // Only count applications with status "selected" or "not selected"
   const getApplicationCount = (jobId) => {
     return applications.filter(
       (app) =>
@@ -151,7 +147,6 @@ const SelectedNotSelected = () => {
         <div className="px-6 py-4 min-h-screen bg-white">
           <h2 className="text-2xl font-bold mb-4">Selected & Not Selected</h2>
 
-          {/* Search Filters */}
           <div>
             <div className="mb-2 sm:flex items-center justify-center sm:border border-gray-300 rounded-full sm:w-[60%] m-auto">
               <div className="w-full sm:w-[50%] text-gray-500">
@@ -181,7 +176,6 @@ const SelectedNotSelected = () => {
             </div>
           </div>
 
-          {/* Job List */}
           {loading ? (
             <p>Loading jobs...</p>
           ) : filteredJobs.length === 0 ? (
@@ -196,7 +190,6 @@ const SelectedNotSelected = () => {
                 >
                   <div className="card w-full">
                     <div className="relative card-container border border-gray-300 rounded-md p-4 h-full flex flex-col justify-between">
-                      {/* Top Row: Company Info & Bookmark */}
                       <div className="card-title flex items-center justify-between">
                         <div className="company-name flex gap-2">
                           <img
@@ -210,9 +203,8 @@ const SelectedNotSelected = () => {
                         </div>
                       </div>
 
-                      {/* Position & Location */}
                       <div className="card-body mt-4">
-                        <p className="text-xl md:text-2xl font-semibold">
+                        <p className="text-xl md:text-2xl font-semibold truncate max-w-[370px]">
                           {job.position}
                         </p>
                         <p className="font-medium text-gray-600">
