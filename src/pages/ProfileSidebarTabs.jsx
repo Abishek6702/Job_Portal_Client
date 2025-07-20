@@ -1,5 +1,14 @@
+
 import React from "react";
 import { User } from "lucide-react";
+
+const mainTabs = [
+  { label: "Account", value: "account", icon: <User className="w-5 h-5 mr-2" /> },
+  { label: "Saved Jobs", value: "saved" },
+  { label: "Applied Jobs", value: "applied" },
+  { label: "My Posts", value: "myPosts" },
+  { label: "Settings", value: "settings" }
+];
 
 const ProfileSidebarTabs = ({
   activeMain,
@@ -7,88 +16,93 @@ const ProfileSidebarTabs = ({
   activeSub,
   setActiveSub,
   isOwnProfile,
-  tabs = [],          
-  showOnlyMainTabs = false,
+  tabs = [],           // Array of sub-tab names (About, Education, etc)
 }) => {
+  // Responsive design using Tailwind's breakpoints
   return (
-    <div className="w-full h-fit sm:max-w-[260px] bg-white rounded-2xl shadow p-0 overflow-hidden">
-      <button
-        className={`flex items-center w-full px-6 pt-6 pb-4 text-gray-700 font-semibold text-lg focus:outline-none transition
-          ${activeMain === "account" ? "bg-gray-50" : ""}
-        `}
-        onClick={() => setActiveMain("account")}
-      >
-        <User className="w-6 h-6 mr-3" />
-        Account Preferences
-      </button>
-
-      {activeMain === "account" && (
-        <ul className="mb-2">
-          {tabs.map((tab) => (
-            <li
-              key={tab}
-              className={`flex items-center cursor-pointer h-11 pl-12 pr-2 rounded transition text-base
-                ${
-                  activeSub === tab
-                    ? "bg-gray-100 font-semibold text-gray-900"
-                    : "hover:bg-gray-50 text-gray-700"
-                }`}
-              onClick={() => setActiveSub(tab)}
+    <>
+      {/* Mobile/tablet: horizontal main tabbar */}
+      <div className="block md:hidden w-full border-b bg-white">
+        <div className="flex flex-row gap-0 overflow-x-auto w-full">
+          {mainTabs.map(tab => (
+            <button
+              key={tab.value}
+              className={`flex items-center px-4 py-2 font-medium border-b-2 transition whitespace-nowrap
+                ${activeMain === tab.value
+                  ? "text-blue-700 border-blue-600 bg-blue-100"
+                  : "text-gray-700 border-transparent"
+                }
+              `}
+              onClick={() => {
+                setActiveMain(tab.value);
+                // Set default subtab when switching back to "Account"
+                if(tab.value === "account" && tabs.length) setActiveSub(tabs[0]);
+              }}
             >
-              <div
-                className={`w-1 h-6 mr-3 rounded ${
-                  activeSub === tab ? "bg-green-500" : ""
-                }`}
-              />
-              <span>{tab}</span>
-            </li>
+              {tab.icon}{tab.label}
+            </button>
           ))}
-        </ul>
-      )}
+        </div>
+        {/* SECOND ROW: account subtabs only if Account is active */}
+        {activeMain === "account" && (
+          <div className="w-full flex flex-row gap-1 overflow-x-auto px-2 pb-1 bg-white border-b">
+            {tabs.map(subTab => (
+              <button
+                key={subTab}
+                className={`px-4 py-1.5 rounded-full text-sm font-semibold cursor-pointer mb-1 whitespace-nowrap
+                  ${activeSub === subTab
+                    ? "bg-green-100 text-green-800"
+                    : "hover:bg-gray-100 text-gray-700"
+                  }`}
+                onClick={() => setActiveSub(subTab)}
+              >
+                {subTab}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
-      {!showOnlyMainTabs && isOwnProfile && (
-        <>
-          <hr className="my-2 mx-6 border-gray-200" />
-          <ul>
-            <li
-              className={`flex items-center h-12 px-6 text-gray-700 font-semibold text-lg cursor-pointer hover:bg-gray-50 transition
-                ${activeMain === "saved" ? "bg-gray-100" : ""}
-              `}
-              onClick={() => setActiveMain("saved")}
+      {/* Desktop: vertical sidebar with main and subtabs */}
+      <div className="hidden md:block w-full h-fit sm:max-w-[240px] bg-white rounded-2xl shadow p-0 overflow-hidden">
+        {/* Main (vertical) */}
+        {mainTabs.map(tab => (
+          <div key={tab.value}>
+            <button
+              className={`flex items-center w-full px-6 py-3 text-left font-medium rounded-none border-l-4 transition
+                ${activeMain === tab.value
+                  ? "text-blue-700 border-blue-500 bg-blue-50"
+                  : "text-gray-700 border-transparent hover:bg-gray-50"
+                }`}
+              onClick={() => {
+                setActiveMain(tab.value);
+                if(tab.value === "account" && tabs.length) setActiveSub(tabs[0]);
+              }}
             >
-              Saved Jobs
-            </li>
-            <hr className="my-2 mx-6 border-gray-200" />
-            <li
-              className={`flex items-center h-12 px-6 text-gray-700 font-semibold text-lg cursor-pointer hover:bg-gray-50 transition
-                ${activeMain === "applied" ? "bg-gray-100" : ""}
-              `}
-              onClick={() => setActiveMain("applied")}
-            >
-              Applied Jobs
-            </li>
-          <hr className="my-2 mx-6 border-gray-200" />
-            <li
-              className={`flex items-center h-12 px-6 text-gray-700 font-semibold text-lg cursor-pointer hover:bg-gray-50 transition
-                ${activeMain === "myPosts" ? "bg-gray-100" : ""}
-              `}
-              onClick={() => setActiveMain("myPosts")}
-            >
-              My Posts
-            </li>
-            <hr className="my-2 mx-6 border-gray-200" />
-            <li
-              className={`flex items-center h-12 px-6 text-gray-700 font-semibold text-lg cursor-pointer hover:bg-gray-50 transition
-                ${activeMain === "settings" ? "bg-gray-100" : ""}
-              `}
-              onClick={() => setActiveMain("settings")}
-            >
-              Settings
-            </li>
-          </ul>
-        </>
-      )}
-    </div>
+              {tab.icon}{tab.label}
+            </button>
+            {/* Subtabs for account (vertical) */}
+            {tab.value === "account" && activeMain === "account" && (
+              <ul className="pl-10 pr-2 py-2">
+                {tabs.map(subTab => (
+                  <li
+                    key={subTab}
+                    className={`cursor-pointer py-2 text-sm font-semibold 
+                      ${activeSub === subTab
+                        ? "text-green-800 bg-green-100 rounded pr-2 pl-3"
+                        : "text-gray-700 hover:bg-gray-50 rounded pr-2 pl-3"
+                      }`}
+                    onClick={() => setActiveSub(subTab)}
+                  >
+                    {subTab}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 
