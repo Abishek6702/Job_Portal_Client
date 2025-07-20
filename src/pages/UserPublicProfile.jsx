@@ -155,7 +155,7 @@ const UserPublicProfile = () => {
       case "Skills":
         return <SkillsTab onboarding={profile.onboarding} />;
       case "Posts":
-        return <MyPostsTab userId={userId} />;
+        return <MyPostsTab userId={userId} token={token} profile={profile} />;
       default:
         return null;
     }
