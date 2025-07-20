@@ -21,6 +21,8 @@ const UserPublicProfile = () => {
   const [connectionStatus, setConnectionStatus] = useState("connect");
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
+  const token = localStorage.getItem("token");
+
 
   // Responsive flag
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
