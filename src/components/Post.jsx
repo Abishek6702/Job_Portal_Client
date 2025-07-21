@@ -183,7 +183,7 @@ const Post = ({ post, profile }) => {
         />
       )}
 
-      <div className="flex border-b border-gray-300  py-2 mb-3 text-gray-500 text-md font-semibold">
+      <div className="flex border-b border-gray-300  py-2 mb-3 text-gray-500 text-sm md:text-md font-semibold">
         <button onClick={handleLike} className="flex items-center px-4 py-1">
           {isLiked ? (
             <>
