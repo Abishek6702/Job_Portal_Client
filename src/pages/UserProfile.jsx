@@ -89,7 +89,9 @@ const UserProfile = () => {
     const fetchAppliedJobs = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/applications/${userId}/applied-jobs`,
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/applications/${userId}/applied-jobs`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const applications = Array.isArray(response.data.appliedJobs)
@@ -123,7 +125,9 @@ const UserProfile = () => {
     return (
       <div className="main_container">
         <div className="profile_container w-full sm:w-[90%] md:w-[80%] m-auto mt-6 border border-gray-300 rounded-md">
-          <div className="p-10 text-center text-gray-500">Loading profile...</div>
+          <div className="p-10 text-center text-gray-500">
+            Loading profile...
+          </div>
         </div>
       </div>
     );
@@ -144,9 +148,13 @@ const UserProfile = () => {
         case "About":
           return <AboutTab profile={profile} />;
         case "Education":
-          return <EducationTab education={profile.onboarding?.education || []} />;
+          return (
+            <EducationTab education={profile.onboarding?.education || []} />
+          );
         case "Experience":
-          return <ExperienceTab experience={profile.onboarding?.experience || []} />;
+          return (
+            <ExperienceTab experience={profile.onboarding?.experience || []} />
+          );
         case "Resumes":
           return <ResumeTab onboarding={profile.onboarding} />;
         case "Skills":
@@ -190,6 +198,25 @@ const UserProfile = () => {
     navigate("/");
   };
 
+  const ACCOUNT_SUBTAB_CONTENT = [
+    { label: "About", content: <AboutTab profile={profile} /> },
+    {
+      label: "Education",
+      content: <EducationTab education={profile.onboarding?.education || []} />,
+    },
+    {
+      label: "Experience",
+      content: (
+        <ExperienceTab experience={profile.onboarding?.experience || []} />
+      ),
+    },
+    {
+      label: "Resumes",
+      content: <ResumeTab onboarding={profile.onboarding} />,
+    },
+    { label: "Skills", content: <SkillsTab onboarding={profile.onboarding} /> },
+  ];
+
   // ---- PROFILE RENDER (responsive layout) ----
   return (
     <div className="main_container bg-[#f8fafc] min-h-[100vh]">
@@ -198,7 +225,9 @@ const UserProfile = () => {
         <div className="relative h-40 bg-gray-100 rounded-t-2xl overflow-hidden">
           {profile.onboarding?.banner ? (
             <img
-              src={`${import.meta.env.VITE_API_BASE_URL}/${profile.onboarding.banner}`}
+              src={`${import.meta.env.VITE_API_BASE_URL}/${
+                profile.onboarding.banner
+              }`}
               alt="Cover"
               className="w-full h-full object-cover"
             />
@@ -221,22 +250,26 @@ const UserProfile = () => {
                 accept="image/*"
                 ref={bannerImageInputRef}
                 style={{ display: "none" }}
-                onChange={e => {
+                onChange={(e) => {
                   const file = e.target.files[0];
                   if (!file) return;
                   const formData = new FormData();
                   formData.append("banner", file);
-                  axios.put(
-                    `${import.meta.env.VITE_API_BASE_URL}/api/onboarding/banner-image`,
-                    formData,
-                    {
-                      headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "multipart/form-data",
-                      },
-                    }
-                  ).then(() => window.location.reload())
-                  .catch(() => alert("Failed to upload banner image."));
+                  axios
+                    .put(
+                      `${
+                        import.meta.env.VITE_API_BASE_URL
+                      }/api/onboarding/banner-image`,
+                      formData,
+                      {
+                        headers: {
+                          Authorization: `Bearer ${token}`,
+                          "Content-Type": "multipart/form-data",
+                        },
+                      }
+                    )
+                    .then(() => window.location.reload())
+                    .catch(() => alert("Failed to upload banner image."));
                 }}
               />
             </>
@@ -250,7 +283,9 @@ const UserProfile = () => {
               <img
                 src={
                   profile.onboarding?.profileImage
-                    ? `${import.meta.env.VITE_API_BASE_URL}/${profile.onboarding.profileImage}`
+                    ? `${import.meta.env.VITE_API_BASE_URL}/${
+                        profile.onboarding.profileImage
+                      }`
                     : undefined
                 }
                 alt="Profile"
@@ -261,22 +296,26 @@ const UserProfile = () => {
                 accept="image/*"
                 ref={profileImageInputRef}
                 style={{ display: "none" }}
-                onChange={e => {
+                onChange={(e) => {
                   const file = e.target.files[0];
                   if (!file) return;
                   const formData = new FormData();
                   formData.append("profileImage", file);
-                  axios.put(
-                    `${import.meta.env.VITE_API_BASE_URL}/api/onboarding/profile-image`,
-                    formData,
-                    {
-                      headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "multipart/form-data",
-                      },
-                    }
-                  ).then(() => window.location.reload())
-                  .catch(() => alert("Failed to upload profile image."));
+                  axios
+                    .put(
+                      `${
+                        import.meta.env.VITE_API_BASE_URL
+                      }/api/onboarding/profile-image`,
+                      formData,
+                      {
+                        headers: {
+                          Authorization: `Bearer ${token}`,
+                          "Content-Type": "multipart/form-data",
+                        },
+                      }
+                    )
+                    .then(() => window.location.reload())
+                    .catch(() => alert("Failed to upload profile image."));
                 }}
               />
               {isOwnProfile && (
@@ -363,7 +402,7 @@ const UserProfile = () => {
           >
             <div
               className="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative border h-[90vh] overflow-auto"
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               <button
                 className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl font-bold"
@@ -394,9 +433,9 @@ const UserProfile = () => {
         {/* --- RESPONISVE TABS & CONTENT --- */}
         <div className="w-full px-0 sm:px-2 md:px-6 py-0 md:py-2">
           <div className="block md:flex md:gap-6 w-full">
-            <div className="w-full md:w-64 sticky top-2 z-20">
+            <div className="w-full md:w-64 sticky top-20 z-20 ">
               {/* Horizontal mobile, vertical desktop */}
-              <div className="block md:hidden border-b">
+              <div className="block md:hidden ">
                 <ProfileSidebarTabs
                   activeMain={activeMain}
                   setActiveMain={setActiveMain}
@@ -404,8 +443,9 @@ const UserProfile = () => {
                   setActiveSub={setActiveSub}
                   isOwnProfile={true}
                   tabs={ALL_TABS}
-                  showOnlyMainTabs={false}
                   orientation="horizontal"
+                  showOnlyMainTabs={false}
+                  subTabContents={ACCOUNT_SUBTAB_CONTENT}
                 />
               </div>
               <div className="hidden md:block">
@@ -418,12 +458,13 @@ const UserProfile = () => {
                   tabs={ALL_TABS}
                   showOnlyMainTabs={false}
                   orientation="vertical"
+                  subTabContents={[]}
                 />
               </div>
             </div>
             {/* Content */}
             <div className="flex-1 w-full bg-gray-50 rounded-2xl min-h-[300px] p-2 sm:p-4 md:p-6 shadow-inner">
-              {renderDetail()}
+              {(activeMain !== "account" || !isMobile) && renderDetail()}
             </div>
           </div>
         </div>
