@@ -183,7 +183,7 @@ const Post = ({ post, profile }) => {
         />
       )}
 
-      <div className="flex border-b border-gray-300  py-2 mb-3 text-gray-500 text-sm md:text-md font-semibold">
+      <div className="flex border-b border-gray-300  py-2 mb-3 text-gray-500 text-md font-semibold">
         <button onClick={handleLike} className="flex items-center px-4 py-1">
           {isLiked ? (
             <>
@@ -191,24 +191,24 @@ const Post = ({ post, profile }) => {
                 className="w-4 h-4 mr-1 text-red-500"
                 fill="currentColor"
               />
-              {likeCount} Liked
+              {likeCount} <p className="hidden md:block ml-1"> Liked</p>
             </>
           ) : (
             <>
               <Heart className="w-4 h-4 mr-1 text-gray-500" />
-              {likeCount} Like
+              {likeCount} <p className="hidden md:block ml-1"> Like</p>
             </>
           )}
         </button>
 
         <button className="flex items-center px-4 py-1 ">
           <MessageCircle className="w-4 h-4 mr-1" />
-          {comments.length} Comment
+          {comments.length}<p className="hidden md:block ml-1">Comment</p>
         </button>
 
         <button className="flex items-center px-4 py-1 ">
           <Share2 className="w-4 h-4 mr-1" />
-          Share
+          <p className="hidden md:block"> Share</p>
         </button>
       </div>
 
