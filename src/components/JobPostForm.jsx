@@ -223,7 +223,7 @@ export default function JobPostForm() {
             </label>
             <input
               className="input w-full border border-gray-300 rounded-sm p-2 text-sm outline-none "
-              placeholder="Workplace"
+              placeholder="eg:(Internship,Full Time,Freelance),(remote,on-site,hybrid)"
               value={formData.workplace}
               onChange={(e) => handleChange("workplace", e.target.value)}
             />
