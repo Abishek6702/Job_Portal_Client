@@ -8,7 +8,7 @@ import nodata from "../assets/cuate.svg";
 import { Funnel, Locate, Search } from "lucide-react";
 
 const filterOptions = {
-  jobType: ["Full-time", "Freelance", "Internship", "Volunteer"],
+  jobType: ["Full Time", "Freelance", "Internship", "Volunteer"],
   remote: ["On-site", "Remote", "Hybrid"],
   datePosted: ["Anytime", "Last 24 hours", "Last 7 days", "Last 30 days"],
 };
@@ -114,11 +114,34 @@ const JobBoard = () => {
         const matchLocation =
           !location ||
           job.location?.toLowerCase().includes(location.toLowerCase());
+        // Extract job type from job.location text
+        // Extract Job Type (e.g. "Full Time") from workplace
+        const jobTypeFromWorkplace = job.workplace
+          ? job.workplace
+              .split(",")
+              .map((s) => s.trim())
+              .find((type) => filterOptions.jobType.includes(type))
+          : null;
+
         const matchJobType =
           filters.jobType.length === 0 ||
-          filters.jobType.includes(job.workplace);
+          (jobTypeFromWorkplace &&
+            filters.jobType.includes(jobTypeFromWorkplace));
+
+        // Extract Work Place (e.g. "Remote") from workplace
+        const workplaceType = job.workplace
+          ? filterOptions.remote.find((opt) =>
+              job.workplace
+                .toLowerCase()
+                .split(",")
+                .some((val) => val.trim() === opt.toLowerCase())
+            )
+          : null;
+
         const matchRemote =
-          filters.remote.length === 0 || filters.remote.includes(job.workplace);
+          filters.remote.length === 0 ||
+          (workplaceType && filters.remote.includes(workplaceType));
+
         const jobDate = new Date(job.postedAt);
         const matchDatePosted =
           filters.datePosted === "Anytime" || jobDate >= filterDate;
@@ -127,10 +150,7 @@ const JobBoard = () => {
           !hasInteractedWithSalarySlider ||
           (jobMinSalary >= salaryRange[0] && jobMinSalary <= salaryRange[1]);
         const applied = appliedJobIds.includes(job._id);
-        const matchAppliedStatus =
-          jobFilter === "all" ||
-          (jobFilter === "applied" && applied) ||
-          (jobFilter === "not_applied" && !applied);
+       
 
         return (
           matchPosition &&
@@ -138,8 +158,7 @@ const JobBoard = () => {
           matchJobType &&
           matchRemote &&
           matchDatePosted &&
-          matchSalary &&
-          matchAppliedStatus
+          matchSalary
         );
       })
     );
@@ -314,11 +333,18 @@ const JobBoard = () => {
               <span>Loading jobs...</span>
             ) : (
               <p className="text-xl text-blue-500">
-                <span className="text-blue-600">{filteredJobs.length} </span>
+                <span className="text-blue-600">
+                  {
+                    filteredJobs.filter(
+                      (job) => !appliedJobIds.includes(job._id)
+                    ).length
+                  }
+                </span>{" "}
                 Jobs results
               </p>
             )}
           </div>
+
           {jobsLoading || appliedLoading ? (
             <div className="text-center py-10 text-gray-500">
               Loading jobs...
@@ -402,7 +428,7 @@ function FilterForm({
 }) {
   return (
     <>
-      <div className="mb-4">
+      <div className="mb-4 text-gray-600">
         <label className="block text-sm font-medium mb-1">Date Posted</label>
         <select
           value={filters.datePosted}
@@ -416,7 +442,7 @@ function FilterForm({
           ))}
         </select>
       </div>
-      <div className="mb-4">
+      <div className="mb-4 text-gray-600">
         <label className="block text-md font-medium mb-1">Job type</label>
         {filterOptions.jobType.map((type) => (
           <div key={type} className="flex items-center mb-1">
@@ -430,8 +456,8 @@ function FilterForm({
           </div>
         ))}
       </div>
-      <div className="mb-4">
-        <label className="block text-md font-medium mb-1">On-site/remote</label>
+      <div className="mb-4 text-gray-600">
+        <label className="block text-md font-medium mb-1">Work Place</label>
         {filterOptions.remote.map((type) => (
           <div key={type} className="flex items-center mb-1">
             <input
@@ -444,7 +470,7 @@ function FilterForm({
           </div>
         ))}
       </div>
-      <div className="mb-4">
+      <div className="mb-4 text-gray-600">
         <label className="block text-md font-medium mb-3">Salary Range</label>
         <RangeSlider
           min={0}
@@ -461,41 +487,7 @@ function FilterForm({
           <span>₹{salaryRange[1].toLocaleString()}</span>
         </div>
       </div>
-      <div className="mb-4">
-        <label className="block text-md font-medium mb-1">Job Status</label>
-        <div className="flex flex-col gap-1">
-          <label className="flex items-center">
-            <input
-              type="radio"
-              name="jobFilter"
-              checked={jobFilter === "all"}
-              onChange={() => setJobFilter("all")}
-              className="mr-2"
-            />
-            <span>All Jobs</span>
-          </label>
-          <label className="flex items-center">
-            <input
-              type="radio"
-              name="jobFilter"
-              checked={jobFilter === "applied"}
-              onChange={() => setJobFilter("applied")}
-              className="mr-2"
-            />
-            <span>Applied Jobs</span>
-          </label>
-          <label className="flex items-center">
-            <input
-              type="radio"
-              name="jobFilter"
-              checked={jobFilter === "not_applied"}
-              onChange={() => setJobFilter("not_applied")}
-              className="mr-2"
-            />
-            <span>Not Applied Jobs</span>
-          </label>
-        </div>
-      </div>
+      
     </>
   );
 }

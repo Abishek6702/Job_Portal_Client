@@ -16,6 +16,7 @@ import {
   X,
   MessageCircle,
   MessageSquareText,
+  Logs,
 } from "lucide-react";
 import logo from "../assets/logomain.svg";
 import NotificationBell from "./NotificationBell";
@@ -30,7 +31,7 @@ const Navbar = ({ socket, currentUserId }) => {
 
   const [showServices, setShowServices] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [profile, setProfile] = useState(null); 
+  const [profile, setProfile] = useState(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -40,16 +41,19 @@ const Navbar = ({ socket, currentUserId }) => {
       let userId;
       try {
         const decoded = jwtDecode(token);
-        userId = decoded.id; 
+        userId = decoded.id;
       } catch (e) {
         console.error("Invalid token", e);
         return;
       }
       if (!userId) return;
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/auth/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (!res.ok) throw new Error("Failed to fetch profile");
         const data = await res.json();
         setProfile(data);
@@ -72,30 +76,6 @@ const Navbar = ({ socket, currentUserId }) => {
   const MenuItems = (
     <>
       <NavLink
-        to="/feeds"
-        className={({ isActive }) =>
-          `flex items-center gap-1 ${
-            isActive ? "text-blue-600 font-semibold" : "text-gray-600"
-          }`
-        }
-        onClick={closeMobileMenu}
-      >
-        <Home />
-        Home
-      </NavLink>
-      <NavLink
-        to="/Network"
-        className={({ isActive }) =>
-          `flex items-center gap-1 ${
-            isActive ? "text-blue-600 font-semibold" : "text-gray-600"
-          }`
-        }
-        onClick={closeMobileMenu}
-      >
-        <Users />
-        Network
-      </NavLink>
-      <NavLink
         to="/Jobs"
         className={({ isActive }) =>
           `flex items-center gap-1 ${
@@ -107,14 +87,55 @@ const Navbar = ({ socket, currentUserId }) => {
         <BriefcaseBusiness />
         Jobs
       </NavLink>
+       <NavLink
+        to="/companies"
+        className={({ isActive }) =>
+          `flex items-center gap-1 ${
+            isActive ? "text-blue-600 font-semibold" : "text-gray-600"
+          }`
+        }
+        onClick={closeMobileMenu}
+      >
+        <Building2 />
+        Companies
+      </NavLink>
+
+     
+      <NavLink
+        to="/feeds"
+        className={({ isActive }) =>
+          `flex items-center gap-1 ${
+            isActive ? "text-blue-600 font-semibold" : "text-gray-600"
+          }`
+        }
+        onClick={closeMobileMenu}
+      >
+        <Logs />
+        Feeds
+      </NavLink>
+       <NavLink
+        to="/Network"
+        className={({ isActive }) =>
+          `flex items-center gap-1 ${
+            isActive ? "text-blue-600 font-semibold" : "text-gray-600"
+          }`
+        }
+        onClick={closeMobileMenu}
+      >
+        <Users />
+        Network
+      </NavLink>
+
       <div className="relative">
         <button
           onClick={toggleDropdown}
           className="flex items-center gap-1 cursor-pointer outline-none"
         >
-          <Settings className={
+          <Settings
+            className={
               isServiceActive ? "text-blue-500 font-semibold" : "text-gray-800"
-            } />
+            }
+          />
           <p
             className={
               isServiceActive ? "text-blue-500 font-semibold" : "text-gray-800"
@@ -185,18 +206,7 @@ const Navbar = ({ socket, currentUserId }) => {
           </div>
         )}
       </div>
-      <NavLink
-        to="/companies"
-        className={({ isActive }) =>
-          `flex items-center gap-1 ${
-            isActive ? "text-blue-600 font-semibold" : "text-gray-600"
-          }`
-        }
-        onClick={closeMobileMenu}
-      >
-        <Building2 />
-        Companies
-      </NavLink>
+     
       <NavLink
         to="/e-learning"
         className={({ isActive }) =>

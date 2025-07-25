@@ -24,7 +24,7 @@ function autoRedirectBasedOnToken(navigate) {
             return;
           case "employee":
             if (onboardingComplete) {
-              navigate("/feeds");
+              navigate("/jobs");
             } else {
               navigate("/onbordingform");
             }

@@ -37,9 +37,12 @@ const JobList = () => {
           return;
         }
 
-        const companyRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/companies`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const companyRes = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/companies`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         const allCompanies = await companyRes.json();
 
         const myCompanies = allCompanies.filter(
@@ -51,9 +54,12 @@ const JobList = () => {
           return;
         }
 
-        const jobsRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/jobs`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const jobsRes = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/jobs`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         const allJobs = await jobsRes.json();
 
@@ -90,7 +96,6 @@ const JobList = () => {
     const absDiffInMinutes = Math.floor(absDiffInSeconds / 60);
     const absDiffInHours = Math.floor(absDiffInMinutes / 60);
     const absDiffInDays = Math.floor(absDiffInHours / 24);
-    const absDiffInWeeks = Math.floor(absDiffInDays / 7);
     const absDiffInMonths = Math.floor(absDiffInDays / 30);
     const absDiffInYears = Math.floor(absDiffInDays / 365);
 
@@ -98,11 +103,9 @@ const JobList = () => {
 
     if (absDiffInDays < 1) {
       timeStr = `${absDiffInHours}h`;
-    } else if (absDiffInDays < 7) {
+    } else if (absDiffInDays < 30) {
       timeStr = `${absDiffInDays}d`;
-    } else if (absDiffInWeeks < 4) {
-      timeStr = `${absDiffInWeeks}w`;
-    } else if (absDiffInMonths < 12) {
+    } else if (absDiffInDays < 365) {
       timeStr = `${absDiffInMonths}m`;
     } else {
       timeStr = `${absDiffInYears}y`;
@@ -127,12 +130,21 @@ const JobList = () => {
         .includes(lowerCaseLocationFilter);
 
       const matchesWorkplace = workplaceFilter
-        ? job.workplace === workplaceFilter
+        ? job.workplace?.toLowerCase().includes(workplaceFilter.toLowerCase())
         : true;
 
-      const matchesTime = timeFilter
-        ? timeAgo(job.postedAt).includes(timeFilter)
-        : true;
+      const now = new Date();
+      const postedDate = new Date(job.postedAt);
+      const diffInDays = (now - postedDate) / (1000 * 60 * 60 * 24);
+
+      let matchesTime = true;
+      if (timeFilter === "1d") {
+        matchesTime = diffInDays <= 1;
+      } else if (timeFilter === "7d") {
+        matchesTime = diffInDays <= 7;
+      } else if (timeFilter === "30d") {
+        matchesTime = diffInDays <= 30;
+      }
 
       return (
         matchesSearch && matchesLocation && matchesWorkplace && matchesTime
@@ -243,7 +255,9 @@ const JobList = () => {
                   <div className="card-title flex items-center justify-between">
                     <div className="company-name flex gap-2">
                       <img
-                        src={`${import.meta.env.VITE_API_BASE_URL}/${job.companyId.company_logo}`}
+                        src={`${import.meta.env.VITE_API_BASE_URL}/${
+                          job.companyId.company_logo
+                        }`}
                         alt="Company Logo"
                         className="w-6 h-6 rounded-full object-cover"
                       />
