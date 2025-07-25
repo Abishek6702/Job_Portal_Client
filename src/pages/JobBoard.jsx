@@ -337,7 +337,7 @@ const JobBoard = () => {
               </div>
               </>
             ) : (
-              <p className="text-xl text-blue-500">
+              <p className="text-xl text-blue-600">
                 <span className="text-blue-600">
                   {
                     filteredJobs.filter(
