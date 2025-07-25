@@ -305,7 +305,7 @@ const JobBoard = () => {
                     placeholder="Search job title or keyword"
                     value={position}
                     onChange={(e) => setPosition(e.target.value)}
-                    className="bg-transparent outline-none text-gray-600 placeholder-gray-400 w-full"
+                    className="bg-transparent outline-none text-gray-600 placeholder-gray-400 w-full  truncate"
                   />
                 </div>
                 <div className="h-8 border-l border-gray-200 mx-4"></div>
@@ -316,7 +316,7 @@ const JobBoard = () => {
                     placeholder="Country or timezone"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="bg-transparent outline-none text-gray-600 placeholder-gray-400 w-full"
+                    className="bg-transparent outline-none text-gray-600 placeholder-gray-400 w-full truncate"
                   />
                 </div>
                 <button

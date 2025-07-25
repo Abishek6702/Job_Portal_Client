@@ -170,7 +170,7 @@ const JobDetails = ({ onClose, job, isExpanded }) => {
         </div>
 
         <div className="mt-2 space-y-4">
-          <div className="flex flex-wrap gap-x-10 border-b text-gray-400 font-semibold text-lg sticky top-[-50px] py-4 z-10 bg-gray-50">
+          <div className=" flex-wrap gap-x-10 border-b text-gray-400 font-semibold text-lg sticky top-[-50px] py-4 z-10 bg-gray-50 hidden md:flex">
             <button
               onClick={() => scrollTo(descriptionRef)}
               className={`hover:text-black focus:text-black cursor-pointer focus:border-b-2 ${
