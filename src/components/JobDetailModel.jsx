@@ -67,7 +67,8 @@ const JobDetailModel = ({ job, handleClose }) => {
             onClick={() => setIsEditing(true)}
           >
             <img src={edit_icon} className="w-4 h-4" />
-            Edit
+                     <p className="hidden md:block">Edit</p>
+
           </button>
           {isEditing && (
             <JobUpdateForm job={job} onClose={() => setIsEditing(false)} />
@@ -77,7 +78,7 @@ const JobDetailModel = ({ job, handleClose }) => {
             className="bg-[#F94144] text-white font-bold py-2 px-4 rounded-xl cursor-pointer flex gap-2 items-center"
           >
             <img src={delete_icon} className="w-6 h-6" />
-            Delete
+            <p className="hidden md:block">Delete</p>
           </button>
 
           {showDeleteModal && (
@@ -87,11 +88,11 @@ const JobDetailModel = ({ job, handleClose }) => {
             />
           )}
           <button
-            className="bg-gray-400  text-white font-bold py-2 px-4 rounded-xl cursor-pointer flex gap-2 items-center"
+            className="text-gray-800 cursor-pointer"
             onClick={handleClose}
           >
             <X />
-            Close
+            
           </button>
         </div>
       </div>
@@ -132,7 +133,7 @@ const JobDetailModel = ({ job, handleClose }) => {
           </div>
         </div>
 
-        <div className=" border-b text-gray-400 font-semibold text-lg sticky top-[-24px] bg-gray-50 ">
+        <div className=" border-b text-gray-400 font-semibold text-lg sticky top-[-24px] bg-gray-50 hidden md:block ">
           <div className="flex flex-wrap gap-x-10 pb-2">
             <button
               onClick={() => scrollTo(descriptionRef)}
