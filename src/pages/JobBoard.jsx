@@ -200,7 +200,7 @@ const JobBoard = () => {
       {isMobile && !showMobileFilter && (
         <button
           onClick={() => setShowMobileFilter(true)}
-          className="flex items-center  gap-2 fixed z-50 top-37 right-6 p-2 px-3 bg-white text-blue-600 rounded-full border "
+          className="flex items-center  gap-2 fixed z-10 top-37 right-6 p-2 px-3 bg-white text-blue-600 rounded-full border "
         >
           <Funnel className="w-5" />
           Filter
