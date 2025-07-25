@@ -196,7 +196,7 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
                     {isJobSaved ? (
                       <path
                         d="M11 0H3C1 0 0 1 0 3V18L7 14L14 18V3C14 1 13 0 11 0ZM9.5 7.75H4.5C4.086 7.75 3.75 7.414 3.75 7C3.75 6.586 4.086 6.25 4.5 6.25H9.5C9.914 6.25 10.25 6.586 10.25 7C10.25 7.414 9.914 7.75 9.5 7.75Z"
-                        fill="black" 
+                        fill="blue" 
                       />
                     ) : (
                       <path
@@ -230,7 +230,7 @@ const CompanyDetails = ({ companyDetails, setFullScreeen, fullScreen }) => {
                       }}
                       disabled={isApplied}
                     >
-                      Easy Apply
+                      {isApplied ? "Already Applied" : "Easy Apply"}
                     </button>
 
                     <p className="text-sm text-gray-500">{job.createdAt}</p>
