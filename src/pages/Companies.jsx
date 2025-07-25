@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CompanyListing from "../components/CompanyListing";
 import CompanyDetails from "../components/CompanyDetails";
-import { Building2, MapPin, Search } from "lucide-react";
+import { Building2, LocateIcon, MapPin, Search } from "lucide-react";
 
 const Companies = () => {
   const [fullScreen, setFullScreeen] = useState(false);
@@ -34,7 +34,7 @@ const Companies = () => {
         if (data.length > 0 && window.innerWidth >= 768) {
           setCompanyDetails(data[0]);
         } else {
-          setCompanyDetails({}); 
+          setCompanyDetails({});
         }
       } catch (error) {
         console.error("Error fetching companies:", error.message);
@@ -68,35 +68,42 @@ const Companies = () => {
       }
     }
     // eslint-disable-next-line
-  }, [nameFilter, locationFilter, company.length]); 
+  }, [nameFilter, locationFilter, company.length]);
 
   return (
     <div className="w-[90%] m-auto mt-4 h-[88vh] flex flex-col bg-white rounded-lg">
       {/* Search Bar */}
-      <div className="md:sticky top-0 z-10 md:flex w-[60%] m-auto items-center md:border border-gray-300 bg-white rounded-full px-4 py-2 gap-4 mb-4">
-        <Building2 className="text-gray-400 hidden md:block" />
-        <input
-          type="text"
-          placeholder="Company Name"
-          value={nameFilter}
-          onChange={(e) => setNameFilter(e.target.value)}
-          className="flex-1 outline-none bg-transparent md:border-none border border-gray-300 rounded-lg md:p-0 md:w-0 p-1 w-[200px]  "
-        />
-        <div className="w-px h-6 bg-gray-300 hidden md:block" />
-        <div className="flex items-center flex-1  w-[400px] md:max-w-none ">
-          <MapPin className="text-gray-400 hidden md:block" />
-          <input
-            type="text"
-            placeholder="Location"
-            value={locationFilter}
-            onChange={(e) => setLocationFilter(e.target.value)}
-            className="md:w-full outline-none md:ml-4 mt-4 md:mt-0 bg-transparent md:border-none border border-gray-300 rounded-lg md:p-0 w-[200px] p-1"
-          />
-        </div>
-        <div className="ml-auto hidden md:block">
-          <button className="rounded-full bg-green-100 p-2">
-            <Search className="text-gray-400" />
-          </button>
+      <div className="sticky top-0 z-10 bg-white px-2 w-full mb-4 ">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-center bg-white border border-gray-200 rounded-full px-6 py-2 shadow-sm">
+            <div className="flex items-center flex-1 gap-2">
+              <Building2 className="w-5 text-gray-400 hidden md:block" />
+              <input
+                type="text"
+                placeholder="Search by Company Name"
+                value={nameFilter}
+                onChange={(e) => setNameFilter(e.target.value)}
+                className="bg-transparent outline-none text-gray-600 placeholder-gray-400 w-full truncate"
+              />
+            </div>
+            <div className="h-8 border-l border-gray-200 mx-4"></div>
+            <div className="flex items-center flex-1 gap-2">
+              <LocateIcon className="w-5 text-gray-400 hidden md:block" />
+              <input
+                type="text"
+                placeholder="Search by  Location"
+                value={locationFilter}
+                onChange={(e) => setLocationFilter(e.target.value)}
+                className="bg-transparent outline-none text-gray-600 placeholder-gray-400 w-full truncate"
+              />
+            </div>
+            <button
+              type="button"
+              className="ml-4 flex items-center justify-center w-10 h-10 rounded-full bg-green-100 hover:bg-green-200 transition"
+            >
+              <Search className="w-5 text-gray-400" />
+            </button>
+          </div>
         </div>
       </div>
 
