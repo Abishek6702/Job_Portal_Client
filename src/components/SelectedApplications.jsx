@@ -12,6 +12,7 @@ import {
 import { useParams } from "react-router-dom";
 import InProgressDetailModel from "./InProgressDetailModel";
 import InprogressApplicationStatusChange from "./InprogressApplicationStatusChange";
+import Loader from "./Loader";
 
 const statusColor = (status) => {
   if (status === "in progress") return "bg-yellow-100 text-orange-600";
@@ -237,7 +238,13 @@ const SelectedApplications = () => {
   };
 
   if (loading) {
-    return <div className="text-center mt-10">Loading applications...</div>;
+    return  <>
+                  {" "}
+                  <div className="flex flex-col justify-center items-center text-gray-500 py-20 w-full h-full">
+                    <Loader/>
+                    <p className="mt-4">Loading...</p>
+                  </div>
+                </>;
   }
 
   return (

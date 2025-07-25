@@ -2,13 +2,14 @@ import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Search_icon from "../assets/search.png";
+import Loader from "./Loader";
 const CandidatesApplication = () => {
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState([]);
-  const [searchFilter, setSearchFilter] = useState(""); 
-  const [locationFilter, setLocationFilter] = useState(""); 
+  const [searchFilter, setSearchFilter] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
 
   useEffect(() => {
     const fetchJobsForEmployer = async () => {
@@ -31,9 +32,12 @@ const CandidatesApplication = () => {
           return;
         }
 
-        const companyRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/companies`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const companyRes = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/companies`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         const allCompanies = await companyRes.json();
 
         const myCompanies = allCompanies.filter(
@@ -45,9 +49,12 @@ const CandidatesApplication = () => {
           return;
         }
 
-        const jobsRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/jobs`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const jobsRes = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/jobs`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         const allJobs = await jobsRes.json();
 
         const myCompanyIds = myCompanies.map((c) => c._id);
@@ -56,7 +63,7 @@ const CandidatesApplication = () => {
         );
 
         setJobs(myJobs);
-        setFilteredJobs(myJobs); 
+        setFilteredJobs(myJobs);
       } catch (error) {
         console.error("Error fetching jobs:", error);
       } finally {
@@ -71,14 +78,17 @@ const CandidatesApplication = () => {
   useEffect(() => {
     const fetchJobsAndApplications = async () => {
       const token = localStorage.getItem("token");
-      const applicationsRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/applications`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const applicationsRes = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/applications`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const allApplications = await applicationsRes.json();
       setApplications(allApplications);
-      console.log("Fetched applications:", allApplications)
+      console.log("Fetched applications:", allApplications);
     };
-  
+
     fetchJobsAndApplications();
   }, []);
 
@@ -94,13 +104,13 @@ const CandidatesApplication = () => {
     const diffInWeeks = Math.floor(diffInDays / 7);
 
     if (diffInDays < 1) {
-      return `${Math.floor(diffInHours)}h`; 
+      return `${Math.floor(diffInHours)}h`;
     } else if (diffInDays < 7) {
-      return `${diffInDays}d`; 
+      return `${diffInDays}d`;
     } else if (diffInWeeks < 4) {
-      return `${diffInWeeks}w`; 
+      return `${diffInWeeks}w`;
     } else {
-      return `${Math.floor(diffInDays / 30)}m`; 
+      return `${Math.floor(diffInDays / 30)}m`;
     }
   };
 
@@ -110,13 +120,14 @@ const CandidatesApplication = () => {
       const lowerCaseLocationFilter = locationFilter.toLowerCase();
 
       const matchesSearch =
-        job.companyId.company_name.toLowerCase().includes(lowerCaseSearchFilter) ||
+        job.companyId.company_name
+          .toLowerCase()
+          .includes(lowerCaseSearchFilter) ||
         job.position.toLowerCase().includes(lowerCaseSearchFilter);
 
       const matchesLocation = job.location
         .toLowerCase()
         .includes(lowerCaseLocationFilter);
-
 
       return matchesSearch && matchesLocation;
     });
@@ -129,7 +140,7 @@ const CandidatesApplication = () => {
   }, [searchFilter, locationFilter]);
 
   const getApplicationCount = (jobId) => {
-    return applications.filter(app => {
+    return applications.filter((app) => {
       if (app.jobId && app.jobId._id) {
         const status = app.status?.toLowerCase();
         return (
@@ -137,16 +148,15 @@ const CandidatesApplication = () => {
           (status === "pending" || status === "rejected")
         );
       }
-      return false; 
+      return false;
     }).length;
   };
-  
+
   const navigate = useNavigate();
   const openModal = (job) => {
     navigate(`/employer-dashboard/job-application/${job._id}`);
   };
 
-  
   return (
     <div className="main_container ">
       <div className="card_container ">
@@ -183,7 +193,13 @@ const CandidatesApplication = () => {
           </div>
 
           {loading ? (
-            <p>Loading jobs...</p>
+            <>
+              {" "}
+              <div className="flex flex-col justify-center items-center text-gray-500 py-20 w-full h-full">
+                <Loader />
+                <p className="mt-4">Loading...</p>
+              </div>
+            </>
           ) : filteredJobs.length === 0 ? (
             <p>No jobs found for your companies.</p>
           ) : (
@@ -199,7 +215,9 @@ const CandidatesApplication = () => {
                       <div className="card-title flex items-center justify-between">
                         <div className="company-name flex gap-2">
                           <img
-                            src={`${import.meta.env.VITE_API_BASE_URL}/${job.companyId.company_logo}`}
+                            src={`${import.meta.env.VITE_API_BASE_URL}/${
+                              job.companyId.company_logo
+                            }`}
                             alt="Company Logo"
                             className="w-6 h-6 rounded-full object-cover"
                           />
@@ -220,7 +238,10 @@ const CandidatesApplication = () => {
                           {job.workplace}
                         </p>
                         <p className="font-medium text-black-600 mt-2">
-                          Total Active Applicants: <span className="font-bold text-blue-600">{getApplicationCount(job._id)}</span>
+                          Total Active Applicants:{" "}
+                          <span className="font-bold text-blue-600">
+                            {getApplicationCount(job._id)}
+                          </span>
                         </p>
                       </div>
 

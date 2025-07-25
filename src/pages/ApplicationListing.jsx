@@ -12,6 +12,7 @@ import {
 import { useParams } from "react-router-dom";
 import ApplicationDetailsModal from "../components/ApplicationDetailsModal";
 import ApplicationStatusChange from "../components/ApplicationStatusChange";
+import Loader from "../components/Loader";
 
 const CandidatesApplication = () => {
   const { jobId } = useParams();
@@ -281,7 +282,13 @@ const CandidatesApplication = () => {
   };
 
   if (loading) {
-    return <div className="text-center mt-10">Loading applications...</div>;
+    return  <>
+                  {" "}
+                  <div className="flex flex-col justify-center items-center text-gray-500 py-20 w-full h-full">
+                    <Loader />
+                    <p className="mt-4">Loading...</p>
+                  </div>
+                </>;
   }
   console.log(companyInfo);
   return (

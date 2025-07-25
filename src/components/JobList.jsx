@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import JobDetailModel from "./JobDetailModel";
 import Search_icon from "../assets/search.png";
 import { ListFilter } from "lucide-react";
-
+import Loader from "../components/Loader"
 const JobList = () => {
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
@@ -238,7 +238,10 @@ const JobList = () => {
       </div>
 
       {loading ? (
-        <p>Loading jobs...</p>
+        <> <div className="flex flex-col justify-center items-center text-gray-500 py-20 w-full h-full">
+                  <Loader/>
+                  <p className="mt-4">Loading...</p>
+                </div></>
       ) : filteredJobs.length === 0 ? (
         <p>No jobs found for your companies.</p>
       ) : (

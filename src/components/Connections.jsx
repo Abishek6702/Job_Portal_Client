@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import UserCard from "../components/UserCard";
 import { Search } from "lucide-react";
 import nodata from "../assets/cuate.svg"
+import Loader from "./Loader";
 const Connections = ({ currentUserId }) => {
   const [search, setSearch] = useState("");
   const [connList, setConnList] = useState([]);
@@ -80,7 +81,10 @@ const Connections = ({ currentUserId }) => {
   });
 
   if (loading) {
-    return <div className="text-center text-gray-500 py-20">Loading...</div>;
+    return  <div className="flex flex-col justify-center items-center text-gray-500 py-20 w-full h-full">
+                  <Loader />
+                  <p className="mt-4">Loading...</p>
+                </div>;
   }
 
   return (

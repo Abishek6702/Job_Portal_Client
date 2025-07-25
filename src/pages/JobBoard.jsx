@@ -6,6 +6,7 @@ import JobDetails from "../components/JobDetails";
 import { jwtDecode } from "jwt-decode";
 import nodata from "../assets/cuate.svg";
 import { Funnel, Locate, Search } from "lucide-react";
+import Loader from "../components/Loader";
 
 const filterOptions = {
   jobType: ["Full Time", "Freelance", "Internship", "Volunteer"],
@@ -328,9 +329,13 @@ const JobBoard = () => {
               </div>
             </div>
           </div>
-          <div className="mt-4 mb-4 font-semibold text-gray-700 px-4">
+          <div className="mt-4 mb-4 font-semibold text-gray-700 px-4 ">
             {jobsLoading || appliedLoading ? (
-              <span>Loading jobs...</span>
+              <>
+              <div className="flex justify-center mt-60">
+                <Loader/>
+              </div>
+              </>
             ) : (
               <p className="text-xl text-blue-500">
                 <span className="text-blue-600">
@@ -347,7 +352,7 @@ const JobBoard = () => {
 
           {jobsLoading || appliedLoading ? (
             <div className="text-center py-10 text-gray-500">
-              Loading jobs...
+              Loading jobs Please wait...
             </div>
           ) : filteredJobs.length === 0 ? (
             <div className="text-center py-10 text-gray-500">

@@ -2,14 +2,15 @@ import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Search_icon from "../assets/search.png";
+import Loader from "../components/Loader";
 
 const SelectedNotSelected = () => {
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState([]);
-  const [searchFilter, setSearchFilter] = useState(""); 
-  const [locationFilter, setLocationFilter] = useState(""); 
+  const [searchFilter, setSearchFilter] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
 
   useEffect(() => {
     const fetchJobsForEmployer = async () => {
@@ -31,9 +32,12 @@ const SelectedNotSelected = () => {
           return;
         }
 
-        const companyRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/companies`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const companyRes = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/companies`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         const allCompanies = await companyRes.json();
 
         const myCompanies = allCompanies.filter(
@@ -44,9 +48,12 @@ const SelectedNotSelected = () => {
           return;
         }
 
-        const jobsRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/jobs`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const jobsRes = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/jobs`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         const allJobs = await jobsRes.json();
 
         const myCompanyIds = myCompanies.map((c) => c._id);
@@ -55,7 +62,7 @@ const SelectedNotSelected = () => {
         );
 
         setJobs(myJobs);
-        setFilteredJobs(myJobs); 
+        setFilteredJobs(myJobs);
       } catch (error) {
         console.error("Error fetching jobs:", error);
       } finally {
@@ -94,13 +101,13 @@ const SelectedNotSelected = () => {
     const diffInWeeks = Math.floor(diffInDays / 7);
 
     if (diffInDays < 1) {
-      return `${Math.floor(diffInHours)}h`; 
+      return `${Math.floor(diffInHours)}h`;
     } else if (diffInDays < 7) {
-      return `${diffInDays}d`; 
+      return `${diffInDays}d`;
     } else if (diffInWeeks < 4) {
       return `${diffInWeeks}w`;
     } else {
-      return `${Math.floor(diffInDays / 30)}m`; 
+      return `${Math.floor(diffInDays / 30)}m`;
     }
   };
 
@@ -110,7 +117,9 @@ const SelectedNotSelected = () => {
       const lowerCaseLocationFilter = locationFilter.toLowerCase();
 
       const matchesSearch =
-        job.companyId.company_name.toLowerCase().includes(lowerCaseSearchFilter) ||
+        job.companyId.company_name
+          .toLowerCase()
+          .includes(lowerCaseSearchFilter) ||
         job.position.toLowerCase().includes(lowerCaseSearchFilter);
 
       const matchesLocation = job.location
@@ -177,7 +186,13 @@ const SelectedNotSelected = () => {
           </div>
 
           {loading ? (
-            <p>Loading jobs...</p>
+            <>
+              {" "}
+              <div className="flex flex-col justify-center items-center text-gray-500 py-20 w-full h-full">
+                <Loader />
+                <p className="mt-4">Loading...</p>
+              </div>
+            </>
           ) : filteredJobs.length === 0 ? (
             <p>No jobs found for your companies.</p>
           ) : (
@@ -193,7 +208,9 @@ const SelectedNotSelected = () => {
                       <div className="card-title flex items-center justify-between">
                         <div className="company-name flex gap-2">
                           <img
-                            src={`${import.meta.env.VITE_API_BASE_URL}/${job.companyId.company_logo}`}
+                            src={`${import.meta.env.VITE_API_BASE_URL}/${
+                              job.companyId.company_logo
+                            }`}
                             alt="Company Logo"
                             className="w-6 h-6 rounded-full object-cover"
                           />
@@ -214,7 +231,7 @@ const SelectedNotSelected = () => {
                           {job.workplace}
                         </p>
                         <p className="font-medium text-black-600 mt-2">
-                         Selected Applicants:{" "}
+                          Selected Applicants:{" "}
                           <span className="font-bold text-blue-600">
                             {getApplicationCount(job._id)}
                           </span>

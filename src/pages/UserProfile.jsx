@@ -24,7 +24,7 @@ import ConfirmModal from "../components/ConfirmModal.jsx";
 import SkillsTab from "../components/tabs/SkillsTab.jsx";
 import MyPostsTab from "../components/tabs/MyPostsTab.jsx";
 import MySettingsTab from "../components/tabs/MySettingsTab.jsx";
-
+import Loader from "../components/Loader.jsx";
 const ALL_TABS = ["About", "Education", "Experience", "Resumes", "Skills"];
 
 const UserProfile = () => {
@@ -123,12 +123,9 @@ const UserProfile = () => {
 
   if (!profile) {
     return (
-      <div className="main_container">
-        <div className="profile_container w-full sm:w-[90%] md:w-[80%] m-auto mt-6 border border-gray-300 rounded-md">
-          <div className="p-10 text-center text-gray-500">
-            Loading profile...
-          </div>
-        </div>
+      <div className="flex flex-col justify-center items-center text-gray-500 py-20 w-full h-full">
+        <Loader />
+        <p className="mt-4">Loading Profile...</p>
       </div>
     );
   }

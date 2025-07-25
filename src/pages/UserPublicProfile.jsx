@@ -9,6 +9,7 @@ import ResumeTab from "../components/tabs/ResumeTab";
 import { UserPlus, MessageCircle, Check, MoreVertical } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
 import MyPostsTab from "../components/tabs/MyPostsTab";
+import Loader from "../components/Loader";
 
 const TABS = ["About", "Education", "Experience", "Skills", "Posts"];
 
@@ -22,7 +23,6 @@ const UserPublicProfile = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
   const token = localStorage.getItem("token");
-
 
   // Responsive flag
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -127,10 +127,9 @@ const UserPublicProfile = () => {
 
   if (loading) {
     return (
-      <div className="main_container">
-        <div className="profile_container w-full sm:w-[90%] md:w-[80%] m-auto mt-6 border border-gray-300 rounded-md">
-          <div className="p-10 text-center text-gray-500">Loading profile...</div>
-        </div>
+      <div className="flex flex-col justify-center items-center text-gray-500 py-20 w-full h-full">
+        <Loader />
+        <p className="mt-4">Loading Profile...</p>
       </div>
     );
   }
@@ -169,7 +168,6 @@ const UserPublicProfile = () => {
   return (
     <div className="main_container bg-[#f8fafc] min-h-[100vh]">
       <div className="w-full sm:w-[95%] md:w-[80%] min-h-[90vh] m-auto mb-20 bg-white rounded-2xl mt-6 overflow-hidden border border-gray-300 shadow-md">
-
         {/* Banner */}
         <div className="relative h-40 bg-gray-100 rounded-t-2xl overflow-hidden">
           {onboarding.banner ? (
@@ -188,9 +186,9 @@ const UserPublicProfile = () => {
               <button
                 type="button"
                 className="p-2 rounded-full bg-white border border-gray-200 shadow"
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
-                  setMenuOpen(open => !open);
+                  setMenuOpen((open) => !open);
                 }}
               >
                 <MoreVertical className="w-5 h-5 text-gray-500 hover:text-gray-700" />
@@ -216,7 +214,9 @@ const UserPublicProfile = () => {
               <img
                 src={
                   onboarding.profileImage
-                    ? `${import.meta.env.VITE_API_BASE_URL}/${onboarding.profileImage}`
+                    ? `${import.meta.env.VITE_API_BASE_URL}/${
+                        onboarding.profileImage
+                      }`
                     : "/default-avatar.png"
                 }
                 alt="Profile"
@@ -301,7 +301,6 @@ const UserPublicProfile = () => {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

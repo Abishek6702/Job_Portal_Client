@@ -6,6 +6,7 @@ import { initSocket } from "../utils/socket";
 import MyNetworks from "../components/MyNetworks";
 import UserCard from "../components/UserCard";
 import Connections from "../components/Connections";
+import Loader from "../components/Loader";
 
 const Network = () => {
   const [allUsers, setAllUsers] = useState([]);
@@ -131,8 +132,9 @@ const Network = () => {
               />
             ) : activeTab === "all" ? (
               loading ? (
-                <div className="text-center text-gray-500 py-20">
-                  Loading...
+                <div className="flex flex-col justify-center items-center text-gray-500 py-20 w-full h-full">
+                  <Loader />
+                  <p className="mt-4">Loading...</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

@@ -14,6 +14,7 @@ import ApplicationDetailsModal from "../components/ApplicationDetailsModal";
 import InProgressDetailModel from "./InProgressDetailModel";
 import ApplicationStatusChange from "./ApplicationStatusChange";
 import InprogressApplicationStatusChange from "./InprogressApplicationStatusChange";
+import Loader from "./Loader";
 
 const InProgressApplicationsPage = () => {
   const { jobId } = useParams();
@@ -243,7 +244,13 @@ const InProgressApplicationsPage = () => {
   };
 
   if (loading) {
-    return <div className="text-center mt-10">Loading applications...</div>;
+    return  <>
+                  {" "}
+                  <div className="flex flex-col justify-center items-center text-gray-500 py-20 w-full h-full">
+                    <Loader/>
+                    <p className="mt-4">Loading...</p>
+                  </div>
+                </>;
   }
 
   return (

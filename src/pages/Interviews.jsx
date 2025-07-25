@@ -2,6 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Search_icon from "../assets/search.png";
+import Loader from "../components/Loader";
 const Interviews = () => {
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
@@ -176,7 +177,13 @@ const Interviews = () => {
           </div>
 
           {loading ? (
-            <p>Loading jobs...</p>
+             <>
+                          {" "}
+                          <div className="flex flex-col justify-center items-center text-gray-500 py-20 w-full h-full">
+                            <Loader/>
+                            <p className="mt-4">Loading...</p>
+                          </div>
+                        </>
           ) : filteredJobs.length === 0 ? (
             <p>No jobs found for your companies.</p>
           ) : (
